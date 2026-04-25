@@ -19,6 +19,8 @@ import McpCreatePage from "./pages/McpCreatePage";
 import Chat from "./pages/Chat";
 import Coding from "./pages/Coding";
 import WorkspaceShell from "./pages/agent/WorkspaceShell";
+import WorkspaceListPage from "./pages/agent/WorkspaceListPage";
+import RoomListPage from "./pages/agent/RoomListPage";
 import SkillDetail from "./pages/SkillDetail";
 import WorkerDetail from "./pages/WorkerDetail";
 import { RequireAuth } from "./components/RequireAuth";
@@ -79,6 +81,8 @@ export function Router() {
         <Route path="/quest" element={<Navigate to="/coding" />} />
         <Route path="/coding" element={<Coding />} />
         <Route path="/agent" element={<WorkspaceShell />} />
+        <Route path="/agent/workspaces" element={<WorkspaceListPage />} />
+        <Route path="/agent/workspaces/:wsId/rooms" element={<RoomListPage />} />
         <Route path="/getting-started" element={<GettingStarted />} />
         <Route path="/apis/:apiProductId" element={<ApiDetail />} />
         <Route path="/consumers/:consumerId" element={<RequireAuth><ConsumerDetail /></RequireAuth>} />
