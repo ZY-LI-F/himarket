@@ -1,5 +1,8 @@
 package com.alibaba.himarket.controller.agent;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -8,10 +11,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.alibaba.himarket.core.advice.ResponseAdvice;
+import com.alibaba.himarket.service.agent.AgentWorkspaceService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(AgentWorkspaceController.class)
@@ -19,6 +26,21 @@ import org.springframework.test.web.servlet.MockMvc;
 class AgentWorkspaceControllerSmokeTest extends AgentControllerSmokeTestSupport {
 
     @Autowired private MockMvc mockMvc;
+    @MockBean private AgentWorkspaceService workspaceService;
+
+    @BeforeEach
+    void setUpService() {
+        when(workspaceService.listWorkspaces(eq("agent-user"), any(Pageable.class)))
+                .thenReturn(AgentStubResponses.workspacePage("agent-user"));
+        when(workspaceService.createWorkspace(eq("agent-user"), any()))
+                .thenReturn(AgentStubResponses.workspace("ws-created", "agent-user"));
+        when(workspaceService.getWorkspace(eq("agent-user"), eq("ws-stub")))
+                .thenReturn(AgentStubResponses.workspace("ws-stub", "agent-user"));
+        when(workspaceService.updateWorkspace(eq("agent-user"), eq("ws-stub"), any()))
+                .thenReturn(AgentStubResponses.workspace("ws-stub", "agent-user"));
+        when(workspaceService.activateWorkspace(eq("agent-user"), eq("ws-stub")))
+                .thenReturn(AgentStubResponses.workspace("ws-stub", "agent-user"));
+    }
 
     @Test
     void requiresAuthentication() throws Exception {

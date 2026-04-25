@@ -1,5 +1,8 @@
 package com.alibaba.himarket.controller.agent;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -8,9 +11,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.alibaba.himarket.core.advice.ResponseAdvice;
+import com.alibaba.himarket.service.agent.AgentRoomService;
+import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -19,6 +26,19 @@ import org.springframework.test.web.servlet.MockMvc;
 class AgentRoomControllerSmokeTest extends AgentControllerSmokeTestSupport {
 
     @Autowired private MockMvc mockMvc;
+    @MockBean private AgentRoomService roomService;
+
+    @BeforeEach
+    void setUpService() {
+        when(roomService.listRooms(eq("agent-user"), eq("ws-stub")))
+                .thenReturn(List.of(AgentStubResponses.room("ws-stub", "room-stub", "agent-user")));
+        when(roomService.createRoom(eq("agent-user"), eq("ws-stub"), any()))
+                .thenReturn(AgentStubResponses.room("ws-stub", "room-created", "agent-user"));
+        when(roomService.getRoom(eq("agent-user"), eq("room-stub")))
+                .thenReturn(AgentStubResponses.room("ws-stub", "room-stub", "agent-user"));
+        when(roomService.updateRoom(eq("agent-user"), eq("room-stub"), any()))
+                .thenReturn(AgentStubResponses.room("ws-stub", "room-stub", "agent-user"));
+    }
 
     @Test
     void requiresAuthentication() throws Exception {

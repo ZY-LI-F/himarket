@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,6 +32,7 @@ public class AgentRoomConfigEntity {
     @Column(name = "config_json", nullable = false, columnDefinition = "longtext")
     private String configJson;
 
+    @Version
     @Column(name = "version", nullable = false)
     private Long version;
 
