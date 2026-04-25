@@ -1,4 +1,4 @@
-import { colors } from "./src/aliyunThemeToken.ts";
+import { agentTokens, colors } from "./src/aliyunThemeToken.ts";
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -8,6 +8,12 @@ export default {
     extend: {
       colors: {
         "black-normal": "#404040",
+        aliyun: {
+          blue: agentTokens.aliyunBlue,
+        },
+        agent: {
+          accent: agentTokens.agentAccent,
+        },
         ...colors,
         gray: {
           50: "#f9fafb",
@@ -66,6 +72,9 @@ export default {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+        r6: agentTokens.radiusR6,
+        r10: agentTokens.radiusR10,
+        r14: agentTokens.radiusR14,
       },
       keyframes: {
         fadeInUp: {

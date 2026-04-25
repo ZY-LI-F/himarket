@@ -1,0 +1,1191 @@
+openapi: 3.1.0
+info:
+  title: HiMarket Agent Workspace API
+  version: 0.1.0
+  description: >
+    Contract-first API for Agent Workspace workspaces, rooms, bindings, task runs,
+    task event streaming, and team templates.
+servers:
+  - url: /api/v1
+    description: Relative HiMarket API base path
+security:
+  - bearerAuth: []
+tags:
+  - name: Workspaces
+    description: Agent workspace lifecycle and active workspace selection.
+  - name: Rooms
+    description: Workspace room lifecycle.
+  - name: Room Config
+    description: Room model, template, binding, and permission configuration.
+  - name: Bindings
+    description: Active Skill, MCP, and Model bindings for a room.
+  - name: Tasks
+    description: Agent task submission, history, detail, and event streaming.
+  - name: Team Templates
+    description: Available team templates from HiMarket and Nacos sources.
+paths:
+  /agent/workspaces:
+    get:
+      tags:
+        - Workspaces
+      operationId: listAgentWorkspaces
+      summary: List current user's workspaces
+      responses:
+        '200':
+          description: Workspace page for the current user and tenant.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WorkspacePage'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/ServerError'
+    post:
+      tags:
+        - Workspaces
+      operationId: createAgentWorkspace
+      summary: Create a workspace
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateWorkspaceRequest'
+      responses:
+        '201':
+          description: Workspace created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Workspace'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/ServerError'
+  /agent/workspaces/{id}:
+    parameters:
+      - $ref: '#/components/parameters/WorkspaceId'
+    get:
+      tags:
+        - Workspaces
+      operationId: getAgentWorkspace
+      summary: Get a workspace
+      responses:
+        '200':
+          description: Workspace detail.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Workspace'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/ServerError'
+    put:
+      tags:
+        - Workspaces
+      operationId: updateAgentWorkspace
+      summary: Update a workspace
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateWorkspaceRequest'
+      responses:
+        '200':
+          description: Updated workspace.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Workspace'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/ServerError'
+    delete:
+      tags:
+        - Workspaces
+      operationId: deleteAgentWorkspace
+      summary: Delete a workspace
+      responses:
+        '204':
+          description: Workspace deleted.
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/ServerError'
+  /agent/workspaces/{id}/active:
+    parameters:
+      - $ref: '#/components/parameters/WorkspaceId'
+    put:
+      tags:
+        - Workspaces
+      operationId: activateAgentWorkspace
+      summary: Mark a workspace active for the current user and tenant
+      responses:
+        '200':
+          description: Active workspace.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Workspace'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/ServerError'
+  /agent/workspaces/{wsId}/rooms:
+    parameters:
+      - $ref: '#/components/parameters/WorkspaceScopeId'
+    get:
+      tags:
+        - Rooms
+      operationId: listAgentRooms
+      summary: List rooms in a workspace
+      responses:
+        '200':
+          description: Rooms in the workspace.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoomList'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/ServerError'
+    post:
+      tags:
+        - Rooms
+      operationId: createAgentRoom
+      summary: Create a room in a workspace
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateRoomRequest'
+      responses:
+        '201':
+          description: Room created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Room'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/ServerError'
+  /agent/rooms/{id}:
+    parameters:
+      - $ref: '#/components/parameters/RoomId'
+    get:
+      tags:
+        - Rooms
+      operationId: getAgentRoom
+      summary: Get a room
+      responses:
+        '200':
+          description: Room detail.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Room'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/ServerError'
+    put:
+      tags:
+        - Rooms
+      operationId: updateAgentRoom
+      summary: Update a room
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateRoomRequest'
+      responses:
+        '200':
+          description: Updated room.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Room'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/ServerError'
+    delete:
+      tags:
+        - Rooms
+      operationId: deleteAgentRoom
+      summary: Delete a room
+      responses:
+        '204':
+          description: Room deleted.
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/ServerError'
+  /agent/rooms/{id}/config:
+    parameters:
+      - $ref: '#/components/parameters/RoomId'
+    get:
+      tags:
+        - Room Config
+      operationId: getAgentRoomConfig
+      summary: Get room configuration
+      responses:
+        '200':
+          description: Room configuration.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoomConfig'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/ServerError'
+    put:
+      tags:
+        - Room Config
+      operationId: updateAgentRoomConfig
+      summary: Update room configuration
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoomConfig'
+      responses:
+        '200':
+          description: Updated room configuration.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RoomConfig'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/ServerError'
+  /agent/rooms/{id}/bindings:
+    parameters:
+      - $ref: '#/components/parameters/RoomId'
+    get:
+      tags:
+        - Bindings
+      operationId: listAgentRoomBindings
+      summary: List active room bindings
+      responses:
+        '200':
+          description: Active Skill, MCP, and Model bindings.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BindingList'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/ServerError'
+    post:
+      tags:
+        - Bindings
+      operationId: createAgentRoomBinding
+      summary: Create a room binding
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateBindingRequest'
+      responses:
+        '201':
+          description: Binding created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Binding'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/ServerError'
+  /agent/bindings/{bindingId}:
+    parameters:
+      - $ref: '#/components/parameters/BindingId'
+    delete:
+      tags:
+        - Bindings
+      operationId: deleteAgentRoomBinding
+      summary: Delete a room binding
+      responses:
+        '204':
+          description: Binding deleted.
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/ServerError'
+  /agent/rooms/{id}/tasks:
+    parameters:
+      - $ref: '#/components/parameters/RoomId'
+    get:
+      tags:
+        - Tasks
+      operationId: listAgentRoomTasks
+      summary: List task run summaries for a room
+      responses:
+        '200':
+          description: Task run summaries.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskRunSummaryList'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/ServerError'
+    post:
+      tags:
+        - Tasks
+      operationId: startAgentRoomTask
+      summary: Start a task in a room
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StartTaskRequest'
+      responses:
+        '202':
+          description: Task accepted for asynchronous execution.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StartTaskResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/ServerError'
+  /agent/rooms/{id}/tasks/{taskId}:
+    parameters:
+      - $ref: '#/components/parameters/RoomId'
+      - $ref: '#/components/parameters/TaskId'
+    get:
+      tags:
+        - Tasks
+      operationId: getAgentRoomTask
+      summary: Get a task run with embedded events
+      responses:
+        '200':
+          description: Task run detail.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskRun'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/ServerError'
+  /agent/rooms/{id}/tasks/{taskId}/stream:
+    parameters:
+      - $ref: '#/components/parameters/RoomId'
+      - $ref: '#/components/parameters/TaskId'
+    get:
+      tags:
+        - Tasks
+      operationId: streamAgentRoomTaskEvents
+      summary: Stream task events
+      description: Each SSE data field contains one TaskEvent JSON payload.
+      responses:
+        '200':
+          description: Task event stream.
+          content:
+            text/event-stream:
+              schema:
+                $ref: '#/components/schemas/TaskEvent'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/ServerError'
+  /agent/team-templates:
+    get:
+      tags:
+        - Team Templates
+      operationId: listAgentTeamTemplates
+      summary: List available team templates
+      description: Lists templates sourced from HiMarket products and Nacos.
+      responses:
+        '200':
+          description: Available team templates.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeamTemplateList'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/ServerError'
+  /agent/team-templates/{id}:
+    parameters:
+      - $ref: '#/components/parameters/TeamTemplateId'
+    get:
+      tags:
+        - Team Templates
+      operationId: getAgentTeamTemplate
+      summary: Get a team template
+      responses:
+        '200':
+          description: Team template with manager and worker profile references.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeamTemplate'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '5XX':
+          $ref: '#/components/responses/ServerError'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: >
+        Existing HiMarket OIDC bearer token from the developer portal flow.
+        Clients send Authorization: Bearer <access_token>.
+  parameters:
+    WorkspaceId:
+      name: id
+      in: path
+      required: true
+      description: Workspace identifier.
+      schema:
+        type: string
+        minLength: 1
+    WorkspaceScopeId:
+      name: wsId
+      in: path
+      required: true
+      description: Workspace identifier for scoped room operations.
+      schema:
+        type: string
+        minLength: 1
+    RoomId:
+      name: id
+      in: path
+      required: true
+      description: Room identifier.
+      schema:
+        type: string
+        minLength: 1
+    BindingId:
+      name: bindingId
+      in: path
+      required: true
+      description: Binding identifier.
+      schema:
+        type: string
+        minLength: 1
+    TaskId:
+      name: taskId
+      in: path
+      required: true
+      description: Task run identifier.
+      schema:
+        type: string
+        minLength: 1
+    TeamTemplateId:
+      name: id
+      in: path
+      required: true
+      description: Team template identifier.
+      schema:
+        type: string
+        minLength: 1
+  responses:
+    BadRequest:
+      description: Invalid request.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Missing, invalid, or expired bearer token.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Forbidden:
+      description: Authenticated principal is not allowed to perform this action.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Requested resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    ServerError:
+      description: Unexpected server error.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    WorkspacePage:
+      type: object
+      required:
+        - content
+        - totalElements
+        - totalPages
+        - size
+        - number
+        - first
+        - last
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/Workspace'
+        totalElements:
+          type: integer
+          format: int64
+          minimum: 0
+        totalPages:
+          type: integer
+          format: int32
+          minimum: 0
+        size:
+          type: integer
+          format: int32
+          minimum: 0
+        number:
+          type: integer
+          format: int32
+          minimum: 0
+        first:
+          type: boolean
+        last:
+          type: boolean
+      additionalProperties: false
+    Workspace:
+      type: object
+      required:
+        - id
+        - name
+        - ownerId
+        - isActive
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        ownerId:
+          type: string
+        defaultTeamTemplateId:
+          type: string
+        isActive:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      additionalProperties: false
+    CreateWorkspaceRequest:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 128
+        description:
+          type: string
+          maxLength: 1024
+        defaultTeamTemplateId:
+          type: string
+          minLength: 1
+      additionalProperties: false
+    UpdateWorkspaceRequest:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 128
+        description:
+          type: string
+          maxLength: 1024
+        defaultTeamTemplateId:
+          type: string
+          minLength: 1
+      additionalProperties: false
+    RoomList:
+      type: array
+      items:
+        $ref: '#/components/schemas/Room'
+    Room:
+      type: object
+      required:
+        - id
+        - workspaceId
+        - name
+        - modelId
+        - teamTemplateId
+        - permission
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+        workspaceId:
+          type: string
+        name:
+          type: string
+        modelId:
+          type: string
+        teamTemplateId:
+          type: string
+        fileRoot:
+          type: string
+        permission:
+          $ref: '#/components/schemas/RoomPermission'
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      additionalProperties: false
+    CreateRoomRequest:
+      type: object
+      required:
+        - name
+        - teamTemplateId
+        - modelId
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 128
+        teamTemplateId:
+          type: string
+          minLength: 1
+        modelId:
+          type: string
+          minLength: 1
+        description:
+          type: string
+          maxLength: 1024
+      additionalProperties: false
+    UpdateRoomRequest:
+      type: object
+      required:
+        - name
+        - teamTemplateId
+        - modelId
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 128
+        teamTemplateId:
+          type: string
+          minLength: 1
+        modelId:
+          type: string
+          minLength: 1
+        description:
+          type: string
+          maxLength: 1024
+      additionalProperties: false
+    RoomConfig:
+      type: object
+      required:
+        - roomId
+        - modelId
+        - teamTemplateId
+        - skillBindings
+        - mcpBindings
+        - permission
+      properties:
+        roomId:
+          type: string
+        modelId:
+          type: string
+        teamTemplateId:
+          type: string
+        skillBindings:
+          type: array
+          items:
+            $ref: '#/components/schemas/BindingRef'
+        mcpBindings:
+          type: array
+          items:
+            $ref: '#/components/schemas/BindingRef'
+        permission:
+          $ref: '#/components/schemas/RoomPermission'
+      additionalProperties: false
+    RoomPermission:
+      type: object
+      required:
+        - readonly
+        - allowedUserIds
+      properties:
+        readonly:
+          type: boolean
+        allowedUserIds:
+          type: array
+          items:
+            type: string
+      additionalProperties: false
+    BindingRef:
+      type: object
+      required:
+        - productId
+        - version
+        - status
+      properties:
+        productId:
+          type: string
+        version:
+          type: string
+        status:
+          $ref: '#/components/schemas/BindingStatus'
+      additionalProperties: false
+    BindingList:
+      type: array
+      items:
+        $ref: '#/components/schemas/Binding'
+    Binding:
+      type: object
+      required:
+        - id
+        - roomId
+        - kind
+        - productId
+        - version
+        - status
+        - createdAt
+      properties:
+        id:
+          type: string
+        roomId:
+          type: string
+        kind:
+          $ref: '#/components/schemas/BindingKind'
+        productId:
+          type: string
+        version:
+          type: string
+        status:
+          $ref: '#/components/schemas/BindingStatus'
+        createdAt:
+          type: string
+          format: date-time
+      additionalProperties: false
+    CreateBindingRequest:
+      type: object
+      required:
+        - kind
+        - productId
+        - version
+      properties:
+        kind:
+          $ref: '#/components/schemas/BindingKind'
+        productId:
+          type: string
+          minLength: 1
+        version:
+          type: string
+          minLength: 1
+      additionalProperties: false
+    BindingKind:
+      type: string
+      enum:
+        - SKILL
+        - MCP
+        - MODEL
+    BindingStatus:
+      type: string
+      enum:
+        - ACTIVE
+        - DISABLED
+    StartTaskRequest:
+      type: object
+      required:
+        - prompt
+        - mode
+      properties:
+        prompt:
+          type: string
+          minLength: 1
+        files:
+          type: array
+          items:
+            type: string
+        mode:
+          type: string
+          enum:
+            - chat
+            - task
+      additionalProperties: false
+    StartTaskResponse:
+      type: object
+      required:
+        - taskId
+        - status
+      properties:
+        taskId:
+          type: string
+        status:
+          $ref: '#/components/schemas/TaskStatus'
+      additionalProperties: false
+    TaskRunSummaryList:
+      type: array
+      items:
+        $ref: '#/components/schemas/TaskRunSummary'
+    TaskRunSummary:
+      type: object
+      required:
+        - id
+        - roomId
+        - status
+        - prompt
+        - createdAt
+      properties:
+        id:
+          type: string
+        roomId:
+          type: string
+        status:
+          $ref: '#/components/schemas/TaskStatus'
+        prompt:
+          type: string
+        failureExcerpt:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        completedAt:
+          type: string
+          format: date-time
+      additionalProperties: false
+    TaskRun:
+      type: object
+      required:
+        - id
+        - roomId
+        - status
+        - prompt
+        - events
+        - artifacts
+        - createdAt
+      properties:
+        id:
+          type: string
+        roomId:
+          type: string
+        status:
+          $ref: '#/components/schemas/TaskStatus'
+        prompt:
+          type: string
+        plan:
+          type: object
+          additionalProperties: true
+        events:
+          type: array
+          items:
+            $ref: '#/components/schemas/TaskEvent'
+        artifacts:
+          type: array
+          items:
+            $ref: '#/components/schemas/Artifact'
+        failureExcerpt:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        completedAt:
+          type: string
+          format: date-time
+      additionalProperties: false
+    TaskStatus:
+      type: string
+      enum:
+        - PENDING
+        - RUNNING
+        - SUCCEEDED
+        - FAILED
+    TaskEvent:
+      type: object
+      required:
+        - seq
+        - kind
+        - payload
+        - timestamp
+      properties:
+        seq:
+          type: integer
+          format: int32
+          minimum: 0
+        kind:
+          type: string
+          enum:
+            - plan
+            - worker.assigned
+            - tool.call
+            - file.diff
+            - task.failed
+            - task.completed
+            - log
+        agentId:
+          type: string
+        payload:
+          type: object
+          additionalProperties: true
+        timestamp:
+          type: string
+          format: date-time
+      additionalProperties: false
+    Artifact:
+      type: object
+      required:
+        - id
+        - taskId
+        - path
+        - mimeType
+        - size
+        - sha256
+        - downloadUrl
+      properties:
+        id:
+          type: string
+        taskId:
+          type: string
+        path:
+          type: string
+        mimeType:
+          type: string
+        size:
+          type: integer
+          format: int64
+          minimum: 0
+        sha256:
+          type: string
+          pattern: '^[a-fA-F0-9]{64}$'
+        downloadUrl:
+          type: string
+          format: uri-reference
+      additionalProperties: false
+    TeamTemplateList:
+      type: array
+      items:
+        $ref: '#/components/schemas/TeamTemplate'
+    TeamTemplate:
+      type: object
+      required:
+        - id
+        - name
+        - version
+        - manager
+        - workers
+        - defaultSkills
+        - defaultMcps
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        version:
+          type: string
+        manager:
+          $ref: '#/components/schemas/AgentProfileRef'
+        workers:
+          type: array
+          items:
+            $ref: '#/components/schemas/AgentProfileRef'
+        defaultSkills:
+          type: array
+          items:
+            type: string
+        defaultMcps:
+          type: array
+          items:
+            type: string
+      additionalProperties: false
+    AgentProfileRef:
+      type: object
+      required:
+        - id
+        - role
+        - model
+        - systemPromptDigest
+      properties:
+        id:
+          type: string
+        role:
+          type: string
+        model:
+          type: string
+        systemPromptDigest:
+          type: string
+      additionalProperties: false
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        details:
+          type: object
+          additionalProperties: true
+      additionalProperties: false
