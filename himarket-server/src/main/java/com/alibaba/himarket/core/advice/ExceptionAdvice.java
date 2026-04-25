@@ -22,6 +22,7 @@ package com.alibaba.himarket.core.advice;
 import com.alibaba.himarket.core.exception.BusinessException;
 import com.alibaba.himarket.core.exception.ErrorCode;
 import com.alibaba.himarket.core.response.Response;
+import com.alibaba.himarket.exception.agent.BindingForbiddenException;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -47,6 +48,14 @@ public class ExceptionAdvice {
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<Response<Void>> handleBusinessException(BusinessException e) {
         log.warn("[Business Exception] code: {}, message: {}", e.getCode(), e.getMessage());
+        return ResponseEntity.status(e.getStatus())
+                .body(Response.fail(e.getCode(), e.getMessage()));
+    }
+
+    @ExceptionHandler(BindingForbiddenException.class)
+    public ResponseEntity<Response<Void>> handleBindingForbiddenException(
+            BindingForbiddenException e) {
+        log.warn("[Binding Forbidden] code: {}, message: {}", e.getCode(), e.getMessage());
         return ResponseEntity.status(e.getStatus())
                 .body(Response.fail(e.getCode(), e.getMessage()));
     }

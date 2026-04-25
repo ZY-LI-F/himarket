@@ -7,9 +7,14 @@ import com.alibaba.himarket.dto.params.agent.RoomPermissionParam;
 import com.alibaba.himarket.dto.params.agent.UpdateRoomConfigParam;
 import com.alibaba.himarket.dto.params.agent.UpdateRoomParam;
 import com.alibaba.himarket.dto.params.agent.UpdateWorkspaceParam;
+import com.alibaba.himarket.repository.agent.AgentBindingRepository;
 import com.alibaba.himarket.repository.agent.AgentRoomConfigRepository;
 import com.alibaba.himarket.repository.agent.AgentRoomRepository;
 import com.alibaba.himarket.repository.agent.AgentWorkspaceRepository;
+import com.alibaba.himarket.service.ConsumerService;
+import com.alibaba.himarket.service.McpServerService;
+import com.alibaba.himarket.service.ProductService;
+import com.alibaba.himarket.service.SkillService;
 import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,6 +24,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -57,6 +63,11 @@ abstract class AgentServiceITSupport {
     @Autowired AgentWorkspaceRepository workspaceRepository;
     @Autowired AgentRoomRepository roomRepository;
     @Autowired AgentRoomConfigRepository roomConfigRepository;
+    @Autowired AgentBindingRepository bindingRepository;
+    @MockBean ProductService productService;
+    @MockBean SkillService skillService;
+    @MockBean McpServerService mcpServerService;
+    @MockBean ConsumerService consumerService;
 
     @DynamicPropertySource
     static void mysqlProperties(DynamicPropertyRegistry registry) {
@@ -68,6 +79,7 @@ abstract class AgentServiceITSupport {
 
     @BeforeEach
     void resetTables() {
+        bindingRepository.deleteAllInBatch();
         roomConfigRepository.deleteAllInBatch();
         roomRepository.deleteAllInBatch();
         workspaceRepository.deleteAllInBatch();
