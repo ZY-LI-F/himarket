@@ -13,6 +13,14 @@ export const colors = {
   "ring-light": "#A3A3A3",
 }
 
+export const agentTokens = {
+  aliyunBlue: "#0064D2",
+  agentAccent: "#FA8C16",
+  radiusR6: "6px",
+  radiusR10: "10px",
+  radiusR14: "14px",
+} as const;
+
 export default {
   ...colors,
   "colorPrimaryBorder": "#C7D2FE",

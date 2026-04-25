@@ -1,44 +1,18 @@
-// SSE stream response handler
+import type { IChatUsage, IToolCall, IToolResponse } from "./apis/chat";
 
-import type { IToolCall, IToolResponse, IChatUsage } from './apis/chat';
+const MAX_EVENTSOURCE_ATTEMPTS = 5;
+const BASE_RECONNECT_DELAY_MS = 300;
+const MAX_RECONNECT_DELAY_MS = 5_000;
 
-// @chat-legacy: Legacy type definitions, can be removed after full migration
-/*
-// Legacy message format (for backward compatibility)
-export interface SSEMessage {
-  status: 'start' | 'chunk' | 'complete' | 'error';
-  chatId?: string;
-  content?: string;
-  fullContent?: string;
-  message?: string; // Error message
-  code?: string;
-}
+export type ChatEventType =
+  | "START"
+  | "ASSISTANT"
+  | "THINKING"
+  | "TOOL_CALL"
+  | "TOOL_RESULT"
+  | "DONE"
+  | "ERROR";
 
-// Legacy message type, use ChatEventType instead
-export type SSEMsgType = 'USER' | 'TOOL_CALL' | 'TOOL_RESPONSE' | 'ANSWER' | 'STOP' | 'ERROR';
-
-// Legacy message structure, use ChatEvent instead
-export interface SSENewMessage {
-  chatId: string;
-  msgType: SSEMsgType;
-  content: string | IToolCall | IToolResponse | null;
-  chatUsage: IChatUsage | null;
-  error?: string;      // Error type
-  message?: string;    // Error message
-}
-*/
-
-// Chat Event Type
-export type ChatEventType = 
-  | 'START'        // Stream started
-  | 'ASSISTANT'    // Assistant response
-  | 'THINKING'     // Thinking process
-  | 'TOOL_CALL'    // Tool call request
-  | 'TOOL_RESULT'  // Tool execution result
-  | 'DONE'         // Stream completed
-  | 'ERROR';       // Error occurred
-
-// Chat Event Structure
 export interface ChatEvent {
   chatId: string;
   type: ChatEventType;
@@ -48,305 +22,229 @@ export interface ChatEvent {
   message?: string;
 }
 
-// @chat-legacy: OpenAI format type definition, can be removed if not using OpenAI API directly
-/*
-export interface OpenAIChunk {
-  id: string;
-  object: string;
-  created: number;
-  model: string;
-  choices: Array<{
-    delta: {
-      content?: string;
-    };
-    index: number;
-    finish_reason?: string;
-  }>;
-  usage?: {
-    prompt_tokens: number;
-    completion_tokens: number;
-    total_tokens: number;
-    prompt_tokens_details?: {
-      cached_tokens: number;
-    };
-  };
-}
-*/
-
 export interface SSEOptions {
   onStart?: (chatId: string) => void;
   onChunk?: (content: string, chatId: string) => void;
   onToolCall?: (toolCall: IToolCall, chatId: string, usage?: IChatUsage) => void;
-  onToolResponse?: (toolResponse: IToolResponse, chatId: string, usage?: IChatUsage) => void;
-  onComplete?: (fullContent: string, chatId: string, usage?: IChatUsage) => void;
+  onToolResponse?: (
+    toolResponse: IToolResponse,
+    chatId: string,
+    usage?: IChatUsage,
+  ) => void;
+  onComplete?: (content: string, chatId: string, usage?: IChatUsage) => void;
   onError?: (error: string, code?: string, httpStatus?: number) => void;
 }
 
-export async function handleSSEStream(
-  url: string,
-  options: RequestInit,
-  callbacks: SSEOptions,
-  signal?: AbortSignal
-): Promise<void> {
-  const response = await fetch(url, {
-    ...options,
-    headers: {
-      ...options.headers,
-      'Accept': 'text/event-stream',
-    },
-    signal,
-  });
+export interface HandleSSEStreamParams {
+  callbacks: SSEOptions;
+  options: RequestInit;
+  signal?: AbortSignal;
+  url: string;
+}
 
-  if (!response.ok) {
-    const status = response.status;
+interface ChatStreamState {
+  chatId: string;
+  fullContent: string;
+}
 
-    // Handle 403 error: clear token and redirect to login
-    if (status === 403) {
-      localStorage.removeItem('access_token');
-      if (window.location.pathname !== '/login') {
-        window.location.href = '/login';
-      }
-      return;
+interface SubscribeState<T> {
+  attempts: number;
+  closed: boolean;
+  onError?: (error: Event | Error) => void;
+  onEvent: (event: T) => void;
+  source: EventSource | null;
+  timer: ReturnType<typeof setTimeout> | null;
+  url: string;
+}
+
+function reconnectDelay(attempts: number) {
+  const delay = BASE_RECONNECT_DELAY_MS * 2 ** attempts;
+  return Math.min(delay, MAX_RECONNECT_DELAY_MS);
+}
+
+function closeSource<T>(state: SubscribeState<T>) {
+  state.source?.close();
+  state.source = null;
+  if (state.timer) {
+    clearTimeout(state.timer);
+    state.timer = null;
+  }
+}
+
+function scheduleReconnect<T>(state: SubscribeState<T>, connect: () => void) {
+  if (state.closed || state.attempts >= MAX_EVENTSOURCE_ATTEMPTS) return;
+  const delay = reconnectDelay(state.attempts);
+  state.attempts += 1;
+  state.timer = setTimeout(connect, delay);
+}
+
+function parseEventData<T>(rawData: string): T | null {
+  if (rawData === "[DONE]") return null;
+  return JSON.parse(rawData) as T;
+}
+
+function openEventSource<T>(state: SubscribeState<T>) {
+  closeSource(state);
+  const source = new EventSource(state.url);
+  state.source = source;
+  source.onmessage = (message) => {
+    try {
+      const parsed = parseEventData<T>(message.data);
+      if (parsed) state.onEvent(parsed);
+    } catch (error) {
+      state.onError?.(error as Error);
     }
+  };
+  source.onerror = (event) => {
+    closeSource(state);
+    state.onError?.(event);
+    scheduleReconnect(state, () => openEventSource(state));
+  };
+}
 
-    // Handle other HTTP errors via onError callback
-    const errorMessage = `HTTP error! status: ${status}`;
-    callbacks.onError?.(errorMessage, undefined, status);
+export function subscribeSSE<T>(
+  url: string,
+  onEvent: (event: T) => void,
+  onError?: (error: Event | Error) => void,
+) {
+  const state: SubscribeState<T> = {
+    attempts: 0,
+    closed: false,
+    onError,
+    onEvent,
+    source: null,
+    timer: null,
+    url,
+  };
+  openEventSource(state);
+  return () => {
+    state.closed = true;
+    closeSource(state);
+  };
+}
+
+function handleUnauthorizedStream() {
+  localStorage.removeItem("access_token");
+  if (window.location.pathname !== "/login") {
+    window.location.href = "/login";
+  }
+}
+
+function isChatEvent(message: unknown): message is ChatEvent {
+  return (
+    typeof message === "object" &&
+    message !== null &&
+    "type" in message &&
+    !("msgType" in message)
+  );
+}
+
+function handleChatEvent(
+  event: ChatEvent,
+  state: ChatStreamState,
+  callbacks: SSEOptions,
+) {
+  if (event.chatId && !state.chatId) state.chatId = event.chatId;
+  if (event.type === "START") callbacks.onStart?.(event.chatId);
+  if (event.type === "ASSISTANT") handleAssistantEvent(event, state, callbacks);
+  if (event.type === "TOOL_CALL") handleToolCallEvent(event, callbacks);
+  if (event.type === "TOOL_RESULT") handleToolResultEvent(event, callbacks);
+  if (event.type === "DONE") {
+    callbacks.onComplete?.(state.fullContent, event.chatId, event.usage);
+  }
+  if (event.type === "ERROR") {
+    callbacks.onError?.(event.message || "Network error, please retry", event.error);
+  }
+}
+
+function handleAssistantEvent(
+  event: ChatEvent,
+  state: ChatStreamState,
+  callbacks: SSEOptions,
+) {
+  if (typeof event.content !== "string" || !event.chatId) return;
+  state.fullContent += event.content;
+  callbacks.onChunk?.(event.content, event.chatId);
+}
+
+function handleToolCallEvent(event: ChatEvent, callbacks: SSEOptions) {
+  if (!event.content || typeof event.content !== "object") return;
+  callbacks.onToolCall?.(event.content as IToolCall, event.chatId, event.usage);
+}
+
+function handleToolResultEvent(event: ChatEvent, callbacks: SSEOptions) {
+  if (!event.content || typeof event.content !== "object") return;
+  callbacks.onToolResponse?.(
+    event.content as IToolResponse,
+    event.chatId,
+    event.usage,
+  );
+}
+
+function processDataLine(
+  data: string,
+  state: ChatStreamState,
+  callbacks: SSEOptions,
+) {
+  if (data === "[DONE]") {
+    if (state.fullContent && state.chatId) {
+      callbacks.onComplete?.(state.fullContent, state.chatId);
+    }
     return;
   }
+  const message = JSON.parse(data) as unknown;
+  if (isChatEvent(message)) handleChatEvent(message, state, callbacks);
+}
 
-  const reader = response.body?.getReader();
-  if (!reader) {
-    throw new Error('Response body is null');
+function processBufferedLines(
+  lines: string[],
+  state: ChatStreamState,
+  callbacks: SSEOptions,
+) {
+  for (const line of lines) {
+    if (!line.startsWith("data:")) continue;
+    const data = line.slice("data:".length).trim();
+    try {
+      processDataLine(data, state, callbacks);
+    } catch (error) {
+      callbacks.onError?.(
+        error instanceof Error ? error.message : "Failed to parse SSE message",
+      );
+    }
   }
+}
 
+export async function handleSSEStream(params: HandleSSEStreamParams) {
+  const response = await fetch(params.url, {
+    ...params.options,
+    headers: {
+      ...params.options.headers,
+      Accept: "text/event-stream",
+    },
+    signal: params.signal,
+  });
+  if (!response.ok) {
+    if (response.status === 403) handleUnauthorizedStream();
+    params.callbacks.onError?.(`HTTP error! status: ${response.status}`);
+    return;
+  }
+  await readSSEBody(response, params.callbacks);
+}
+
+async function readSSEBody(response: Response, callbacks: SSEOptions) {
+  const reader = response.body?.getReader();
+  if (!reader) throw new Error("Response body is null");
   const decoder = new TextDecoder();
-  let buffer = '';
-  let chatId = '';
-  let fullContent = '';
-  let usage: IChatUsage | undefined;
-
+  const state: ChatStreamState = { chatId: "", fullContent: "" };
+  let buffer = "";
   try {
     while (true) {
       const { done, value } = await reader.read();
-
-      if (done) {
-        break;
-      }
-
+      if (done) break;
       buffer += decoder.decode(value, { stream: true });
-      const lines = buffer.split('\n');
-      buffer = lines.pop() || '';
-
-      for (const line of lines) {
-        if (line.startsWith('data:')) {
-          const data = line.slice(5).trim();
-
-          // Check if it's the end marker
-          if (data === '[DONE]') {
-            // Stream ended, call onComplete
-            if (fullContent && chatId) {
-              callbacks.onComplete?.(fullContent, chatId, usage);
-            }
-            break;
-          }
-
-          try {
-            const message = JSON.parse(data);
-
-            // Check if it's the new format (has type field, not msgType)
-            if ('type' in message && !('msgType' in message)) {
-              const event = message as ChatEvent;
-
-              // Update chatId
-              if (event.chatId && !chatId) {
-                chatId = event.chatId;
-              }
-
-              switch (event.type) {
-                case 'START':
-                  // Corresponds to legacy USER
-                  callbacks.onStart?.(event.chatId);
-                  break;
-
-                case 'ASSISTANT':
-                  // Corresponds to legacy ANSWER
-                  if (typeof event.content === 'string' && event.chatId) {
-                    fullContent += event.content;
-                    callbacks.onChunk?.(event.content, event.chatId);
-                  }
-                  break;
-
-                case 'THINKING':
-                  // Thinking process - temporarily ignored
-                  break;
-
-                case 'TOOL_CALL':
-                  // Tool call
-                  if (event.content && typeof event.content === 'object') {
-                    callbacks.onToolCall?.(
-                      event.content as IToolCall,
-                      event.chatId,
-                      event.usage || undefined
-                    );
-                  }
-                  break;
-
-                case 'TOOL_RESULT':
-                  // Corresponds to legacy TOOL_RESPONSE
-                  if (event.content && typeof event.content === 'object') {
-                    callbacks.onToolResponse?.(
-                      event.content as IToolResponse,
-                      event.chatId,
-                      event.usage || undefined
-                    );
-                  }
-                  break;
-
-                case 'DONE':
-                  // Corresponds to legacy STOP
-                  if (event.chatId) {
-                    callbacks.onComplete?.(fullContent, event.chatId, event.usage);
-                  }
-                  break;
-
-                case 'ERROR':
-                  // Error event
-                  callbacks.onError?.(
-                    event.message || "Network error, please retry",
-                    event.error
-                  );
-                  break;
-              }
-            }
-            // @chat-legacy: Legacy format handler (msgType field), can be removed after backend fully migrates
-            /* 
-            else if ('msgType' in message) {
-              const newMessage = message as SSENewMessage;
-
-              // Update chatId
-              if (newMessage.chatId && !chatId) {
-                chatId = newMessage.chatId;
-              }
-
-              switch (newMessage.msgType) {
-                case 'USER':
-                  // User message start
-                  if (newMessage.chatId) {
-                    callbacks.onStart?.(newMessage.chatId);
-                  }
-                  break;
-
-                case 'TOOL_CALL':
-                  // MCP tool call
-                  if (newMessage.content && typeof newMessage.content === 'object') {
-                    callbacks.onToolCall?.(
-                      newMessage.content as IToolCall,
-                      newMessage.chatId,
-                      newMessage.chatUsage || undefined
-                    );
-                  }
-                  break;
-
-                case 'TOOL_RESPONSE':
-                  // MCP tool result
-                  if (newMessage.content && typeof newMessage.content === 'object') {
-                    callbacks.onToolResponse?.(
-                      newMessage.content as IToolResponse,
-                      newMessage.chatId,
-                      newMessage.chatUsage || undefined
-                    );
-                  }
-                  break;
-
-                case 'ANSWER':
-                  // Model answer content stream
-                  if (typeof newMessage.content === 'string' && newMessage.chatId) {
-                    fullContent += newMessage.content;
-                    callbacks.onChunk?.(newMessage.content, newMessage.chatId);
-                  }
-                  break;
-
-                case 'STOP':
-                  // Stream response completed
-                  if (newMessage.chatId) {
-                    callbacks.onComplete?.(fullContent, newMessage.chatId, newMessage.chatUsage || undefined);
-                  }
-                  break;
-
-                case 'ERROR':
-                  // Error event
-                  callbacks.onError?.(
-                    newMessage.message || "Network error, please retry",
-                    newMessage.error
-                  );
-                  break;
-              }
-            }
-            */
-            // @chat-legacy: Legacy format handler (status field), can be removed after backend fully migrates
-            /*
-            else if ('status' in message) {
-              const oldMessage = message as SSEMessage;
-
-              switch (oldMessage.status) {
-                case 'start':
-                  if (oldMessage.chatId) {
-                    chatId = oldMessage.chatId;
-                    callbacks.onStart?.(oldMessage.chatId);
-                  }
-                  break;
-
-                case 'chunk':
-                  if (oldMessage.content && oldMessage.chatId) {
-                    fullContent += oldMessage.content;
-                    callbacks.onChunk?.(oldMessage.content, oldMessage.chatId);
-                  }
-                  break;
-
-                case 'complete':
-                  if (oldMessage.fullContent && oldMessage.chatId) {
-                    callbacks.onComplete?.(oldMessage.fullContent, oldMessage.chatId, usage);
-                  }
-                  break;
-
-                case 'error':
-                  callbacks.onError?.(oldMessage.message || 'Unknown error', oldMessage.code);
-                  break;
-              }
-            }
-            */
-            // @chat-legacy: OpenAI format handler, can be removed if not using OpenAI API directly
-            /*
-            else if ('object' in message && message.object === 'chat.completion.chunk') {
-              const chunk = message as OpenAIChunk;
-
-              // Save chatId on first receipt
-              if (!chatId && chunk.id) {
-                chatId = chunk.id;
-                callbacks.onStart?.(chunk.id);
-              }
-
-              // Process content chunk
-              if (chunk.choices && chunk.choices.length > 0) {
-                const choice = chunk.choices[0];
-                if (choice.delta?.content) {
-                  fullContent += choice.delta.content;
-                  callbacks.onChunk?.(choice.delta.content, chatId || chunk.id);
-                }
-              }
-
-              // Extract usage info (usually in the last chunk)
-              if (chunk.usage) {
-                usage = chunk.usage;
-              }
-            }
-            */
-          } catch (error) {
-            console.error('Failed to parse SSE message:', error, 'Data:', data);
-          }
-        }
-      }
+      const lines = buffer.split("\n");
+      buffer = lines.pop() || "";
+      processBufferedLines(lines, state, callbacks);
     }
   } finally {
     reader.releaseLock();

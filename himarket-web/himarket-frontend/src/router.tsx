@@ -83,6 +83,7 @@ export function Router() {
         <Route path="/agent" element={<WorkspaceShell />} />
         <Route path="/agent/workspaces" element={<WorkspaceListPage />} />
         <Route path="/agent/workspaces/:wsId/rooms" element={<RoomListPage />} />
+        <Route path="/agent/workspaces/:wsId/rooms/:rid" element={<WorkspaceShell />} />
         <Route path="/getting-started" element={<GettingStarted />} />
         <Route path="/apis/:apiProductId" element={<ApiDetail />} />
         <Route path="/consumers/:consumerId" element={<RequireAuth><ConsumerDetail /></RequireAuth>} />

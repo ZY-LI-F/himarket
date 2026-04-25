@@ -2,89 +2,45 @@ import type {
   CreateRoomRequest,
   CreateWorkspaceRequest,
   Room,
+  RoomConfig,
   RoomList,
+  StartTaskRequest,
+  StartTaskResponse,
+  SubscribeRoomTaskEventsParams,
+  TaskEvent,
+  TeamTemplateList,
   UpdateRoomRequest,
   UpdateWorkspaceRequest,
   Workspace,
   WorkspacePage,
 } from "../agent";
+import {
+  DEFAULT_ROOMS,
+  DEFAULT_TEAM_TEMPLATES,
+  DEFAULT_WORKSPACES,
+  OWNER_ID,
+  ROOT_PREFIX,
+  copyRoom,
+  copyRoomConfig,
+  defaultRoomConfig,
+  workspacePage,
+} from "./agentFixtures";
 
-const OWNER_ID = "mock-user";
-const DEFAULT_WORKSPACE_ID = "ws-default";
-const DEFAULT_TEAM_TEMPLATE_ID = "team-default";
-const DEFAULT_MODEL_ID = "qwen-max";
-const ROOT_PREFIX = "/workspace";
-
-const DEFAULT_WORKSPACES: readonly Workspace[] = [
-  {
-    id: DEFAULT_WORKSPACE_ID,
-    name: "默认研发工作区",
-    description: "用于验证 Agent Workspace CRUD 的内置 mock 数据",
-    ownerId: OWNER_ID,
-    defaultTeamTemplateId: DEFAULT_TEAM_TEMPLATE_ID,
-    isActive: true,
-    createdAt: "2026-04-25T00:00:00.000Z",
-    updatedAt: "2026-04-25T00:00:00.000Z",
-  },
-];
-
-const DEFAULT_ROOMS: readonly Room[] = [
-  {
-    id: "room-main",
-    workspaceId: DEFAULT_WORKSPACE_ID,
-    name: "主开发房间",
-    modelId: DEFAULT_MODEL_ID,
-    teamTemplateId: DEFAULT_TEAM_TEMPLATE_ID,
-    fileRoot: `${ROOT_PREFIX}/default/main`,
-    permission: { readonly: false, allowedUserIds: [OWNER_ID] },
-    createdAt: "2026-04-25T00:10:00.000Z",
-    updatedAt: "2026-04-25T00:10:00.000Z",
-  },
-  {
-    id: "room-review",
-    workspaceId: DEFAULT_WORKSPACE_ID,
-    name: "代码评审房间",
-    modelId: DEFAULT_MODEL_ID,
-    teamTemplateId: DEFAULT_TEAM_TEMPLATE_ID,
-    fileRoot: `${ROOT_PREFIX}/default/review`,
-    permission: { readonly: false, allowedUserIds: [OWNER_ID] },
-    createdAt: "2026-04-25T00:20:00.000Z",
-    updatedAt: "2026-04-25T00:20:00.000Z",
-  },
-];
+const MOCK_EVENT_DELAY_MS = 10;
 
 let idSequence = 1;
+let taskSequence = 1;
 let workspaces: Workspace[] = [];
 let rooms: Room[] = [];
-
-function copyRoom(room: Room): Room {
-  return {
-    ...room,
-    permission: {
-      readonly: room.permission.readonly,
-      allowedUserIds: [...room.permission.allowedUserIds],
-    },
-  };
-}
-
-function buildWorkspacePage(items: Workspace[]): WorkspacePage {
-  return {
-    content: items.map((workspace) => ({ ...workspace })),
-    totalElements: items.length,
-    totalPages: items.length > 0 ? 1 : 0,
-    size: items.length,
-    number: 0,
-    first: true,
-    last: true,
-  };
-}
+let roomConfigs: RoomConfig[] = [];
+let taskPrompts: Record<string, string> = {};
 
 function createError(status: number, code: string, message: string) {
   return Object.assign(new Error(message), { status, code });
 }
 
-function normalizeName(name: string) {
-  return name.trim();
+function now() {
+  return new Date().toISOString();
 }
 
 function nextId(prefix: string) {
@@ -92,24 +48,25 @@ function nextId(prefix: string) {
   return `${prefix}-${idSequence}`;
 }
 
-function now() {
-  return new Date().toISOString();
-}
-
 function findWorkspace(id: string) {
   const workspace = workspaces.find((item) => item.id === id);
-  if (!workspace) {
-    throw createError(404, "AGENT_WORKSPACE_NOT_FOUND", "工作区不存在");
-  }
+  if (!workspace) throw createError(404, "AGENT_WORKSPACE_NOT_FOUND", "工作区不存在");
   return workspace;
 }
 
 function findRoom(id: string) {
   const room = rooms.find((item) => item.id === id);
-  if (!room) {
-    throw createError(404, "AGENT_ROOM_NOT_FOUND", "房间不存在");
-  }
+  if (!room) throw createError(404, "AGENT_ROOM_NOT_FOUND", "房间不存在");
   return room;
+}
+
+function findRoomConfig(id: string) {
+  findRoom(id);
+  const existing = roomConfigs.find((item) => item.roomId === id);
+  if (existing) return existing;
+  const created = defaultRoomConfig(findRoom(id));
+  roomConfigs = [...roomConfigs, created];
+  return created;
 }
 
 function assertUniqueWorkspaceName(name: string, ignoredId?: string) {
@@ -131,22 +88,43 @@ function assertUniqueRoomName(workspaceId: string, name: string, ignoredId?: str
   }
 }
 
+function taskEvent(seq: number, taskId: string, token: string): TaskEvent {
+  return {
+    seq,
+    kind: "log",
+    agentId: "manager",
+    payload: { taskId, token, done: seq === 3 },
+    timestamp: now(),
+  };
+}
+
+function mockTaskEvents(taskId: string): TaskEvent[] {
+  const prompt = taskPrompts[taskId] || "mock stream";
+  return [
+    taskEvent(1, taskId, "已收到："),
+    taskEvent(2, taskId, prompt),
+    taskEvent(3, taskId, "。Mock 回复完成。"),
+  ];
+}
+
 export function resetAgentMockStore() {
   idSequence = 1;
+  taskSequence = 1;
   workspaces = DEFAULT_WORKSPACES.map((workspace) => ({ ...workspace }));
   rooms = DEFAULT_ROOMS.map(copyRoom);
+  roomConfigs = rooms.map(defaultRoomConfig);
+  taskPrompts = {};
 }
 
 export async function listWorkspaces(): Promise<WorkspacePage> {
-  return buildWorkspacePage(workspaces);
+  return workspacePage(workspaces);
 }
 
 export async function createWorkspace(
   data: CreateWorkspaceRequest,
 ): Promise<Workspace> {
-  const name = normalizeName(data.name);
+  const name = data.name.trim();
   assertUniqueWorkspaceName(name);
-
   const timestamp = now();
   const workspace: Workspace = {
     id: nextId("ws"),
@@ -171,10 +149,9 @@ export async function updateWorkspace(
   data: UpdateWorkspaceRequest,
 ): Promise<Workspace> {
   const current = findWorkspace(id);
-  const name = normalizeName(data.name);
+  const name = data.name.trim();
   assertUniqueWorkspaceName(name, id);
-
-  const updated: Workspace = {
+  const updated = {
     ...current,
     name,
     description: data.description?.trim() || undefined,
@@ -189,6 +166,8 @@ export async function deleteWorkspace(id: string): Promise<void> {
   findWorkspace(id);
   workspaces = workspaces.filter((item) => item.id !== id);
   rooms = rooms.filter((item) => item.workspaceId !== id);
+  const roomIds = new Set(rooms.map((room) => room.id));
+  roomConfigs = roomConfigs.filter((item) => roomIds.has(item.roomId));
   if (workspaces.length > 0 && !workspaces.some((item) => item.isActive)) {
     const [firstWorkspace, ...rest] = workspaces;
     workspaces = [{ ...firstWorkspace, isActive: true }, ...rest];
@@ -211,38 +190,42 @@ export async function createRoom(
   data: CreateRoomRequest,
 ): Promise<Room> {
   findWorkspace(workspaceId);
-  const name = normalizeName(data.name);
+  const name = data.name.trim();
   assertUniqueRoomName(workspaceId, name);
-
   const timestamp = now();
-  const room: Room = {
-    id: nextId("room"),
-    workspaceId,
-    name,
-    modelId: data.modelId,
-    teamTemplateId: data.teamTemplateId,
-    fileRoot: `${ROOT_PREFIX}/${workspaceId}/${name}`,
-    permission: { readonly: false, allowedUserIds: [OWNER_ID] },
-    createdAt: timestamp,
-    updatedAt: timestamp,
-  };
+  const room = buildRoom({ workspaceId, data: { ...data, name }, timestamp });
   rooms = [...rooms, room];
+  roomConfigs = [...roomConfigs, defaultRoomConfig(room)];
   return copyRoom(room);
+}
+
+function buildRoom(params: {
+  data: CreateRoomRequest;
+  timestamp: string;
+  workspaceId: string;
+}): Room {
+  return {
+    id: nextId("room"),
+    workspaceId: params.workspaceId,
+    name: params.data.name,
+    modelId: params.data.modelId,
+    teamTemplateId: params.data.teamTemplateId,
+    fileRoot: `${ROOT_PREFIX}/${params.workspaceId}/${params.data.name}`,
+    permission: { readonly: false, allowedUserIds: [OWNER_ID] },
+    createdAt: params.timestamp,
+    updatedAt: params.timestamp,
+  };
 }
 
 export async function getRoom(id: string): Promise<Room> {
   return copyRoom(findRoom(id));
 }
 
-export async function updateRoom(
-  id: string,
-  data: UpdateRoomRequest,
-): Promise<Room> {
+export async function updateRoom(id: string, data: UpdateRoomRequest): Promise<Room> {
   const current = findRoom(id);
-  const name = normalizeName(data.name);
+  const name = data.name.trim();
   assertUniqueRoomName(current.workspaceId, name, id);
-
-  const updated: Room = {
+  const updated = {
     ...current,
     name,
     modelId: data.modelId,
@@ -250,12 +233,71 @@ export async function updateRoom(
     updatedAt: now(),
   };
   rooms = rooms.map((item) => (item.id === id ? updated : item));
+  roomConfigs = roomConfigs.map((config) =>
+    config.roomId === id ? { ...config, ...modelTeamIds(data) } : config,
+  );
   return copyRoom(updated);
+}
+
+function modelTeamIds(data: { modelId: string; teamTemplateId: string }) {
+  return { modelId: data.modelId, teamTemplateId: data.teamTemplateId };
 }
 
 export async function deleteRoom(id: string): Promise<void> {
   findRoom(id);
   rooms = rooms.filter((item) => item.id !== id);
+  roomConfigs = roomConfigs.filter((item) => item.roomId !== id);
+}
+
+export async function getRoomConfig(id: string): Promise<RoomConfig> {
+  return copyRoomConfig(findRoomConfig(id));
+}
+
+export async function updateRoomConfig(
+  id: string,
+  data: RoomConfig,
+): Promise<RoomConfig> {
+  if (data.roomId !== id) {
+    throw createError(400, "AGENT_ROOM_CONFIG_CONFLICT", "房间配置 ID 不一致");
+  }
+  findRoom(id);
+  const updated = copyRoomConfig(data);
+  roomConfigs = roomConfigs.map((item) => (item.roomId === id ? updated : item));
+  rooms = rooms.map((room) => (room.id === id ? { ...room, ...modelTeamIds(data) } : room));
+  return copyRoomConfig(updated);
+}
+
+export async function listTeamTemplates(): Promise<TeamTemplateList> {
+  return DEFAULT_TEAM_TEMPLATES.map((template) => ({
+    ...template,
+    defaultMcps: [...template.defaultMcps],
+    defaultSkills: [...template.defaultSkills],
+    manager: { ...template.manager },
+    workers: template.workers.map((worker) => ({ ...worker })),
+  }));
+}
+
+export async function startRoomTask(
+  id: string,
+  data: StartTaskRequest,
+): Promise<StartTaskResponse> {
+  findRoom(id);
+  const prompt = data.prompt.trim();
+  if (!prompt) throw createError(400, "AGENT_TASK_PROMPT_EMPTY", "任务提示词不能为空");
+  taskSequence += 1;
+  const taskId = `task-${taskSequence}`;
+  taskPrompts = { ...taskPrompts, [taskId]: prompt };
+  return { taskId, status: "RUNNING" };
+}
+
+export function subscribeRoomTaskEvents(
+  params: SubscribeRoomTaskEventsParams,
+): () => void {
+  findRoom(params.id);
+  const timers = mockTaskEvents(params.taskId).map((event, index) =>
+    setTimeout(() => params.onEvent(event), MOCK_EVENT_DELAY_MS * (index + 1)),
+  );
+  return () => timers.forEach((timer) => clearTimeout(timer));
 }
 
 resetAgentMockStore();

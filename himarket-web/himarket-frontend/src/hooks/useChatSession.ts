@@ -63,9 +63,9 @@ async function executeSSERequest(
 ) {
   const streamUrl = APIs.getChatMessageStreamUrl();
   const accessToken = localStorage.getItem('access_token');
-  await handleSSEStream(
-    streamUrl,
-    {
+  await handleSSEStream({
+    url: streamUrl,
+    options: {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -73,9 +73,9 @@ async function executeSSERequest(
       },
       body: JSON.stringify(messagePayload),
     },
-    sseCallbacks,
-    abortController.signal,
-  );
+    callbacks: sseCallbacks,
+    signal: abortController.signal,
+  });
 }
 
 // ============ Hook ============

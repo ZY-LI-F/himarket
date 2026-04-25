@@ -1,4 +1,5 @@
 import request from "../api";
+import { subscribeSSE } from "../sse";
 import type { components } from "../../types/agent";
 import * as mockAgentApi from "./__mocks__/agent";
 
@@ -12,6 +13,22 @@ export type Room = components["schemas"]["Room"];
 export type RoomList = components["schemas"]["RoomList"];
 export type CreateRoomRequest = components["schemas"]["CreateRoomRequest"];
 export type UpdateRoomRequest = components["schemas"]["UpdateRoomRequest"];
+export type RoomConfig = components["schemas"]["RoomConfig"];
+export type BindingRef = components["schemas"]["BindingRef"];
+export type TeamTemplate = components["schemas"]["TeamTemplate"];
+export type TeamTemplateList = components["schemas"]["TeamTemplateList"];
+export type StartTaskRequest = components["schemas"]["StartTaskRequest"];
+export type StartTaskResponse = components["schemas"]["StartTaskResponse"];
+export type TaskEvent = components["schemas"]["TaskEvent"];
+
+export type TaskEventUnsubscribe = () => void;
+
+export interface SubscribeRoomTaskEventsParams {
+  id: string;
+  onError?: (error: Event | Error) => void;
+  onEvent: (event: TaskEvent) => void;
+  taskId: string;
+}
 
 export interface AgentApi {
   listWorkspaces: () => Promise<WorkspacePage>;
@@ -31,6 +48,16 @@ export interface AgentApi {
   getRoom: (id: string) => Promise<Room>;
   updateRoom: (id: string, data: UpdateRoomRequest) => Promise<Room>;
   deleteRoom: (id: string) => Promise<void>;
+  getRoomConfig: (id: string) => Promise<RoomConfig>;
+  updateRoomConfig: (id: string, data: RoomConfig) => Promise<RoomConfig>;
+  listTeamTemplates: () => Promise<TeamTemplateList>;
+  startRoomTask: (
+    id: string,
+    data: StartTaskRequest,
+  ) => Promise<StartTaskResponse>;
+  subscribeRoomTaskEvents: (
+    params: SubscribeRoomTaskEventsParams,
+  ) => TaskEventUnsubscribe;
 }
 
 interface ErrorLike {
@@ -40,6 +67,11 @@ interface ErrorLike {
       message?: string;
     };
   };
+}
+
+function buildApiUrl(path: string) {
+  const baseUrl = import.meta.env.VITE_API_BASE_URL || "";
+  return `${baseUrl}${path}`;
 }
 
 const realAgentApi: AgentApi = {
@@ -72,6 +104,26 @@ const realAgentApi: AgentApi = {
   updateRoom: (id, data) =>
     request.put<Room, Room, UpdateRoomRequest>(`/agent/rooms/${id}`, data),
   deleteRoom: (id) => request.delete<void, void>(`/agent/rooms/${id}`),
+  getRoomConfig: (id) =>
+    request.get<RoomConfig, RoomConfig>(`/agent/rooms/${id}/config`),
+  updateRoomConfig: (id, data) =>
+    request.put<RoomConfig, RoomConfig, RoomConfig>(
+      `/agent/rooms/${id}/config`,
+      data,
+    ),
+  listTeamTemplates: () =>
+    request.get<TeamTemplateList, TeamTemplateList>("/agent/team-templates"),
+  startRoomTask: (id, data) =>
+    request.post<StartTaskResponse, StartTaskResponse, StartTaskRequest>(
+      `/agent/rooms/${id}/tasks`,
+      data,
+    ),
+  subscribeRoomTaskEvents: ({ id, taskId, onEvent, onError }) =>
+    subscribeSSE<TaskEvent>(
+      buildApiUrl(`/agent/rooms/${id}/tasks/${taskId}/stream`),
+      onEvent,
+      onError,
+    ),
 };
 
 const selectedAgentApi: AgentApi =
@@ -96,3 +148,8 @@ export const createRoom = selectedAgentApi.createRoom;
 export const getRoom = selectedAgentApi.getRoom;
 export const updateRoom = selectedAgentApi.updateRoom;
 export const deleteRoom = selectedAgentApi.deleteRoom;
+export const getRoomConfig = selectedAgentApi.getRoomConfig;
+export const updateRoomConfig = selectedAgentApi.updateRoomConfig;
+export const listTeamTemplates = selectedAgentApi.listTeamTemplates;
+export const startRoomTask = selectedAgentApi.startRoomTask;
+export const subscribeRoomTaskEvents = selectedAgentApi.subscribeRoomTaskEvents;

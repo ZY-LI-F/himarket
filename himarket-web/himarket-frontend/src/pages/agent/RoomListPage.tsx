@@ -66,11 +66,16 @@ function buildRoomColumns(onDelete: (room: Room) => void): TableColumnType<Room>
     {
       title: "操作",
       key: "actions",
-      width: 120,
+      width: 160,
       render: (_: unknown, record) => (
-        <Button danger icon={<DeleteOutlined />} onClick={() => onDelete(record)}>
-          删除
-        </Button>
+        <Space>
+          <Link to={`/agent/workspaces/${record.workspaceId}/rooms/${record.id}`}>
+            进入
+          </Link>
+          <Button danger icon={<DeleteOutlined />} onClick={() => onDelete(record)}>
+            删除
+          </Button>
+        </Space>
       ),
     },
   ];
