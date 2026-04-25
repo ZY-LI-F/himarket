@@ -1,0 +1,31 @@
+package com.alibaba.himarket.controller.agent;
+
+import com.alibaba.himarket.core.annotation.DeveloperAuth;
+import com.alibaba.himarket.dto.params.agent.UpdateRoomConfigParam;
+import com.alibaba.himarket.dto.result.agent.AgentRoomConfigResult;
+import jakarta.validation.Valid;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/api/v1/agent/rooms/{id}/config")
+@Validated
+@DeveloperAuth
+public class AgentRoomConfigController {
+
+    @GetMapping
+    public AgentRoomConfigResult getRoomConfig(@PathVariable String id) {
+        return AgentStubResponses.stubResponse(userId -> AgentStubResponses.roomConfig(id, userId));
+    }
+
+    @PutMapping
+    public AgentRoomConfigResult updateRoomConfig(
+            @PathVariable String id, @Valid @RequestBody UpdateRoomConfigParam param) {
+        return AgentStubResponses.stubResponse(userId -> AgentStubResponses.roomConfig(id, userId));
+    }
+}
