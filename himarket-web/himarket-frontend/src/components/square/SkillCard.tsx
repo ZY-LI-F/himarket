@@ -1,6 +1,8 @@
 import { DownloadOutlined } from "@ant-design/icons";
+import type { ReactNode } from "react";
 
 interface SkillCardProps {
+  actions?: ReactNode;
   name: string;
   description: string;
   releaseDate: string;
@@ -10,6 +12,7 @@ interface SkillCardProps {
 }
 
 export function SkillCard({
+  actions,
   name,
   description,
   releaseDate,
@@ -61,8 +64,11 @@ export function SkillCard({
           </div>
         )}
 
-        <div className="flex items-center justify-end text-gray-400 text-xs">
+        <div
+          className={`flex items-center gap-2 text-gray-400 text-xs ${actions ? "justify-between" : "justify-end"}`}
+        >
           <span className="tabular-nums tracking-tight">{releaseDate}</span>
+          {actions && <div className="flex-shrink-0">{actions}</div>}
         </div>
       </div>
     </div>

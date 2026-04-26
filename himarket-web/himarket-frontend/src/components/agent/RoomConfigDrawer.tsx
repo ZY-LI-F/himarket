@@ -1,4 +1,14 @@
-import { Alert, Button, Drawer, Form, Select, Space, Spin, Typography, message } from "antd";
+import {
+  Alert,
+  Button,
+  Drawer,
+  Form,
+  Select,
+  Space,
+  Spin,
+  Typography,
+  message,
+} from "antd";
 import type { FormInstance } from "antd";
 import { Settings } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -38,11 +48,14 @@ interface RoomConfigDrawerProps {
   defaultOpen?: boolean;
   getConfig?: (roomId: string) => Promise<RoomConfig>;
   loadOptions?: () => Promise<RoomConfigOptionGroups>;
+  refreshKey?: number;
   roomId?: string;
   saveConfig?: (roomId: string, config: RoomConfig) => Promise<RoomConfig>;
 }
 
-interface ControllerParams extends Required<Omit<RoomConfigDrawerProps, "roomId">> {
+interface ControllerParams extends Required<
+  Omit<RoomConfigDrawerProps, "roomId">
+> {
   roomId?: string;
 }
 
@@ -55,7 +68,7 @@ interface SaveConfigParams {
 }
 
 function bindingIds(bindings: BindingRef[]) {
-  return bindings.map((binding) => binding.productId);
+  return bindings.map(binding => binding.productId);
 }
 
 function option(value: string, label?: string, version?: string): SelectOption {
@@ -72,14 +85,14 @@ function mergeOptions(current: RoomConfig, groups: RoomConfigOptionGroups) {
 }
 
 function mergeIdOption(value: string, options: SelectOption[]) {
-  if (options.some((item) => item.value === value)) return options;
+  if (options.some(item => item.value === value)) return options;
   return [option(value), ...options];
 }
 
 function mergeBindingOptions(bindings: BindingRef[], options: SelectOption[]) {
   const missing = bindings
-    .filter((binding) => !options.some((item) => item.value === binding.productId))
-    .map((binding) => option(binding.productId, undefined, binding.version));
+    .filter(binding => !options.some(item => item.value === binding.productId))
+    .map(binding => option(binding.productId, undefined, binding.version));
   return [...missing, ...options];
 }
 
@@ -92,13 +105,21 @@ function buildFormValues(config: RoomConfig): RoomConfigFormValues {
   };
 }
 
-function bindingRefs(ids: string[], knownBindings: BindingRef[], options: SelectOption[]) {
-  const known = new Map(knownBindings.map((binding) => [binding.productId, binding]));
-  const versions = new Map(options.map((item) => [item.value, item.version]));
-  return ids.map((productId) => ({
+function bindingRefs(
+  ids: string[],
+  knownBindings: BindingRef[],
+  options: SelectOption[]
+) {
+  const known = new Map(
+    knownBindings.map(binding => [binding.productId, binding])
+  );
+  const versions = new Map(options.map(item => [item.value, item.version]));
+  return ids.map(productId => ({
     productId,
     version:
-      known.get(productId)?.version || versions.get(productId) || DEFAULT_BINDING_VERSION,
+      known.get(productId)?.version ||
+      versions.get(productId) ||
+      DEFAULT_BINDING_VERSION,
     status: known.get(productId)?.status || ACTIVE_BINDING_STATUS,
   }));
 }
@@ -124,12 +145,12 @@ async function saveConfigSnapshot(params: SaveConfigParams) {
     skillBindings: bindingRefs(
       values.skillBindingIds,
       params.config.skillBindings,
-      params.options.skills,
+      params.options.skills
     ),
     mcpBindings: bindingRefs(
       values.mcpBindingIds,
       params.config.mcpBindings,
-      params.options.mcps,
+      params.options.mcps
     ),
   });
 }
@@ -139,8 +160,8 @@ async function loadProductOptions(type: string): Promise<SelectOption[]> {
   if (response.code !== "SUCCESS") {
     throw new Error(response.message || `加载 ${type} 失败`);
   }
-  return response.data.content.map((product) =>
-    option(product.productId, product.name, product.skillConfig?.currentVersion),
+  return response.data.content.map(product =>
+    option(product.productId, product.name, product.skillConfig?.currentVersion)
   );
 }
 
@@ -155,8 +176,8 @@ export async function loadRoomConfigOptions(): Promise<RoomConfigOptionGroups> {
     mcps,
     models,
     skills,
-    teamTemplates: templates.map((template) =>
-      option(template.id, template.name, template.version),
+    teamTemplates: templates.map(template =>
+      option(template.id, template.name, template.version)
     ),
   };
 }
@@ -165,6 +186,7 @@ function useRoomConfigController({
   defaultOpen,
   getConfig,
   loadOptions,
+  refreshKey,
   roomId,
   saveConfig,
 }: ControllerParams) {
@@ -184,28 +206,34 @@ function useRoomConfigController({
   const canOpen = Boolean(roomId);
   const drawerTitle = useMemo(
     () => `Room Config${roomId ? `: ${roomId}` : ""}`,
-    [roomId],
+    [roomId]
   );
 
   const loadConfig = useCallback(async () => {
     if (!roomId) return;
     setLoading(true);
     try {
-      const snapshot = await fetchConfigSnapshot({ getConfig, loadOptions, roomId });
+      const snapshot = await fetchConfigSnapshot({
+        getConfig,
+        loadOptions,
+        roomId,
+      });
       setConfig(snapshot.config);
       setOptions(snapshot.options);
       form.setFieldsValue(buildFormValues(snapshot.config));
       setError(null);
     } catch (requestError) {
-      setError(requestError instanceof Error ? requestError.message : "加载配置失败");
+      setError(
+        requestError instanceof Error ? requestError.message : "加载配置失败"
+      );
     } finally {
       setLoading(false);
     }
   }, [form, getConfig, loadOptions, roomId]);
 
   useEffect(() => {
-    if (open) void loadConfig();
-  }, [loadConfig, open]);
+    if (open || refreshKey) void loadConfig();
+  }, [loadConfig, open, refreshKey]);
 
   const submit = async () => {
     if (!roomId || !config) return;
@@ -223,7 +251,9 @@ function useRoomConfigController({
       message.success("房间配置已保存");
       setError(null);
     } catch (requestError) {
-      setError(requestError instanceof Error ? requestError.message : "保存配置失败");
+      setError(
+        requestError instanceof Error ? requestError.message : "保存配置失败"
+      );
     } finally {
       setSaving(false);
     }
@@ -258,7 +288,11 @@ function DrawerBody(props: {
         <Form.Item label="模型" name="modelId" rules={[{ required: true }]}>
           <Select options={props.options.models} showSearch />
         </Form.Item>
-        <Form.Item label="团队模板" name="teamTemplateId" rules={[{ required: true }]}>
+        <Form.Item
+          label="团队模板"
+          name="teamTemplateId"
+          rules={[{ required: true }]}
+        >
           <Select options={props.options.teamTemplates} showSearch />
         </Form.Item>
         <Form.Item label="Skills" name="skillBindingIds">
@@ -276,6 +310,7 @@ export function RoomConfigDrawer({
   defaultOpen = false,
   getConfig = getRoomConfig,
   loadOptions = loadRoomConfigOptions,
+  refreshKey = 0,
   roomId,
   saveConfig = updateRoomConfig,
 }: RoomConfigDrawerProps) {
@@ -283,6 +318,7 @@ export function RoomConfigDrawer({
     defaultOpen,
     getConfig,
     loadOptions,
+    refreshKey,
     roomId,
     saveConfig,
   });
@@ -299,9 +335,15 @@ export function RoomConfigDrawer({
         编辑配置
       </Button>
       {controller.config && (
-        <Typography.Text className="text-xs text-gray-500">
-          {controller.config.modelId} / {controller.config.teamTemplateId}
-        </Typography.Text>
+        <Space orientation="vertical" size={2}>
+          <Typography.Text className="text-xs text-gray-500">
+            {controller.config.modelId} / {controller.config.teamTemplateId}
+          </Typography.Text>
+          <Typography.Text className="text-xs text-gray-500">
+            Skills {controller.config.skillBindings.length} · MCPs{" "}
+            {controller.config.mcpBindings.length}
+          </Typography.Text>
+        </Space>
       )}
       <Drawer
         destroyOnHidden

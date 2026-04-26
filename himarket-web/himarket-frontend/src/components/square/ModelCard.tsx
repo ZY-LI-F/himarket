@@ -1,6 +1,8 @@
+import type { ReactNode } from "react";
 import { ProductIconRenderer } from "../icon/ProductIconRenderer";
 
 interface ModelCardProps {
+  actions?: ReactNode;
   icon: string;
   name: string;
   description: string;
@@ -10,7 +12,16 @@ interface ModelCardProps {
   onTryNow?: () => void;
 }
 
-export function ModelCard({ icon, name, description, company, releaseDate, onClick, onTryNow }: ModelCardProps) {
+export function ModelCard({
+  actions,
+  icon,
+  name,
+  description,
+  company,
+  releaseDate,
+  onClick,
+  onTryNow,
+}: ModelCardProps) {
   return (
     <div
       onClick={onClick}
@@ -30,22 +41,34 @@ export function ModelCard({ icon, name, description, company, releaseDate, onCli
       {/* 上部：图标和名称 */}
       <div className="flex items-center gap-3 mb-3">
         <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-colorPrimary/10 to-colorPrimary/5 flex items-center justify-center flex-shrink-0 overflow-hidden">
-          <ProductIconRenderer className="w-full h-full object-cover" iconType={icon} />
+          <ProductIconRenderer
+            className="w-full h-full object-cover"
+            iconType={icon}
+          />
         </div>
-        <h3 className="text-base font-semibold text-gray-800 truncate flex-1 group-hover:text-gray-900 transition-colors">{name}</h3>
+        <h3 className="text-base font-semibold text-gray-800 truncate flex-1 group-hover:text-gray-900 transition-colors">
+          {name}
+        </h3>
       </div>
 
       {/* 中部：简介（固定两行） */}
-      <p className="max-h-12 text-sm mb-4 line-clamp-2 leading-relaxed flex-1 text-gray-500" >
+      <p className="max-h-12 text-sm mb-4 line-clamp-2 leading-relaxed flex-1 text-gray-500">
         {description}
       </p>
 
       {/* 底部：公司和发布日期 - 只有在有按钮时才在 hover 时淡出 */}
-      <div className={`h-10 flex items-center justify-between text-xs transition-opacity duration-300 ${onTryNow ? 'group-hover:opacity-0' : ''}`}>
-        {company ? (
-          <span className="truncate text-gray-500" >{company}</span>
-        ) : null}
-        <span className="flex-shrink-0 text-gray-400 tabular-nums tracking-tight" >{releaseDate}</span>
+      <div
+        className={`h-10 flex items-center justify-between gap-2 text-xs transition-opacity duration-300 ${onTryNow ? "group-hover:opacity-0" : ""}`}
+      >
+        <div className="flex min-w-0 flex-1 items-center justify-between gap-2">
+          {company ? (
+            <span className="truncate text-gray-500">{company}</span>
+          ) : null}
+          <span className="flex-shrink-0 text-gray-400 tabular-nums tracking-tight">
+            {releaseDate}
+          </span>
+        </div>
+        {actions && <div className="flex-shrink-0">{actions}</div>}
       </div>
 
       {/* 底部按钮组 - hover 时淡入 + 轻微上移 */}
@@ -62,7 +85,7 @@ export function ModelCard({ icon, name, description, company, releaseDate, onCli
         >
           <div className="flex gap-3">
             <button
-              onClick={(e) => {
+              onClick={e => {
                 e.stopPropagation();
                 onClick?.();
               }}
@@ -79,7 +102,7 @@ export function ModelCard({ icon, name, description, company, releaseDate, onCli
               查看详情
             </button>
             <button
-              onClick={(e) => {
+              onClick={e => {
                 e.stopPropagation();
                 onTryNow();
               }}

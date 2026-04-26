@@ -1,9 +1,19 @@
-import { useState, useEffect, useCallback, useRef } from "react";
-import { SearchOutlined, DownloadOutlined, ClockCircleOutlined } from "@ant-design/icons";
-import { Trans } from 'react-i18next';
+import {
+  useState,
+  useEffect,
+  useCallback,
+  useRef,
+  type ReactNode,
+} from "react";
+import {
+  SearchOutlined,
+  DownloadOutlined,
+  ClockCircleOutlined,
+} from "@ant-design/icons";
+import { Trans } from "react-i18next";
 import { Input, message, Pagination } from "antd";
 import { useNavigate } from "react-router-dom";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 import { Layout } from "../components/Layout";
 import { CategoryMenu } from "../components/square/CategoryMenu";
 import { ModelCard } from "../components/square/ModelCard";
@@ -20,22 +30,31 @@ import dayjs from "dayjs";
 import BackToTopButton from "../components/scroll-to-top";
 import { CardGridSkeleton } from "../components/loading";
 
-function Square(props: { activeType: string }) {
-  const { activeType } = props;
+export interface SquareProps {
+  activeType: string;
+  embedded?: boolean;
+  renderActions?: (product: IProductDetail) => ReactNode;
+}
+
+function Square(props: SquareProps) {
+  const { activeType, embedded = false, renderActions } = props;
   const navigate = useNavigate();
-  const { t } = useTranslation('square');
+  const { t } = useTranslation("square");
   const { isLoggedIn } = useAuth();
   const [loginPromptOpen, setLoginPromptOpen] = useState(false);
 
   const [activeCategory, setActiveCategory] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [products, setProducts] = useState<IProductDetail[]>([]);
-  const [categories, setCategories] = useState<Array<{ id: string; name: string; count: number }>>([]);
+  const [categories, setCategories] = useState<
+    Array<{ id: string; name: string; count: number }>
+  >([]);
   const [loading, setLoading] = useState(true);
   const [categoriesLoading, setCategoriesLoading] = useState(true);
   const [sortBy, setSortBy] = useState<string>("DOWNLOAD_COUNT");
 
-  const showSortControl = activeType === 'AGENT_SKILL' || activeType === 'WORKER';
+  const showSortControl =
+    activeType === "AGENT_SKILL" || activeType === "WORKER";
 
   // 分页相关状态
   const [currentPage, setCurrentPage] = useState(1);
@@ -71,8 +90,8 @@ function Square(props: { activeType: string }) {
 
           if (categoryList.length > 0) {
             setCategories([
-              { id: "all", name: t('allCategory'), count: 0 },
-              ...categoryList
+              { id: "all", name: t("allCategory"), count: 0 },
+              ...categoryList,
             ]);
           } else {
             setCategories([]);
@@ -80,7 +99,7 @@ function Square(props: { activeType: string }) {
         }
       } catch (error) {
         console.error("Failed to fetch categories:", error);
-        message.error(t('fetchCategoriesFailed'));
+        message.error(t("fetchCategoriesFailed"));
       } finally {
         setCategoriesLoading(false);
       }
@@ -90,41 +109,45 @@ function Square(props: { activeType: string }) {
   }, [activeType]);
 
   // 获取产品列表
-  const fetchProducts = useCallback(async (searchText?: string, page?: number) => {
-    setLoading(true);
-    try {
-      const productType = activeType;
-      const categoryIds = activeCategory === "all" ? undefined : [activeCategory];
-      const name = (searchText ?? "").trim() || undefined;
-      // page 从 0 开始，currentPage 从 1 开始
-      const pageIndex = (page ?? currentPage);
+  const fetchProducts = useCallback(
+    async (searchText?: string, page?: number) => {
+      setLoading(true);
+      try {
+        const productType = activeType;
+        const categoryIds =
+          activeCategory === "all" ? undefined : [activeCategory];
+        const name = (searchText ?? "").trim() || undefined;
+        // page 从 0 开始，currentPage 从 1 开始
+        const pageIndex = page ?? currentPage;
 
-      const response = await APIs.getProducts({
-        type: productType,
-        categoryIds,
-        name,
-        page: pageIndex,
-        size: PAGE_SIZE,
-        sortBy: showSortControl ? sortBy : undefined,
-      });
-      if (response.code === "SUCCESS" && response.data?.content) {
-        setProducts(response.data.content);
-        setTotalElements(response.data.totalElements);
+        const response = await APIs.getProducts({
+          type: productType,
+          categoryIds,
+          name,
+          page: pageIndex,
+          size: PAGE_SIZE,
+          sortBy: showSortControl ? sortBy : undefined,
+        });
+        if (response.code === "SUCCESS" && response.data?.content) {
+          setProducts(response.data.content);
+          setTotalElements(response.data.totalElements);
+        }
+      } catch (error) {
+        console.error("Failed to fetch products:", error);
+        message.error(t("fetchProductsFailed"));
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.error("Failed to fetch products:", error);
-      message.error(t('fetchProductsFailed'));
-    } finally {
-      setLoading(false);
-    }
-  }, [activeType, activeCategory, currentPage, sortBy, showSortControl]);
+    },
+    [activeType, activeCategory, currentPage, sortBy, showSortControl]
+  );
 
   useEffect(() => {
     fetchProducts(searchQuery);
   }, [activeType, activeCategory, currentPage, sortBy]);
 
   // Debounce 自动搜索：输入停顿 300ms 后自动触发搜索并重置分页
-  useDebounce(searchQuery, 300, (debouncedValue) => {
+  useDebounce(searchQuery, 300, debouncedValue => {
     setCurrentPage(1);
     fetchProducts(debouncedValue, 1);
   });
@@ -148,10 +171,16 @@ function Square(props: { activeType: string }) {
   // 根据产品类型获取引导语
   const getSlogan = (): { title: string; subtitleKey: string } | null => {
     switch (activeType) {
-      case 'AGENT_SKILL':
-        return { title: t('skillMarketTitle'), subtitleKey: 'skillMarketSubtitle' };
-      case 'WORKER':
-        return { title: t('workerMarketTitle'), subtitleKey: 'workerMarketSubtitle' };
+      case "AGENT_SKILL":
+        return {
+          title: t("skillMarketTitle"),
+          subtitleKey: "skillMarketSubtitle",
+        };
+      case "WORKER":
+        return {
+          title: t("workerMarketTitle"),
+          subtitleKey: "workerMarketSubtitle",
+        };
       default:
         return null;
     }
@@ -186,30 +215,35 @@ function Square(props: { activeType: string }) {
         navigate(`/workers/${product.productId}`);
         break;
       default:
-        console.log(t('unknownProductType'), product.type);
+        console.log(t("unknownProductType"), product.type);
     }
   };
 
   const slogan = getSlogan();
 
-  return (
-    <Layout>
-      <div className="flex flex-col h-[calc(100vh-96px)] overflow-auto scrollbar-hide" ref={scrollContainerRef}>
+  const content = (
+    <>
+      <div
+        className={`flex flex-col overflow-auto scrollbar-hide ${embedded ? "h-full" : "h-[calc(100vh-96px)]"}`}
+        ref={scrollContainerRef}
+      >
         {/* 引导语 */}
         {slogan && (
-            <div className="text-center py-6">
-              <h1 className="text-4xl font-bold mb-3">{slogan.title}</h1>
-              <p className="text-gray-500 text-base flex items-baseline justify-center gap-0">
-                <Trans
-                  t={t}
-                  i18nKey={slogan.subtitleKey}
-                  values={{ count: totalElements }}
-                  components={{
-                    1: <span className="text-4xl font-extrabold text-blue-500 mx-1 tabular-nums leading-none relative -top-[2px]" />
-                  }}
-                />
-              </p>
-            </div>
+          <div className="text-center py-6">
+            <h1 className="text-4xl font-bold mb-3">{slogan.title}</h1>
+            <p className="text-gray-500 text-base flex items-baseline justify-center gap-0">
+              <Trans
+                t={t}
+                i18nKey={slogan.subtitleKey}
+                values={{ count: totalElements }}
+                components={{
+                  1: (
+                    <span className="text-4xl font-extrabold text-blue-500 mx-1 tabular-nums leading-none relative -top-[2px]" />
+                  ),
+                }}
+              />
+            </p>
+          </div>
         )}
 
         {/* 搜索区域 */}
@@ -220,9 +254,17 @@ function Square(props: { activeType: string }) {
               <div className="flex items-center justify-center text-sm">
                 <div className="inline-flex items-center p-[3px] rounded-xl bg-gray-100/80 backdrop-blur-sm">
                   {[
-                    { label: t('sortMostDownloads'), value: 'DOWNLOAD_COUNT', icon: <DownloadOutlined /> },
-                    { label: t('sortRecentlyUpdated'), value: 'UPDATED_AT', icon: <ClockCircleOutlined /> },
-                  ].map((option) => (
+                    {
+                      label: t("sortMostDownloads"),
+                      value: "DOWNLOAD_COUNT",
+                      icon: <DownloadOutlined />,
+                    },
+                    {
+                      label: t("sortRecentlyUpdated"),
+                      value: "UPDATED_AT",
+                      icon: <ClockCircleOutlined />,
+                    },
+                  ].map(option => (
                     <button
                       key={option.value}
                       type="button"
@@ -233,13 +275,16 @@ function Square(props: { activeType: string }) {
                       className={`
                         flex items-center gap-1.5 px-3.5 py-1.5 rounded-[10px] text-[13px] font-medium
                         transition-all duration-200 ease-out cursor-pointer select-none
-                        ${sortBy === option.value
-                          ? 'bg-white text-gray-900 shadow-[0_1px_3px_rgba(0,0,0,0.08),0_0_0_1px_rgba(0,0,0,0.04)]'
-                          : 'text-gray-500 hover:text-gray-700'
+                        ${
+                          sortBy === option.value
+                            ? "bg-white text-gray-900 shadow-[0_1px_3px_rgba(0,0,0,0.08),0_0_0_1px_rgba(0,0,0,0.04)]"
+                            : "text-gray-500 hover:text-gray-700"
                         }
                       `}
                     >
-                      <span className={`text-xs transition-colors duration-200 ${sortBy === option.value ? 'text-indigo-500' : 'text-gray-500'}`}>
+                      <span
+                        className={`text-xs transition-colors duration-200 ${sortBy === option.value ? "text-indigo-500" : "text-gray-500"}`}
+                      >
                         {option.icon}
                       </span>
                       {option.label}
@@ -253,9 +298,9 @@ function Square(props: { activeType: string }) {
             <div className="flex items-center justify-center">
               <div className="w-full max-w-3xl">
                 <Input
-                  placeholder={t('searchPlaceholder')}
+                  placeholder={t("searchPlaceholder")}
                   value={searchQuery}
-                  onChange={(e) => handleSearchChange(e.target.value)}
+                  onChange={e => handleSearchChange(e.target.value)}
                   onPressEnter={handleSearch}
                   size="large"
                   suffix={
@@ -292,39 +337,52 @@ function Square(props: { activeType: string }) {
             ) : (
               <>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-[1600px] mx-auto animate-in fade-in duration-300">
-                  {filteredModels.map((product) => (
-                    product.type === 'AGENT_SKILL' ? (
+                  {filteredModels.map(product =>
+                    product.type === "AGENT_SKILL" ? (
                       <SkillCard
+                        actions={renderActions?.(product)}
                         key={product.productId}
                         name={product.name}
                         description={product.description}
-                        releaseDate={dayjs(product.createAt).format("YYYY-MM-DD HH:mm:ss")}
+                        releaseDate={dayjs(product.createAt).format(
+                          "YYYY-MM-DD HH:mm:ss"
+                        )}
                         skillTags={product.skillConfig?.skillTags}
                         downloadCount={product.skillConfig?.downloadCount}
                         onClick={() => handleViewDetail(product)}
                       />
-                    ) : product.type === 'WORKER' ? (
+                    ) : product.type === "WORKER" ? (
                       <WorkerCard
+                        actions={renderActions?.(product)}
                         key={product.productId}
                         name={product.name}
                         description={product.description}
-                        releaseDate={dayjs(product.createAt).format("YYYY-MM-DD HH:mm:ss")}
+                        releaseDate={dayjs(product.createAt).format(
+                          "YYYY-MM-DD HH:mm:ss"
+                        )}
                         workerTags={product.workerConfig?.tags}
                         downloadCount={product.workerConfig?.downloadCount}
                         onClick={() => handleViewDetail(product)}
                       />
                     ) : (
                       <ModelCard
+                        actions={renderActions?.(product)}
                         key={product.productId}
                         icon={getIconString(product.icon, product.name)}
                         name={product.name}
                         description={product.description}
-                        releaseDate={dayjs(product.createAt).format("YYYY-MM-DD HH:mm:ss")}
+                        releaseDate={dayjs(product.createAt).format(
+                          "YYYY-MM-DD HH:mm:ss"
+                        )}
                         onClick={() => handleViewDetail(product)}
-                        onTryNow={activeType === "MODEL_API" ? () => handleTryNow(product) : undefined}
+                        onTryNow={
+                          activeType === "MODEL_API" && !embedded
+                            ? () => handleTryNow(product)
+                            : undefined
+                        }
                       />
                     )
-                  ))}
+                  )}
                   {!loading && filteredModels.length === 0 && (
                     <EmptyState productType={activeType} />
                   )}
@@ -348,14 +406,18 @@ function Square(props: { activeType: string }) {
           </div>
         </div>
       </div>
-      <BackToTopButton container={scrollContainerRef.current!} />
-      <LoginPrompt
-        open={loginPromptOpen}
-        onClose={() => setLoginPromptOpen(false)}
-        contextMessage={t('loginPromptContext')}
-      />
-    </Layout>
+      {!embedded && <BackToTopButton container={scrollContainerRef.current!} />}
+      {!embedded && (
+        <LoginPrompt
+          open={loginPromptOpen}
+          onClose={() => setLoginPromptOpen(false)}
+          contextMessage={t("loginPromptContext")}
+        />
+      )}
+    </>
   );
+
+  return embedded ? content : <Layout>{content}</Layout>;
 }
 
 export default Square;

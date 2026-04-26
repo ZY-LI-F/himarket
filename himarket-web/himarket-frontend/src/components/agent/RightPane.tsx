@@ -1,5 +1,7 @@
 import { Tabs } from "antd";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
+import { MarketDrawer } from "./MarketDrawer";
 import { RoomConfigDrawer } from "./RoomConfigDrawer";
 
 const DEFAULT_ROOM_ID = "room-main";
@@ -7,20 +9,30 @@ const DEFAULT_ROOM_ID = "room-main";
 export function RightPane() {
   const { rid } = useParams();
   const roomId = rid || DEFAULT_ROOM_ID;
+  const [roomConfigRefreshKey, setRoomConfigRefreshKey] = useState(0);
   const rightTabs = [
     {
       key: "room-config",
       label: "Room Config",
       children: (
         <div className="h-full" data-testid="agent-room-config-tab">
-          <RoomConfigDrawer roomId={roomId} />
+          <RoomConfigDrawer refreshKey={roomConfigRefreshKey} roomId={roomId} />
         </div>
       ),
     },
     {
       key: "market",
       label: "Market",
-      children: <div className="h-full" data-testid="agent-market-tab" />,
+      children: (
+        <div className="h-full" data-testid="agent-market-tab">
+          <MarketDrawer
+            onBindingChanged={() =>
+              setRoomConfigRefreshKey(current => current + 1)
+            }
+            roomId={roomId}
+          />
+        </div>
+      ),
     },
   ];
 

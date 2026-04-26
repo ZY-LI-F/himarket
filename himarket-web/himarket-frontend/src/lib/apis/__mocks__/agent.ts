@@ -1,4 +1,8 @@
 import type {
+  Binding,
+  BindingKind,
+  BindingList,
+  CreateBindingRequest,
   CreateRoomRequest,
   CreateWorkspaceRequest,
   Room,
@@ -33,6 +37,7 @@ let taskSequence = 1;
 let workspaces: Workspace[] = [];
 let rooms: Room[] = [];
 let roomConfigs: RoomConfig[] = [];
+let bindings: Binding[] = [];
 let taskRequests: Record<string, StartTaskRequest> = {};
 
 function createError(status: number, code: string, message: string) {
@@ -68,6 +73,119 @@ function findRoomConfig(id: string) {
   const created = defaultRoomConfig(findRoom(id));
   roomConfigs = [...roomConfigs, created];
   return created;
+}
+
+function copyBinding(binding: Binding): Binding {
+  return { ...binding };
+}
+
+function bindingFromRef(params: {
+  kind: BindingKind;
+  productId: string;
+  roomId: string;
+  status: Binding["status"];
+  version: string;
+}): Binding {
+  return {
+    id: `binding-${params.roomId}-${params.kind.toLowerCase()}-${params.productId}`,
+    roomId: params.roomId,
+    kind: params.kind,
+    productId: params.productId,
+    version: params.version,
+    status: params.status,
+    createdAt: now(),
+  };
+}
+
+function bindingsFromConfig(config: RoomConfig): Binding[] {
+  return [
+    bindingFromRef({
+      kind: "MODEL",
+      productId: config.modelId,
+      roomId: config.roomId,
+      status: "ACTIVE",
+      version: "1.0.0",
+    }),
+    ...config.skillBindings.map(binding =>
+      bindingFromRef({
+        kind: "SKILL",
+        productId: binding.productId,
+        roomId: config.roomId,
+        status: binding.status,
+        version: binding.version,
+      })
+    ),
+    ...config.mcpBindings.map(binding =>
+      bindingFromRef({
+        kind: "MCP",
+        productId: binding.productId,
+        roomId: config.roomId,
+        status: binding.status,
+        version: binding.version,
+      })
+    ),
+  ];
+}
+
+function upsertBindingRef(
+  refs: RoomConfig["skillBindings"],
+  productId: string,
+  version: string
+) {
+  if (refs.some(ref => ref.productId === productId)) {
+    return refs.map(ref =>
+      ref.productId === productId
+        ? { ...ref, status: "ACTIVE" as const, version }
+        : ref
+    );
+  }
+  return [...refs, { productId, version, status: "ACTIVE" as const }];
+}
+
+function applyCreatedBinding(config: RoomConfig, binding: Binding): RoomConfig {
+  if (config.roomId !== binding.roomId) return config;
+  if (binding.kind === "MODEL") {
+    return { ...config, modelId: binding.productId };
+  }
+  if (binding.kind === "SKILL") {
+    return {
+      ...config,
+      skillBindings: upsertBindingRef(
+        config.skillBindings,
+        binding.productId,
+        binding.version
+      ),
+    };
+  }
+  return {
+    ...config,
+    mcpBindings: upsertBindingRef(
+      config.mcpBindings,
+      binding.productId,
+      binding.version
+    ),
+  };
+}
+
+function applyDeletedBinding(config: RoomConfig, binding: Binding): RoomConfig {
+  if (config.roomId !== binding.roomId) return config;
+  if (binding.kind === "SKILL") {
+    return {
+      ...config,
+      skillBindings: config.skillBindings.filter(
+        ref => ref.productId !== binding.productId
+      ),
+    };
+  }
+  if (binding.kind === "MCP") {
+    return {
+      ...config,
+      mcpBindings: config.mcpBindings.filter(
+        ref => ref.productId !== binding.productId
+      ),
+    };
+  }
+  return config;
 }
 
 function assertUniqueWorkspaceName(name: string, ignoredId?: string) {
@@ -175,6 +293,7 @@ export function resetAgentMockStore() {
   workspaces = DEFAULT_WORKSPACES.map(workspace => ({ ...workspace }));
   rooms = DEFAULT_ROOMS.map(copyRoom);
   roomConfigs = rooms.map(defaultRoomConfig);
+  bindings = roomConfigs.flatMap(bindingsFromConfig);
   taskRequests = {};
 }
 
@@ -332,6 +451,44 @@ export async function updateRoomConfig(
     room.id === id ? { ...room, ...modelTeamIds(data) } : room
   );
   return copyRoomConfig(updated);
+}
+
+export async function listRoomBindings(id: string): Promise<BindingList> {
+  findRoom(id);
+  return bindings
+    .filter(binding => binding.roomId === id && binding.status === "ACTIVE")
+    .map(copyBinding);
+}
+
+export async function createRoomBinding(
+  id: string,
+  data: CreateBindingRequest
+): Promise<Binding> {
+  findRoom(id);
+  const binding: Binding = {
+    id: nextId("binding"),
+    roomId: id,
+    kind: data.kind,
+    productId: data.productId,
+    version: data.version,
+    status: "ACTIVE",
+    createdAt: now(),
+  };
+  bindings = [...bindings, binding];
+  roomConfigs = roomConfigs.map(config => applyCreatedBinding(config, binding));
+  return copyBinding(binding);
+}
+
+export async function deleteRoomBinding(bindingId: string): Promise<void> {
+  const binding = bindings.find(
+    item => item.id === bindingId && item.status === "ACTIVE"
+  );
+  if (!binding) {
+    throw createError(404, "AGENT_BINDING_NOT_FOUND", "绑定不存在");
+  }
+  const disabled = { ...binding, status: "DISABLED" as const };
+  bindings = bindings.map(item => (item.id === bindingId ? disabled : item));
+  roomConfigs = roomConfigs.map(config => applyDeletedBinding(config, binding));
 }
 
 export async function listTeamTemplates(): Promise<TeamTemplateList> {
