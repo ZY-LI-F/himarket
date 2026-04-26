@@ -26,6 +26,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.alibaba.higress.sdk.model.route.KeyedRoutePredicate;
 import com.alibaba.higress.sdk.model.route.RoutePredicate;
+import com.alibaba.himarket.core.security.AgentEgressHeaders;
 import com.alibaba.himarket.dto.result.agent.AgentAPIResult;
 import com.alibaba.himarket.dto.result.common.DomainResult;
 import com.alibaba.himarket.dto.result.common.PageResult;
@@ -377,11 +378,12 @@ public class HigressOperator extends GatewayOperator<HigressClient> {
                         });
 
         MCPTransportConfig transportConfig = config.toTransportConfig();
-        transportConfig.setHeaders(credentialContext.copyHeaders());
+        transportConfig.setHeaders(
+                AgentEgressHeaders.withHigressHost(
+                        credentialContext.copyHeaders(), transportConfig.getUrl()));
         transportConfig.setQueryParams(credentialContext.copyQueryParams());
 
-        McpClientWrapper mcpClientWrapper =
-                toolManager.getOrCreateClient(config.toTransportConfig());
+        McpClientWrapper mcpClientWrapper = toolManager.getOrCreateClient(transportConfig);
         if (mcpClientWrapper == null) {
             return null;
         }

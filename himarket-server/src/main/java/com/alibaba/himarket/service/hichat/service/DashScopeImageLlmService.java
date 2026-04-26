@@ -22,6 +22,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.himarket.core.exception.ChatError;
+import com.alibaba.himarket.core.security.AgentEgressHeaders;
 import com.alibaba.himarket.dto.result.chat.LlmInvokeResult;
 import com.alibaba.himarket.dto.result.product.ProductResult;
 import com.alibaba.himarket.service.GatewayService;
@@ -173,6 +174,7 @@ public class DashScopeImageLlmService extends AbstractLlmService {
                             (pathValue, pathType) -> pathValue);
 
             request.setUri(uri);
+            request.setHeaders(AgentEgressHeaders.withHigressHost(request.getHeaders(), uri));
         }
 
         Map<String, Object> bodyParams = request.getBodyParams();

@@ -25,6 +25,7 @@ import cn.hutool.core.util.StrUtil;
 import com.alibaba.himarket.core.event.ChatSessionDeletingEvent;
 import com.alibaba.himarket.core.exception.BusinessException;
 import com.alibaba.himarket.core.exception.ErrorCode;
+import com.alibaba.himarket.core.security.AgentEgressHeaders;
 import com.alibaba.himarket.core.security.ContextHolder;
 import com.alibaba.himarket.core.utils.IdGenerator;
 import com.alibaba.himarket.dto.params.chat.CreateChatParam;
@@ -447,7 +448,10 @@ public class ChatService {
                                                     .productId(product.getProductId())
                                                     .transportMode(mode)
                                                     .url(ep.getEndpointUrl())
-                                                    .headers(credentialContext.copyHeaders())
+                                                    .headers(
+                                                            AgentEgressHeaders.withHigressHost(
+                                                                    credentialContext.copyHeaders(),
+                                                                    ep.getEndpointUrl()))
                                                     .queryParams(
                                                             credentialContext.copyQueryParams())
                                                     .build();
@@ -464,7 +468,10 @@ public class ChatService {
                             if (transportConfig == null) {
                                 return null;
                             }
-                            transportConfig.setHeaders(credentialContext.copyHeaders());
+                            transportConfig.setHeaders(
+                                    AgentEgressHeaders.withHigressHost(
+                                            credentialContext.copyHeaders(),
+                                            transportConfig.getUrl()));
                             transportConfig.setQueryParams(credentialContext.copyQueryParams());
                             return transportConfig;
                         })

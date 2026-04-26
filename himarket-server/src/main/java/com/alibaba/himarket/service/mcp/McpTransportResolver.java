@@ -22,6 +22,7 @@ package com.alibaba.himarket.service.mcp;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.himarket.core.exception.BusinessException;
 import com.alibaba.himarket.core.exception.ErrorCode;
+import com.alibaba.himarket.core.security.AgentEgressHeaders;
 import com.alibaba.himarket.dto.result.consumer.ConsumerResult;
 import com.alibaba.himarket.dto.result.consumer.CredentialContext;
 import com.alibaba.himarket.entity.McpServerEndpoint;
@@ -178,7 +179,9 @@ public class McpTransportResolver {
                             .description(product != null ? product.getDescription() : null)
                             .transportMode(transportMode)
                             .url(url)
-                            .headers(resolveAuthHeaders(endpoint, meta, userId))
+                            .headers(
+                                    AgentEgressHeaders.withHigressHost(
+                                            resolveAuthHeaders(endpoint, meta, userId), url))
                             .build());
         }
 

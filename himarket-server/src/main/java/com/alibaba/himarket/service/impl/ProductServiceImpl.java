@@ -29,6 +29,7 @@ import com.alibaba.himarket.core.event.ProductConfigReloadEvent;
 import com.alibaba.himarket.core.event.ProductDeletingEvent;
 import com.alibaba.himarket.core.exception.BusinessException;
 import com.alibaba.himarket.core.exception.ErrorCode;
+import com.alibaba.himarket.core.security.AgentEgressHeaders;
 import com.alibaba.himarket.core.security.ContextHolder;
 import com.alibaba.himarket.core.utils.CacheUtil;
 import com.alibaba.himarket.core.utils.IdGenerator;
@@ -677,7 +678,9 @@ public class ProductServiceImpl implements ProductService {
         }
         CredentialContext credentialContext =
                 consumerService.getDefaultCredential(contextHolder.getUser());
-        transportConfig.setHeaders(credentialContext.copyHeaders());
+        transportConfig.setHeaders(
+                AgentEgressHeaders.withHigressHost(
+                        credentialContext.copyHeaders(), transportConfig.getUrl()));
         transportConfig.setQueryParams(credentialContext.copyQueryParams());
 
         McpToolListResult result = new McpToolListResult();

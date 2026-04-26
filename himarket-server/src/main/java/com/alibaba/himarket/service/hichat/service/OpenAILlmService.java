@@ -2,6 +2,7 @@ package com.alibaba.himarket.service.hichat.service;
 
 import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.json.JSONUtil;
+import com.alibaba.himarket.core.security.AgentEgressHeaders;
 import com.alibaba.himarket.dto.result.product.ProductResult;
 import com.alibaba.himarket.service.GatewayService;
 import com.alibaba.himarket.service.gateway.ModelEndpointResolver;
@@ -45,6 +46,7 @@ public class OpenAILlmService extends AbstractLlmService {
                                 ModelEndpointResolver.resolveBaseUrlPath(
                                         pathValue, pathType, aiProtocols));
         request.setUri(uri);
+        request.setHeaders(AgentEgressHeaders.withHigressHost(request.getHeaders(), uri));
 
         if (BooleanUtil.isTrue(param.getEnableWebSearch())) {
             Map<String, Object> webSearchOptions =

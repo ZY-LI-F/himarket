@@ -25,6 +25,7 @@ import cn.hutool.core.map.MapUtil;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import com.alibaba.himarket.core.event.McpClientRemovedEvent;
+import com.alibaba.himarket.core.security.AgentEgressHeaders;
 import com.alibaba.himarket.core.utils.CacheUtil;
 import com.alibaba.himarket.support.chat.mcp.MCPTransportConfig;
 import com.github.benmanes.caffeine.cache.Cache;
@@ -188,10 +189,9 @@ public class ToolManager {
                         "Unsupported transport: " + config.getTransportMode());
         }
 
-        // Apply authentication headers and query parameters
-        if (MapUtil.isNotEmpty(config.getHeaders())) {
-            builder.headers(config.getHeaders());
-        }
+        Map<String, String> headers =
+                AgentEgressHeaders.withHigressHost(config.getHeaders(), config.getUrl());
+        builder.headers(headers);
         if (MapUtil.isNotEmpty(config.getQueryParams())) {
             builder.queryParams(config.getQueryParams());
         }
