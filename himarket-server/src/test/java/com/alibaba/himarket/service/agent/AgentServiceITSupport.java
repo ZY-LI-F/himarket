@@ -10,6 +10,7 @@ import com.alibaba.himarket.dto.params.agent.UpdateWorkspaceParam;
 import com.alibaba.himarket.repository.agent.AgentBindingRepository;
 import com.alibaba.himarket.repository.agent.AgentRoomConfigRepository;
 import com.alibaba.himarket.repository.agent.AgentRoomRepository;
+import com.alibaba.himarket.repository.agent.AgentTaskRunRepository;
 import com.alibaba.himarket.repository.agent.AgentWorkspaceRepository;
 import com.alibaba.himarket.service.ConsumerService;
 import com.alibaba.himarket.service.McpServerService;
@@ -46,7 +47,8 @@ import org.testcontainers.junit.jupiter.Testcontainers;
         properties = {
             "spring.flyway.enabled=false",
             "spring.jpa.hibernate.ddl-auto=none",
-            "spring.jpa.open-in-view=false"
+            "spring.jpa.open-in-view=false",
+            "hiclaw.bridge.mode=mock"
         })
 abstract class AgentServiceITSupport {
 
@@ -64,6 +66,7 @@ abstract class AgentServiceITSupport {
     @Autowired AgentRoomRepository roomRepository;
     @Autowired AgentRoomConfigRepository roomConfigRepository;
     @Autowired AgentBindingRepository bindingRepository;
+    @Autowired AgentTaskRunRepository taskRunRepository;
     @MockBean ProductService productService;
     @MockBean SkillService skillService;
     @MockBean McpServerService mcpServerService;
@@ -79,6 +82,7 @@ abstract class AgentServiceITSupport {
 
     @BeforeEach
     void resetTables() {
+        taskRunRepository.deleteAllInBatch();
         bindingRepository.deleteAllInBatch();
         roomConfigRepository.deleteAllInBatch();
         roomRepository.deleteAllInBatch();
@@ -167,7 +171,7 @@ abstract class AgentServiceITSupport {
     @ComponentScan(
             basePackages = {
                 "com.alibaba.himarket.dto.converter.agent",
-                "com.alibaba.himarket.service.agent.impl"
+                "com.alibaba.himarket.service.agent"
             })
     static class AgentServiceTestApplication {}
 }

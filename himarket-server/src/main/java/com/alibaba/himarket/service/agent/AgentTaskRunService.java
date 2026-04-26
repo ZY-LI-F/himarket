@@ -5,6 +5,7 @@ import com.alibaba.himarket.dto.result.agent.AgentStartTaskResult;
 import com.alibaba.himarket.dto.result.agent.AgentTaskRunResult;
 import com.alibaba.himarket.dto.result.agent.AgentTaskRunSummaryResult;
 import java.util.List;
+import reactor.core.publisher.Flux;
 
 public interface AgentTaskRunService {
 
@@ -14,5 +15,5 @@ public interface AgentTaskRunService {
 
     AgentTaskRunResult getTask(String userId, String roomId, String taskId);
 
-    String streamTaskEvents(String userId, String roomId, String taskId);
+    Flux<TaskEvent> streamTaskEvents(String userId, String roomId, String taskId);
 }
