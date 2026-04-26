@@ -3,6 +3,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { ChatStream, type AgentChatMessage } from "./ChatStream";
 import { Composer, type AgentFileReference } from "./Composer";
+import { TaskRunPanel } from "./TaskRunPanel";
 import {
   getRoom,
   startRoomTask,
@@ -90,13 +91,17 @@ function useAgentChat(roomId: string) {
   const [error, setError] = useState<string | null>(null);
   const unsubscribeRef = useRef<(() => void) | null>(null);
   const mutations = useMessageMutations(setMessages);
+  const closeSubscription = useCallback(() => {
+    unsubscribeRef.current?.();
+    unsubscribeRef.current = null;
+  }, []);
   const handleTaskEvent = useTaskEventHandler({
     ...mutations,
+    closeSubscription,
     setStreaming,
-    unsubscribeRef,
   });
 
-  useEffect(() => () => unsubscribeRef.current?.(), []);
+  useEffect(() => closeSubscription, [closeSubscription]);
 
   const submitMessage = useCallback(
     async (payload: { fileRefs: string[]; text: string }) => {
@@ -149,26 +154,27 @@ function addSubmittedMessages(
 
 function useTaskEventHandler(params: {
   appendToken: (id: string, token: string) => void;
+  closeSubscription: () => void;
   setStreaming: (value: boolean) => void;
-  unsubscribeRef: React.MutableRefObject<(() => void) | null>;
   updateAssistant: (id: string, patch: Partial<AgentChatMessage>) => void;
 }) {
+  const { appendToken, closeSubscription, setStreaming, updateAssistant } = params;
   return useCallback(
     (assistantId: string, event: TaskEvent) => {
       const token = taskToken(event);
-      if (token) params.appendToken(assistantId, token);
+      if (token) appendToken(assistantId, token);
       if (isTaskFailed(event)) {
-        params.updateAssistant(assistantId, { status: "error" });
-        params.setStreaming(false);
+        updateAssistant(assistantId, { status: "error" });
+        closeSubscription();
+        setStreaming(false);
       }
       if (isTaskDone(event)) {
-        params.updateAssistant(assistantId, { status: "done" });
-        params.unsubscribeRef.current?.();
-        params.unsubscribeRef.current = null;
-        params.setStreaming(false);
+        updateAssistant(assistantId, { status: "done" });
+        closeSubscription();
+        setStreaming(false);
       }
     },
-    [params],
+    [appendToken, closeSubscription, setStreaming, updateAssistant],
   );
 }
 
@@ -215,7 +221,7 @@ export function CenterPane() {
     {
       key: "task-run",
       label: "Task Run",
-      children: <div className="h-full" data-testid="agent-task-run-tab" />,
+      children: <TaskRunPanel roomId={roomId} />,
     },
   ];
 

@@ -17,7 +17,9 @@ export type RoomConfig = components["schemas"]["RoomConfig"];
 export type BindingRef = components["schemas"]["BindingRef"];
 export type TeamTemplate = components["schemas"]["TeamTemplate"];
 export type TeamTemplateList = components["schemas"]["TeamTemplateList"];
-export type StartTaskRequest = components["schemas"]["StartTaskRequest"];
+export type StartTaskRequest = components["schemas"]["StartTaskRequest"] & {
+  teamTemplateId?: string;
+};
 export type StartTaskResponse = components["schemas"]["StartTaskResponse"];
 export type TaskEvent = components["schemas"]["TaskEvent"];
 
@@ -41,10 +43,7 @@ export interface AgentApi {
   deleteWorkspace: (id: string) => Promise<void>;
   setActiveWorkspace: (id: string) => Promise<Workspace>;
   listRooms: (workspaceId: string) => Promise<RoomList>;
-  createRoom: (
-    workspaceId: string,
-    data: CreateRoomRequest,
-  ) => Promise<Room>;
+  createRoom: (workspaceId: string, data: CreateRoomRequest) => Promise<Room>;
   getRoom: (id: string) => Promise<Room>;
   updateRoom: (id: string, data: UpdateRoomRequest) => Promise<Room>;
   deleteRoom: (id: string) => Promise<void>;
