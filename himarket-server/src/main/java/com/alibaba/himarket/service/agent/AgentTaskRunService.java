@@ -16,4 +16,6 @@ public interface AgentTaskRunService {
     AgentTaskRunResult getTask(String userId, String roomId, String taskId);
 
     Flux<TaskEvent> streamTaskEvents(String userId, String roomId, String taskId);
+
+    TaskEvent appendTaskEvent(String taskId, TaskEvent event);
 }

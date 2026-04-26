@@ -106,9 +106,7 @@ public class AgentTaskRunServiceImpl implements AgentTaskRunService {
                     .build();
         } catch (RuntimeException e) {
             TaskEvent event = failureEvent(localTaskId, e);
-            TaskEvent persisted = persistEvent(localTaskId, event);
-            publish(localTaskId, persisted);
-            completeSink(localTaskId);
+            appendTaskEvent(localTaskId, event);
             log.error(
                     "Failed to start HiClaw bridge task: room={}, task={}", roomId, localTaskId, e);
             return AgentStartTaskResult.builder().taskId(localTaskId).status(STATUS_FAILED).build();
@@ -128,6 +126,16 @@ public class AgentTaskRunServiceImpl implements AgentTaskRunService {
         transactionTemplate.executeWithoutResult(
                 status -> findTaskForTenant(taskId, roomId, tenantId));
         return sinkFor(taskId).asFlux();
+    }
+
+    @Override
+    public TaskEvent appendTaskEvent(String taskId, TaskEvent event) {
+        TaskEvent persisted = persistEvent(taskId, event);
+        publish(taskId, persisted);
+        if (isTerminal(persisted)) {
+            completeSink(taskId);
+        }
+        return persisted;
     }
 
     private AgentTaskRunEntity createPendingRun(
@@ -184,16 +192,10 @@ public class AgentTaskRunServiceImpl implements AgentTaskRunService {
                 .streamEvents(taskId)
                 .subscribe(
                         event -> {
-                            TaskEvent persisted = persistEvent(taskId, event);
-                            publish(taskId, persisted);
-                            if (isTerminal(persisted)) {
-                                completeSink(taskId);
-                            }
+                            appendTaskEvent(taskId, event);
                         },
                         error -> {
-                            TaskEvent persisted = persistEvent(taskId, failureEvent(taskId, error));
-                            publish(taskId, persisted);
-                            completeSink(taskId);
+                            appendTaskEvent(taskId, failureEvent(taskId, error));
                             log.error("HiClaw bridge SSE failed: task={}", taskId, error);
                         });
     }

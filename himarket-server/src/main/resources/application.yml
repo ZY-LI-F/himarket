@@ -2,6 +2,7 @@ hiclaw:
   bridge:
     url: http://localhost:8088
     token: ${HICLAW_BRIDGE_TOKEN:dev-token}
+    webhook-secret: ${HICLAW_WEBHOOK_SECRET:dev-secret}
     mode: mock
 nacos:
   agent-workspace:
