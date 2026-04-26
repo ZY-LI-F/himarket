@@ -15,6 +15,7 @@ import com.alibaba.himarket.entity.agent.AgentWorkspaceEntity;
 import com.alibaba.himarket.repository.agent.AgentRoomConfigRepository;
 import com.alibaba.himarket.repository.agent.AgentRoomRepository;
 import com.alibaba.himarket.repository.agent.AgentWorkspaceRepository;
+import com.alibaba.himarket.service.agent.AgentNacosSyncService;
 import com.alibaba.himarket.service.agent.AgentRoomService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -42,6 +43,7 @@ public class AgentRoomServiceImpl implements AgentRoomService {
     private final AgentWorkspaceRepository workspaceRepository;
     private final AgentRoomConverter roomConverter;
     private final ObjectMapper objectMapper;
+    private final AgentNacosSyncService nacosSyncService;
 
     @Override
     @Transactional(readOnly = true)
@@ -63,6 +65,7 @@ public class AgentRoomServiceImpl implements AgentRoomService {
         AgentRoomEntity room = buildRoom(userId, workspace, param);
         AgentRoomEntity savedRoom = roomRepository.save(room);
         roomConfigRepository.save(buildDefaultConfig(userId, savedRoom));
+        publishRoomSnapshot(savedRoom.getRoomUid(), true);
         return roomConverter.toResult(savedRoom);
     }
 
@@ -79,7 +82,9 @@ public class AgentRoomServiceImpl implements AgentRoomService {
         room.setModelId(param.getModelId());
         room.setTeamTemplateId(param.getTeamTemplateId());
         room.setUpdatedAt(LocalDateTime.now());
-        return roomConverter.toResult(roomRepository.saveAndFlush(room));
+        AgentRoomEntity saved = roomRepository.saveAndFlush(room);
+        publishRoomSnapshot(saved.getRoomUid(), false);
+        return roomConverter.toResult(saved);
     }
 
     @Override
@@ -88,6 +93,15 @@ public class AgentRoomServiceImpl implements AgentRoomService {
         room.setDeletedAt(LocalDateTime.now());
         room.setUpdatedAt(room.getDeletedAt());
         roomRepository.saveAndFlush(room);
+        publishRoomSnapshot(room.getRoomUid(), true);
+    }
+
+    private void publishRoomSnapshot(String roomId, boolean workspaceListChanged) {
+        if (workspaceListChanged) {
+            nacosSyncService.publishWorkspaceList();
+        }
+        nacosSyncService.publishRoomConfig(roomId);
+        nacosSyncService.publishSkillBinding(roomId);
     }
 
     private AgentRoomEntity buildRoom(

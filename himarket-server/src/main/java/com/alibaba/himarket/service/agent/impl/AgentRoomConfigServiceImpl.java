@@ -12,6 +12,7 @@ import com.alibaba.himarket.entity.agent.AgentRoomConfigEntity;
 import com.alibaba.himarket.entity.agent.AgentRoomEntity;
 import com.alibaba.himarket.repository.agent.AgentRoomConfigRepository;
 import com.alibaba.himarket.repository.agent.AgentRoomRepository;
+import com.alibaba.himarket.service.agent.AgentNacosSyncService;
 import com.alibaba.himarket.service.agent.AgentRoomConfigService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -40,6 +41,7 @@ public class AgentRoomConfigServiceImpl implements AgentRoomConfigService {
     private final AgentRoomRepository roomRepository;
     private final AgentRoomConfigConverter roomConfigConverter;
     private final ObjectMapper objectMapper;
+    private final AgentNacosSyncService nacosSyncService;
 
     @Override
     @Transactional(readOnly = true)
@@ -58,7 +60,9 @@ public class AgentRoomConfigServiceImpl implements AgentRoomConfigService {
         LocalDateTime now = LocalDateTime.now();
         updateRoom(room, result, now);
         updateConfig(config, result, now);
-        return saveConfig(config);
+        AgentRoomConfigResult saved = saveConfig(config);
+        nacosSyncService.publishRoomConfig(roomId);
+        return saved;
     }
 
     private AgentRoomConfigResult saveConfig(AgentRoomConfigEntity config) {

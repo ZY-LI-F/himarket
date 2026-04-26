@@ -10,6 +10,7 @@ import com.alibaba.himarket.dto.result.agent.AgentWorkspacePageResult;
 import com.alibaba.himarket.dto.result.agent.AgentWorkspaceResult;
 import com.alibaba.himarket.entity.agent.AgentWorkspaceEntity;
 import com.alibaba.himarket.repository.agent.AgentWorkspaceRepository;
+import com.alibaba.himarket.service.agent.AgentNacosSyncService;
 import com.alibaba.himarket.service.agent.AgentWorkspaceService;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +32,7 @@ public class AgentWorkspaceServiceImpl implements AgentWorkspaceService {
 
     private final AgentWorkspaceRepository workspaceRepository;
     private final AgentWorkspaceConverter workspaceConverter;
+    private final AgentNacosSyncService nacosSyncService;
 
     @Override
     @Transactional(readOnly = true)
@@ -55,7 +57,9 @@ public class AgentWorkspaceServiceImpl implements AgentWorkspaceService {
                         .createdAt(now)
                         .updatedAt(now)
                         .build();
-        return workspaceConverter.toResult(workspaceRepository.save(workspace));
+        AgentWorkspaceEntity saved = workspaceRepository.save(workspace);
+        publishWorkspaceSnapshot();
+        return workspaceConverter.toResult(saved);
     }
 
     @Override
@@ -72,7 +76,9 @@ public class AgentWorkspaceServiceImpl implements AgentWorkspaceService {
         workspace.setDescription(param.getDescription());
         workspace.setDefaultTeamTemplateId(param.getDefaultTeamTemplateId());
         workspace.setUpdatedAt(LocalDateTime.now());
-        return workspaceConverter.toResult(workspaceRepository.saveAndFlush(workspace));
+        AgentWorkspaceEntity saved = workspaceRepository.saveAndFlush(workspace);
+        publishWorkspaceSnapshot();
+        return workspaceConverter.toResult(saved);
     }
 
     @Override
@@ -82,6 +88,7 @@ public class AgentWorkspaceServiceImpl implements AgentWorkspaceService {
         workspace.setDeletedAt(LocalDateTime.now());
         workspace.setUpdatedAt(workspace.getDeletedAt());
         workspaceRepository.saveAndFlush(workspace);
+        publishWorkspaceSnapshot();
     }
 
     @Override
@@ -91,7 +98,14 @@ public class AgentWorkspaceServiceImpl implements AgentWorkspaceService {
         workspaceRepository.deactivateTenantWorkspaces(tenantId);
         workspace.setActive(Boolean.TRUE);
         workspace.setUpdatedAt(LocalDateTime.now());
-        return workspaceConverter.toResult(workspaceRepository.saveAndFlush(workspace));
+        AgentWorkspaceEntity saved = workspaceRepository.saveAndFlush(workspace);
+        publishWorkspaceSnapshot();
+        return workspaceConverter.toResult(saved);
+    }
+
+    private void publishWorkspaceSnapshot() {
+        nacosSyncService.publishWorkspaceList();
+        nacosSyncService.publishTeamTemplateList();
     }
 
     private AgentWorkspaceEntity findWorkspace(String userId, String workspaceId) {

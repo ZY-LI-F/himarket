@@ -3,3 +3,8 @@ hiclaw:
     url: http://localhost:8088
     token: ${HICLAW_BRIDGE_TOKEN:dev-token}
     mode: mock
+nacos:
+  agent-workspace:
+    namespace: agent-workspace
+    group: AGENT_WORKSPACE
+    auto-create-namespace: true

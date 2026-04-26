@@ -71,6 +71,7 @@ abstract class AgentServiceITSupport {
     @MockBean SkillService skillService;
     @MockBean McpServerService mcpServerService;
     @MockBean ConsumerService consumerService;
+    @MockBean AgentNacosSyncService nacosSyncService;
 
     @DynamicPropertySource
     static void mysqlProperties(DynamicPropertyRegistry registry) {

@@ -19,6 +19,7 @@ import com.alibaba.himarket.service.McpServerService;
 import com.alibaba.himarket.service.ProductService;
 import com.alibaba.himarket.service.SkillService;
 import com.alibaba.himarket.service.agent.AgentBindingService;
+import com.alibaba.himarket.service.agent.AgentNacosSyncService;
 import com.alibaba.himarket.support.enums.ProductType;
 import com.alibaba.himarket.support.enums.SubscriptionStatus;
 import java.time.LocalDateTime;
@@ -51,6 +52,7 @@ public class AgentBindingServiceImpl implements AgentBindingService {
     private final SkillService skillService;
     private final McpServerService mcpServerService;
     private final ConsumerService consumerService;
+    private final AgentNacosSyncService nacosSyncService;
 
     @Override
     @Transactional(readOnly = true)
@@ -81,7 +83,9 @@ public class AgentBindingServiceImpl implements AgentBindingService {
                         .status(STATUS_ACTIVE)
                         .createdAt(LocalDateTime.now())
                         .build();
-        return bindingConverter.toResult(bindingRepository.save(binding));
+        AgentBindingEntity saved = bindingRepository.save(binding);
+        nacosSyncService.publishSkillBinding(roomId);
+        return bindingConverter.toResult(saved);
     }
 
     @Override
@@ -95,6 +99,7 @@ public class AgentBindingServiceImpl implements AgentBindingService {
         binding.setStatus(STATUS_DISABLED);
         binding.setDeletedAt(LocalDateTime.now());
         bindingRepository.saveAndFlush(binding);
+        nacosSyncService.publishSkillBinding(binding.getRoomUid());
     }
 
     private void findRoomForTenant(String roomId, String tenantId) {
