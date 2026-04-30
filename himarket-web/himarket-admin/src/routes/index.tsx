@@ -12,6 +12,7 @@ import Login from "@/pages/Login";
 import ModelDashboard from "@/pages/ModelDashboard";
 import McpMonitor from "@/pages/McpMonitor";
 import SandboxConsoles from "@/pages/SandboxConsoles";
+import WorkerTeamProducts from "@/pages/WorkerTeamProducts";
 
 export const router = createBrowserRouter([
   {
@@ -58,6 +59,10 @@ export const router = createBrowserRouter([
             element: <ProductTypePage productType="WORKER" />,
           },
           {
+            path: "worker-teams",
+            element: <WorkerTeamProducts />,
+          },
+          {
             path: "agent-api",
             element: <ProductTypePage productType="AGENT_API" />,
           },
@@ -92,11 +97,11 @@ export const router = createBrowserRouter([
         element: <NacosConsoles />,
       },
       {
-        path: 'consoles/sandbox',
+        path: "consoles/sandbox",
         element: <SandboxConsoles />,
       },
       {
-        path: 'observability',
+        path: "observability",
         element: <Navigate to="/observability/model-dashboard" replace />,
       },
       {
