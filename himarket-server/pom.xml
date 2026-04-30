@@ -364,6 +364,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <excludedGroups>${surefire.excludedGroups}</excludedGroups>
+                    <failIfNoSpecifiedTests>false</failIfNoSpecifiedTests>
                 </configuration>
             </plugin>
         </plugins>
