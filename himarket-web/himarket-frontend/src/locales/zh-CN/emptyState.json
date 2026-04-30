@@ -23,6 +23,10 @@
     "WORKER": {
       "title": "Worker 市场",
       "desc": "这里是 Worker 市场，开发者可以使用适用于 HiClaw 和 OpenClaw 的 Worker。"
+    },
+    "WORKER_TEAM": {
+      "title": "Worker Teams",
+      "desc": "这里是 Worker Team 市场，开发者可以订阅由 Leader、成员 Worker 和 Skills 组成的团队包。"
     }
   },
   "defaultTitle": "产品市场",

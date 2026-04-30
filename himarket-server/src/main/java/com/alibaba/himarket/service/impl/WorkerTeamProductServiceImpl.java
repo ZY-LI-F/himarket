@@ -2,15 +2,23 @@ package com.alibaba.himarket.service.impl;
 
 import com.alibaba.himarket.core.exception.BusinessException;
 import com.alibaba.himarket.core.exception.ErrorCode;
+import com.alibaba.himarket.core.utils.IdGenerator;
+import com.alibaba.himarket.dto.params.consumer.CreateSubscriptionParam;
 import com.alibaba.himarket.dto.params.worker.UpsertWorkerTeamProductParam;
 import com.alibaba.himarket.dto.params.worker.WorkerTeamProductMemberParam;
 import com.alibaba.himarket.dto.result.common.PageResult;
+import com.alibaba.himarket.dto.result.consumer.ConsumerResult;
+import com.alibaba.himarket.dto.result.product.SubscriptionResult;
 import com.alibaba.himarket.dto.result.worker.WorkerTeamProductMemberResult;
 import com.alibaba.himarket.dto.result.worker.WorkerTeamProductResult;
+import com.alibaba.himarket.entity.ProductSubscription;
 import com.alibaba.himarket.entity.WorkerTeamProductEntity;
 import com.alibaba.himarket.entity.WorkerTeamProductMemberEntity;
+import com.alibaba.himarket.repository.SubscriptionRepository;
 import com.alibaba.himarket.repository.WorkerTeamProductRepository;
+import com.alibaba.himarket.service.ConsumerService;
 import com.alibaba.himarket.service.WorkerTeamProductService;
+import com.alibaba.himarket.support.enums.SubscriptionStatus;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -36,6 +44,10 @@ public class WorkerTeamProductServiceImpl implements WorkerTeamProductService {
     private final WorkerTeamProductRepository repository;
 
     private final ObjectMapper objectMapper;
+
+    private final ConsumerService consumerService;
+
+    private final SubscriptionRepository subscriptionRepository;
 
     @Override
     @Transactional
@@ -70,6 +82,41 @@ public class WorkerTeamProductServiceImpl implements WorkerTeamProductService {
                 .findById(productId)
                 .map(this::toResult)
                 .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND, RESOURCE, productId));
+    }
+
+    @Override
+    @Transactional
+    public SubscriptionResult subscribeWorkerTeamProduct(CreateSubscriptionParam param) {
+        WorkerTeamProductEntity team =
+                repository
+                        .findById(param.getProductId())
+                        .orElseThrow(
+                                () ->
+                                        new BusinessException(
+                                                ErrorCode.NOT_FOUND,
+                                                RESOURCE,
+                                                param.getProductId()));
+
+        ConsumerResult primaryConsumer = consumerService.getPrimaryConsumer();
+        String consumerId = primaryConsumer.getConsumerId();
+        if (subscriptionRepository
+                .findByConsumerIdAndProductId(consumerId, team.getProductId())
+                .isPresent()) {
+            throw new BusinessException(ErrorCode.INVALID_REQUEST, "Duplicate subscription");
+        }
+
+        ProductSubscription subscription =
+                ProductSubscription.builder()
+                        .subscriptionId(IdGenerator.genSubscriptionId())
+                        .productId(team.getProductId())
+                        .consumerId(consumerId)
+                        .status(SubscriptionStatus.APPROVED)
+                        .build();
+
+        ProductSubscription saved = subscriptionRepository.save(subscription);
+        SubscriptionResult result = new SubscriptionResult().convertFrom(saved);
+        result.setProductName(team.getName());
+        return result;
     }
 
     private void syncMembers(

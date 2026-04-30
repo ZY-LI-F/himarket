@@ -23,6 +23,10 @@
     "WORKER": {
       "title": "Worker Market",
       "desc": "Use Workers compatible with HiClaw and OpenClaw."
+    },
+    "WORKER_TEAM": {
+      "title": "Worker Teams",
+      "desc": "Subscribe to team bundles composed of a leader, member Workers, and Skills."
     }
   },
   "defaultTitle": "Product Market",

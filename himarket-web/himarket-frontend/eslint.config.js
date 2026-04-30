@@ -6,6 +6,17 @@ import tseslint from "typescript-eslint";
 import eslintPluginPrettierRecommended from "eslint-plugin-prettier/recommended";
 
 export default [
+  {
+    ignores: [
+      "node_modules/**",
+      "build/**",
+      "dist/**",
+      "**/*.min.js",
+      "**/*-min.js",
+      "**/*.bundle.js",
+      "tailwind.config.js",
+    ],
+  },
   ...tseslint.configs.recommended,
   eslintPluginPrettierRecommended,
   {
@@ -19,6 +30,21 @@ export default [
         "warn",
         { allowConstantExport: true },
       ],
+      "prettier/prettier": ["warn", { endOfLine: "auto" }],
+      "@typescript-eslint/no-empty-object-type": "warn",
+      "@typescript-eslint/no-explicit-any": "warn",
+      "@typescript-eslint/no-unused-expressions": "warn",
+      "@typescript-eslint/no-unused-vars": [
+        "warn",
+        {
+          argsIgnorePattern: "^_",
+          caughtErrorsIgnorePattern: "^_",
+          varsIgnorePattern: "^_",
+        },
+      ],
+      "react-hooks/preserve-manual-memoization": "warn",
+      "react-hooks/refs": "warn",
+      "react-hooks/set-state-in-render": "warn",
       // 允许在 effect 中调用异步函数，只要状态更新在异步回调中
       "react-hooks/set-state-in-effect": "off",
     },

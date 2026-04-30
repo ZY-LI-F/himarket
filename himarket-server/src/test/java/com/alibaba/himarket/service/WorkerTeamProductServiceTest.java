@@ -8,14 +8,20 @@ import static org.mockito.Mockito.when;
 
 import com.alibaba.himarket.core.exception.BusinessException;
 import com.alibaba.himarket.core.exception.ErrorCode;
+import com.alibaba.himarket.dto.params.consumer.CreateSubscriptionParam;
 import com.alibaba.himarket.dto.params.worker.UpsertWorkerTeamProductParam;
 import com.alibaba.himarket.dto.params.worker.WorkerTeamProductMemberParam;
 import com.alibaba.himarket.dto.result.common.PageResult;
+import com.alibaba.himarket.dto.result.consumer.ConsumerResult;
+import com.alibaba.himarket.dto.result.product.SubscriptionResult;
 import com.alibaba.himarket.dto.result.worker.WorkerTeamProductResult;
+import com.alibaba.himarket.entity.ProductSubscription;
 import com.alibaba.himarket.entity.WorkerTeamProductEntity;
 import com.alibaba.himarket.entity.WorkerTeamProductMemberEntity;
+import com.alibaba.himarket.repository.SubscriptionRepository;
 import com.alibaba.himarket.repository.WorkerTeamProductRepository;
 import com.alibaba.himarket.service.impl.WorkerTeamProductServiceImpl;
+import com.alibaba.himarket.support.enums.SubscriptionStatus;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import java.util.Optional;
@@ -33,6 +39,10 @@ class WorkerTeamProductServiceTest {
 
     @Mock private WorkerTeamProductRepository repository;
 
+    @Mock private ConsumerService consumerService;
+
+    @Mock private SubscriptionRepository subscriptionRepository;
+
     private WorkerTeamProductService service;
 
     private ObjectMapper objectMapper;
@@ -40,7 +50,9 @@ class WorkerTeamProductServiceTest {
     @BeforeEach
     void setUp() {
         objectMapper = new ObjectMapper();
-        service = new WorkerTeamProductServiceImpl(repository, objectMapper);
+        service =
+                new WorkerTeamProductServiceImpl(
+                        repository, objectMapper, consumerService, subscriptionRepository);
     }
 
     @Test
@@ -111,6 +123,53 @@ class WorkerTeamProductServiceTest {
                 .isInstanceOf(BusinessException.class)
                 .extracting("code")
                 .isEqualTo(ErrorCode.NOT_FOUND.name());
+    }
+
+    @Test
+    void subscribeWorkerTeamProductCreatesApprovedSubscription() {
+        WorkerTeamProductEntity team = existingEntity("team-product-1", "Support Team");
+        ConsumerResult consumer = new ConsumerResult();
+        consumer.setConsumerId("consumer-1");
+        when(repository.findById("team-product-1")).thenReturn(Optional.of(team));
+        when(consumerService.getPrimaryConsumer()).thenReturn(consumer);
+        when(subscriptionRepository.findByConsumerIdAndProductId("consumer-1", "team-product-1"))
+                .thenReturn(Optional.empty());
+        when(subscriptionRepository.save(any(ProductSubscription.class)))
+                .thenAnswer(invocation -> invocation.getArgument(0));
+
+        SubscriptionResult result = service.subscribeWorkerTeamProduct(subscriptionParam());
+
+        ArgumentCaptor<ProductSubscription> captor =
+                ArgumentCaptor.forClass(ProductSubscription.class);
+        verify(subscriptionRepository).save(captor.capture());
+        ProductSubscription saved = captor.getValue();
+        assertThat(saved.getConsumerId()).isEqualTo("consumer-1");
+        assertThat(saved.getProductId()).isEqualTo("team-product-1");
+        assertThat(saved.getStatus()).isEqualTo(SubscriptionStatus.APPROVED);
+        assertThat(result.getProductName()).isEqualTo("Support Team");
+        assertThat(result.getStatus()).isEqualTo(SubscriptionStatus.APPROVED.name());
+    }
+
+    @Test
+    void subscribeWorkerTeamProductRejectsDuplicateSubscription() {
+        WorkerTeamProductEntity team = existingEntity("team-product-1", "Support Team");
+        ConsumerResult consumer = new ConsumerResult();
+        consumer.setConsumerId("consumer-1");
+        when(repository.findById("team-product-1")).thenReturn(Optional.of(team));
+        when(consumerService.getPrimaryConsumer()).thenReturn(consumer);
+        when(subscriptionRepository.findByConsumerIdAndProductId("consumer-1", "team-product-1"))
+                .thenReturn(Optional.of(ProductSubscription.builder().build()));
+
+        assertThatThrownBy(() -> service.subscribeWorkerTeamProduct(subscriptionParam()))
+                .isInstanceOf(BusinessException.class)
+                .extracting("code")
+                .isEqualTo(ErrorCode.INVALID_REQUEST.name());
+    }
+
+    private CreateSubscriptionParam subscriptionParam() {
+        CreateSubscriptionParam param = new CreateSubscriptionParam();
+        param.setProductId("team-product-1");
+        return param;
     }
 
     private UpsertWorkerTeamProductParam upsertParam(String productId, String name) {

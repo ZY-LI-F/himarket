@@ -1,19 +1,27 @@
 import { InboxOutlined } from "@ant-design/icons";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 
 interface EmptyStateProps {
   productType: string;
 }
 
 export function EmptyState({ productType }: EmptyStateProps) {
-  const { t } = useTranslation('emptyState');
+  const { t } = useTranslation("emptyState");
 
-  const typeKey = ['MODEL_API', 'MCP_SERVER', 'AGENT_API', 'REST_API', 'AGENT_SKILL', 'WORKER'].includes(productType)
+  const typeKey = [
+    "MODEL_API",
+    "MCP_SERVER",
+    "AGENT_API",
+    "REST_API",
+    "AGENT_SKILL",
+    "WORKER",
+    "WORKER_TEAM",
+  ].includes(productType)
     ? productType
     : null;
 
-  const title = typeKey ? t(`types.${typeKey}.title`) : t('defaultTitle');
-  const desc = typeKey ? t(`types.${typeKey}.desc`) : t('defaultDesc');
+  const title = typeKey ? t(`types.${typeKey}.title`) : t("defaultTitle");
+  const desc = typeKey ? t(`types.${typeKey}.desc`) : t("defaultDesc");
 
   return (
     <div className="col-span-full flex flex-col items-center justify-center py-24 text-center">

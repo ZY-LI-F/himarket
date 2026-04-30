@@ -1,7 +1,9 @@
 package com.alibaba.himarket.service;
 
+import com.alibaba.himarket.dto.params.consumer.CreateSubscriptionParam;
 import com.alibaba.himarket.dto.params.worker.UpsertWorkerTeamProductParam;
 import com.alibaba.himarket.dto.result.common.PageResult;
+import com.alibaba.himarket.dto.result.product.SubscriptionResult;
 import com.alibaba.himarket.dto.result.worker.WorkerTeamProductResult;
 import org.springframework.data.domain.Pageable;
 
@@ -12,4 +14,6 @@ public interface WorkerTeamProductService {
     PageResult<WorkerTeamProductResult> listWorkerTeamProducts(Pageable pageable);
 
     WorkerTeamProductResult getWorkerTeamProduct(String productId);
+
+    SubscriptionResult subscribeWorkerTeamProduct(CreateSubscriptionParam param);
 }

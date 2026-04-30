@@ -1,4 +1,12 @@
-import { createContext, useContext, useState, useEffect, useMemo, type ReactNode } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useState,
+  useEffect,
+  useMemo,
+  type ReactNode,
+} from "react";
 import { getPortalProfile } from "../lib/apis/portal";
 
 export interface TabItem {
@@ -16,6 +24,7 @@ const ALL_TABS: TabItem[] = [
   { key: "apis", path: "/apis", label: "tabs.apis" },
   { key: "skills", path: "/skills", label: "tabs.skills" },
   { key: "workers", path: "/workers", label: "tabs.workers" },
+  { key: "workerTeams", path: "/teams", label: "tabs.workerTeams" },
 ];
 
 interface PortalConfigContextValue {
@@ -27,7 +36,7 @@ interface PortalConfigContextValue {
 }
 
 const PortalConfigContext = createContext<PortalConfigContextValue>({
-  portalId: '',
+  portalId: "",
   isMenuVisible: () => true,
   visibleTabs: ALL_TABS,
   firstVisiblePath: "/models",
@@ -39,20 +48,23 @@ export function usePortalConfig() {
 }
 
 export function PortalConfigProvider({ children }: { children: ReactNode }) {
-  const [portalId, setPortalId] = useState('');
-  const [menuVisibility, setMenuVisibility] = useState<Record<string, boolean> | null>(null);
+  const [portalId, setPortalId] = useState("");
+  const [menuVisibility, setMenuVisibility] = useState<Record<
+    string,
+    boolean
+  > | null>(null);
   const [loading, setLoading] = useState(true);
 
   const fetchConfig = () => {
     getPortalProfile()
-      .then((res) => {
+      .then(res => {
         console.log("[PortalConfig] API response:", JSON.stringify(res));
-        setPortalId(res.data?.portalId || '');
+        setPortalId(res.data?.portalId || "");
         const mv = res.data?.portalUiConfig?.menuVisibility ?? null;
         console.log("[PortalConfig] menuVisibility:", JSON.stringify(mv));
         setMenuVisibility(mv);
       })
-      .catch((err) => {
+      .catch(err => {
         console.warn("[PortalConfig] API failed:", err);
         setMenuVisibility(null);
       })
@@ -65,16 +77,22 @@ export function PortalConfigProvider({ children }: { children: ReactNode }) {
     fetchConfig();
   }, []);
 
-  const isMenuVisible = (key: string): boolean => {
-    if (menuVisibility == null) return true;
-    return menuVisibility[key] ?? true;
-  };
+  const isMenuVisible = useCallback(
+    (key: string): boolean => {
+      if (menuVisibility == null) return true;
+      return menuVisibility[key] ?? true;
+    },
+    [menuVisibility]
+  );
 
   const visibleTabs = useMemo(() => {
-    const result = ALL_TABS.filter((tab) => isMenuVisible(tab.key));
-    console.log("[PortalConfig] visibleTabs:", result.map((t) => t.key));
+    const result = ALL_TABS.filter(tab => isMenuVisible(tab.key));
+    console.log(
+      "[PortalConfig] visibleTabs:",
+      result.map(t => t.key)
+    );
     return result;
-  }, [menuVisibility]);
+  }, [isMenuVisible]);
 
   const firstVisiblePath = useMemo(
     () => (visibleTabs.length > 0 ? visibleTabs[0].path : "/models"),
@@ -82,7 +100,15 @@ export function PortalConfigProvider({ children }: { children: ReactNode }) {
   );
 
   return (
-    <PortalConfigContext.Provider value={{ portalId, isMenuVisible, visibleTabs, firstVisiblePath, loading }}>
+    <PortalConfigContext.Provider
+      value={{
+        portalId,
+        isMenuVisible,
+        visibleTabs,
+        firstVisiblePath,
+        loading,
+      }}
+    >
       {children}
     </PortalConfigContext.Provider>
   );

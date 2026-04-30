@@ -11,15 +11,19 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.alibaba.himarket.controller.admin.WorkerTeamProductAdminController;
 import com.alibaba.himarket.controller.portal.WorkerTeamProductPortalController;
+import com.alibaba.himarket.controller.portal.WorkerTeamSubscriptionPortalController;
 import com.alibaba.himarket.core.advice.ExceptionAdvice;
 import com.alibaba.himarket.core.advice.ResponseAdvice;
 import com.alibaba.himarket.core.exception.BusinessException;
 import com.alibaba.himarket.core.exception.ErrorCode;
+import com.alibaba.himarket.dto.params.consumer.CreateSubscriptionParam;
 import com.alibaba.himarket.dto.params.worker.UpsertWorkerTeamProductParam;
 import com.alibaba.himarket.dto.result.common.PageResult;
+import com.alibaba.himarket.dto.result.product.SubscriptionResult;
 import com.alibaba.himarket.dto.result.worker.WorkerTeamProductMemberResult;
 import com.alibaba.himarket.dto.result.worker.WorkerTeamProductResult;
 import com.alibaba.himarket.service.WorkerTeamProductService;
+import com.alibaba.himarket.support.enums.SubscriptionStatus;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -40,7 +44,8 @@ import org.springframework.test.web.servlet.MockMvc;
 @WebMvcTest(
         controllers = {
             WorkerTeamProductAdminController.class,
-            WorkerTeamProductPortalController.class
+            WorkerTeamProductPortalController.class,
+            WorkerTeamSubscriptionPortalController.class
         })
 @Import({
     ResponseAdvice.class,
@@ -70,6 +75,8 @@ class WorkerTeamProductAdminControllerSliceTest {
                 .thenReturn(PageResult.of(List.of(product), 0, 20, 1));
         when(service.upsertWorkerTeamProduct(any(UpsertWorkerTeamProductParam.class)))
                 .thenReturn(product);
+        when(service.subscribeWorkerTeamProduct(any(CreateSubscriptionParam.class)))
+                .thenReturn(subscription("team-product-1"));
         when(service.getWorkerTeamProduct(eq("team-product-1"))).thenReturn(product);
         when(service.getWorkerTeamProduct(eq("missing")))
                 .thenThrow(
@@ -128,6 +135,19 @@ class WorkerTeamProductAdminControllerSliceTest {
                 .andExpect(status().is4xxClientError());
     }
 
+    @Test
+    void portalSubscriptionEndpointRequiresDeveloperAndReturnsSubscription() throws Exception {
+        mockMvc.perform(
+                        post("/api/portal/subscriptions/team")
+                                .with(user("developer").roles("DEVELOPER"))
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content("{\"productId\":\"team-product-1\"}"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.productId").value("team-product-1"))
+                .andExpect(jsonPath("$.data.productName").value("Support Team"))
+                .andExpect(jsonPath("$.data.status").value("APPROVED"));
+    }
+
     private WorkerTeamProductResult product(String productId) {
         return WorkerTeamProductResult.builder()
                 .productId(productId)
@@ -148,6 +168,16 @@ class WorkerTeamProductAdminControllerSliceTest {
                                         .ordinal(1)
                                         .build()))
                 .build();
+    }
+
+    private SubscriptionResult subscription(String productId) {
+        SubscriptionResult result = new SubscriptionResult();
+        result.setSubscriptionId("subscription-1");
+        result.setConsumerId("consumer-1");
+        result.setProductId(productId);
+        result.setProductName("Support Team");
+        result.setStatus(SubscriptionStatus.APPROVED.name());
+        return result;
     }
 
     @TestConfiguration
