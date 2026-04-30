@@ -24,7 +24,6 @@ import com.alibaba.himarket.core.response.Response;
 import java.lang.reflect.Method;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.MethodParameter;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -83,9 +82,6 @@ public class ResponseAdvice implements ResponseBodyAdvice<Object> {
         if (body instanceof Response) {
             return body;
         }
-
-        // Set success status
-        response.setStatusCode(HttpStatus.OK);
 
         if (body instanceof String) {
             return JSONUtil.toJsonStr(Response.ok(body));

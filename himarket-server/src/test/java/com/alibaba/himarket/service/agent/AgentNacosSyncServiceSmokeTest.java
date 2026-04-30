@@ -100,6 +100,7 @@ class AgentNacosSyncServiceSmokeTest {
     @MockBean private SkillService skillService;
     @MockBean private McpServerService mcpServerService;
     @MockBean private ConsumerService consumerService;
+    @MockBean private HiClawBridgeClient hiClawBridgeClient;
 
     @BeforeEach
     void setUp() {

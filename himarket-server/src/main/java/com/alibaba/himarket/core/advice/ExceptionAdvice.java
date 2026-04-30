@@ -25,7 +25,10 @@ import com.alibaba.himarket.core.response.Response;
 import com.alibaba.himarket.exception.agent.BindingForbiddenException;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -75,6 +78,21 @@ public class ExceptionAdvice {
         log.warn("[Validation Exception] invalid parameters: {}", message);
         return ResponseEntity.status(ErrorCode.INVALID_PARAMETER.getStatus())
                 .body(Response.fail(ErrorCode.INVALID_PARAMETER.name(), message));
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<Response<Void>> handleAccessDeniedException(AccessDeniedException e) {
+        log.warn("[Access Denied] message: {}", e.getMessage());
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(Response.fail("FORBIDDEN", e.getMessage()));
+    }
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<Response<Void>> handleMethodNotSupportedException(
+            HttpRequestMethodNotSupportedException e) {
+        log.warn("[Method Not Supported] message: {}", e.getMessage());
+        return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED)
+                .body(Response.fail("METHOD_NOT_ALLOWED", e.getMessage()));
     }
 
     @ExceptionHandler(Exception.class)
