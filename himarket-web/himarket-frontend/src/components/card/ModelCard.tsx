@@ -18,12 +18,7 @@ function HomeModelCard() {
         }}
       >
         <div
-          className="absolute w-full h-full z-[1] animate-[fadeIn_0.8s_ease-out_0.2s_both] group-hover:opacity-60 transition-opacity duration-500"
-          style={{
-            background: "linear-gradient(306deg, #0D53FF 1%, rgba(80, 98, 244, 0.7) 59%, rgba(99, 102, 241, 0.09) 98%)",
-            opacity: .4,
-            mixBlendMode: "multiply"
-          }}
+          className="absolute w-full h-full z-[1] animate-[fadeIn_0.8s_ease-out_0.2s_both] bg-gradient-to-br from-colorPrimary/70 via-colorPrimary/40 to-transparent opacity-50 mix-blend-multiply group-hover:opacity-70 transition-opacity duration-500"
         />
         <div className="h-full relative z-[3] flex flex-col justify-between p-6">
           <div className="flex flex-col gap-4">

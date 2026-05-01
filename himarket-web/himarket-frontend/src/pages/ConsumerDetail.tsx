@@ -8,6 +8,7 @@ import type { ApiResponse } from "../types";
 import "../styles/table.css";
 import APIs, { type IConsumer, type ISubscription } from "../lib/apis";
 import request from "../lib/request";
+import { Card } from "../components/common";
 
 
 function ConsumerDetailPage() {
@@ -79,15 +80,18 @@ function ConsumerDetailPage() {
     <Layout>
       {consumer ? (
         <div className="w-full h-full ">
-          <div className="min-h-[calc(100vh-96px)] pb-8 bg-white backdrop-blur-xl rounded-2xl shadow-sm border border-white/40 overflow-hidden">
+          <Card className="min-h-[calc(100vh-96px)] bg-white/90 backdrop-blur-xl border-claude-neutral-200 shadow-claude-sm overflow-hidden">
             {/* 消费者头部 - 返回按钮 + 消费者名称 */}
-            <div className="p-6">
+            <div className="mb-2">
+              <div className="mb-3 inline-flex rounded-claude-full bg-colorPrimaryBgHover px-3 py-1 text-xs font-semibold uppercase tracking-normal text-colorPrimary">
+                Consumer
+              </div>
               <div className="flex items-center gap-3">
                 <ArrowLeftOutlined
                   onClick={() => navigate('/consumers')}
-                  className="text-sm"
+                  className="text-sm text-claude-neutral-600 hover:text-colorPrimary"
                 />
-                <h1 className="text-2xl font-semibold text-gray-900">
+                <h1 className="text-2xl font-semibold text-claude-neutral-900">
                   {consumer.name}
                 </h1>
               </div>
@@ -97,10 +101,10 @@ function ConsumerDetailPage() {
               activeKey={activeTab}
               onChange={setActiveTab}
               size="large"
-              className="px-6"
+              className="mt-4"
             >
               <Tabs.TabPane tab="基本信息" key="basic">
-                <div className="border border-[#e5e5e5] rounded-lg mt-2">
+                <div className="border border-claude-neutral-200 rounded-claude-lg mt-2 overflow-hidden">
                   <AuthConfig consumerId={consumerId!} />
                 </div>
               </Tabs.TabPane>
@@ -144,7 +148,7 @@ function ConsumerDetailPage() {
                 />
               </Tabs.TabPane>
             </Tabs>
-          </div>
+          </Card>
         </div>
       ) : (
         <div className="flex items-center justify-center h-64">

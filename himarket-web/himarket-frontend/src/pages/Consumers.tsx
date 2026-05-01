@@ -7,6 +7,7 @@ import { message, Modal } from "antd";
 import { Link, useSearchParams } from "react-router-dom";
 import { formatDateTime } from "../lib/utils";
 import APIs, { type IConsumer, type IGetPrimaryConsumerResp } from "../lib/apis";
+import { Card, Empty } from "../components/common";
 
 const { Title } = Typography;
 
@@ -153,7 +154,7 @@ function ConsumersPage() {
                 setShowModifyPrimaryConsumerModal(true);
                 fetchConsumersForSelect(undefined, 1, 1000, true);
               }}
-              className="px-2 py-1 gap-2 cursor-pointer rounded-md bg-black/70 text-white">
+              className="px-2 py-1 gap-2 cursor-pointer rounded-md bg-colorPrimary text-white shadow-claude-sm">
               <span> 默认消费者 </span>
               <EditOutlined />
             </div>
@@ -189,7 +190,7 @@ function ConsumersPage() {
           </Link>
           <Button
             disabled={record.consumerId === primaryConsumer?.consumerId}
-            className="rounded-lg" icon={<DeleteOutlined className={record.consumerId === primaryConsumer?.consumerId ? "" : "text-[#EF4444]"} />}
+            className="rounded-lg" icon={<DeleteOutlined className={record.consumerId === primaryConsumer?.consumerId ? "" : "text-red-500"} />}
             onClick={() => handleDelete(record)}>
           </Button>
         </Space>
@@ -206,9 +207,12 @@ function ConsumersPage() {
       <div className="w-full ">
 
         {/* 主内容区域 - glass-morphism 风格 */}
-        <div className="min-h-[calc(100vh-96px)] bg-white backdrop-blur-xl rounded-2xl shadow-xs border border-white/40 p-6">
+        <Card className="min-h-[calc(100vh-96px)] bg-white/90 backdrop-blur-xl border-claude-neutral-200 shadow-claude-sm">
           <div className="mb-5">
-            <Title level={2} className="text-gray-900">
+            <div className="mb-3 inline-flex rounded-claude-full bg-colorPrimaryBgHover px-3 py-1 text-xs font-semibold uppercase tracking-normal text-colorPrimary">
+              Consumers
+            </div>
+            <Title level={2} className="text-claude-neutral-900">
               {productId ? '产品订阅管理' : '消费者管理'}
             </Title>
           </div>
@@ -245,13 +249,14 @@ function ConsumersPage() {
           </div>
 
           {/* 表格 */}
-          <div className="overflow-hidden rounded-lg border border-[#e5e5e5]">
+          <div className="overflow-hidden rounded-claude-lg border border-claude-neutral-200">
             <Table
               columns={columns}
               dataSource={consumers}
               rowKey="consumerId"
               loading={loading}
               pagination={false}
+              locale={{ emptyText: <Empty compact description="暂无消费者" /> }}
             />
           </div>
           <div className="flex w-full justify-end items-center p-3">
@@ -270,7 +275,7 @@ function ConsumersPage() {
               }}
             />
           </div>
-        </div>
+        </Card>
 
         {/* 新增消费者模态框 */}
         <Modal

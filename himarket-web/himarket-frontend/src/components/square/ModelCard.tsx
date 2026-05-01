@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { ProductIconRenderer } from "../icon/ProductIconRenderer";
+import { Card } from "../common";
 
 interface ModelCardProps {
   actions?: ReactNode;
@@ -23,21 +24,22 @@ export function ModelCard({
   onTryNow,
 }: ModelCardProps) {
   return (
-    <div
+    <Card
+      variant="interactive"
       onClick={onClick}
       className="
-        group bg-white/70 backdrop-blur-sm rounded-2xl p-5
-        border border-gray-100/80
+        group h-full min-h-[200px]
+        bg-white/85 backdrop-blur-sm
+        border-claude-neutral-200
         cursor-pointer
         transition-all duration-300 ease-out
-        hover:bg-white hover:shadow-lg hover:shadow-gray-200/50 hover:-translate-y-0.5 hover:border-gray-200/60
+        hover:bg-white hover:shadow-claude-md hover:-translate-y-0.5 hover:border-colorPrimary/40
         active:scale-[0.98] active:duration-150
         relative
         overflow-hidden
-        min-h-[200px]
-        flex flex-col
       "
     >
+      <div className="relative flex h-full min-h-[152px] flex-col">
       {/* 上部：图标和名称 */}
       <div className="flex items-center gap-3 mb-3">
         <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-colorPrimary/10 to-colorPrimary/5 flex items-center justify-center flex-shrink-0 overflow-hidden">
@@ -120,6 +122,7 @@ export function ModelCard({
           </div>
         </div>
       )}
-    </div>
+      </div>
+    </Card>
   );
 }

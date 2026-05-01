@@ -8,10 +8,7 @@ function HomeChatCard() {
   return (
     <CommonCard to="/chats">
       <div
-        className="absolute w-full h-full z-[1] animate-[fadeIn_0.8s_ease-out_0.2s_both]"
-        style={{
-          background: "linear-gradient(324deg, #C6CFFF 0%, #E1E6FF 29%, #FFFFFF 100%)",
-        }}
+        className="absolute w-full h-full z-[1] animate-[fadeIn_0.8s_ease-out_0.2s_both] bg-gradient-to-br from-colorPrimary/20 via-colorPrimaryBgHover to-white"
       />
       <div className="h-full relative z-[3] flex flex-col justify-between p-6">
         <div className="flex flex-col gap-4">

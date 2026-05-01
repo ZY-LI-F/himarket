@@ -1,5 +1,6 @@
 import { DownloadOutlined } from "@ant-design/icons";
 import type { ReactNode } from "react";
+import { Card } from "../common";
 
 interface SkillCardProps {
   actions?: ReactNode;
@@ -21,18 +22,19 @@ export function SkillCard({
   onClick,
 }: SkillCardProps) {
   return (
-    <div
+    <Card
+      variant="interactive"
       onClick={onClick}
       className="
-        group bg-white/70 backdrop-blur-sm rounded-2xl p-5
-        border border-gray-100/80
+        group h-full bg-white/85 backdrop-blur-sm
+        border-claude-neutral-200
         cursor-pointer
         transition-all duration-300 ease-out
-        hover:bg-white hover:shadow-lg hover:shadow-gray-200/50 hover:-translate-y-0.5 hover:border-gray-200/60
+        hover:bg-white hover:shadow-claude-md hover:-translate-y-0.5 hover:border-colorPrimary/40
         active:scale-[0.98] active:duration-150
-        h-[200px] flex flex-col
       "
     >
+      <div className="flex h-[152px] flex-col">
       {/* 名称 + 下载数 */}
       <div className="flex items-center gap-3 mb-3">
         <h3 className="text-base font-semibold text-gray-800 truncate flex-1 group-hover:text-gray-900 transition-colors">
@@ -71,6 +73,7 @@ export function SkillCard({
           {actions && <div className="flex-shrink-0">{actions}</div>}
         </div>
       </div>
-    </div>
+      </div>
+    </Card>
   );
 }

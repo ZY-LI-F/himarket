@@ -11,10 +11,7 @@ function HomeAgentCard() {
   return (
     <CommonCard to="/agents">
       <div
-        className="absolute w-full h-full z-[1] animate-[fadeIn_0.8s_ease-out_0.2s_both]"
-        style={{
-          background: "linear-gradient(324deg, #C6C8FF 0%, #E1E2FF 21%, #FFFFFF 99%)",
-        }}
+        className="absolute w-full h-full z-[1] animate-[fadeIn_0.8s_ease-out_0.2s_both] bg-gradient-to-br from-colorPrimary/20 via-colorPrimaryBgHover to-white"
       />
       <div className="h-full relative z-[3] flex flex-col justify-between p-6">
         <div className="h-full relative flex flex-col gap-4">
@@ -41,13 +38,13 @@ function HomeAgentCard() {
               </TextTooltip>
             </div>
             <div className="flex justify-start">
-              <TextTooltip className="flex-1 max-w-[90%] animate-[fadeInLeft_0.7s_ease-out_0.8s_both] group-hover:-translate-x-2 group-hover:scale-105 transition-all duration-300" style={{ boxShadow: "0px 8px 24px 0px rgba(71, 71, 235, 0.08)" }} placement="l" classNames={{ root: "bg-[#F9FAFB]" }}>
+              <TextTooltip className="flex-1 max-w-[90%] animate-[fadeInLeft_0.7s_ease-out_0.8s_both] group-hover:-translate-x-2 group-hover:scale-105 transition-all duration-300" style={{ boxShadow: "0px 8px 24px 0px rgba(71, 71, 235, 0.08)" }} placement="l" classNames={{ root: "bg-claude-neutral-50" }}>
                 <div className="flex flex-col gap-2 w-full p-2">
                   <span className="text-colorPrimaryBorderHover text-xs">
                     正在为您生成旅行计划
                   </span>
-                  <div className="w-full h-2 rounded group-hover:w-3/4 transition-all duration-300" style={{ background: "linear-gradient(90deg, rgba(224, 231, 255, 0.7) 0%, rgba(224, 231, 255, 0.2) 100%)" }}></div>
-                  <div className="w-full h-2 rounded group-hover:w-2/3 transition-all duration-300 delay-75" style={{ background: "linear-gradient(90deg, rgba(224, 231, 255, 0.7) 0%, rgba(224, 231, 255, 0.2) 100%)" }}></div>
+                  <div className="w-full h-2 rounded bg-gradient-to-r from-colorPrimaryBgHover to-white/40 group-hover:w-3/4 transition-all duration-300"></div>
+                  <div className="w-full h-2 rounded bg-gradient-to-r from-colorPrimaryBgHover to-white/40 group-hover:w-2/3 transition-all duration-300 delay-75"></div>
                 </div>
               </TextTooltip>
             </div>

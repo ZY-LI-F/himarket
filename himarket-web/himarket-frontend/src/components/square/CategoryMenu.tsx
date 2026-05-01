@@ -25,7 +25,7 @@ export function CategoryMenu({ categories, activeCategory, onSelectCategory, loa
           {Array.from({ length: 5 }).map((_, i) => (
             <div
               key={i}
-              className="h-8 rounded-full bg-gray-200 animate-pulse"
+              className="h-8 rounded-full bg-claude-neutral-200 animate-pulse"
               style={{ width: `${60 + i * 12}px` }}
             />
           ))}
@@ -42,8 +42,8 @@ export function CategoryMenu({ categories, activeCategory, onSelectCategory, loa
                   px-4 py-1.5 rounded-full cursor-pointer whitespace-nowrap
                   transition-all duration-300 ease-in-out text-sm font-medium
                   ${isActive
-                    ? "bg-gray-900 text-white shadow-md"
-                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                    ? "bg-colorPrimary text-white shadow-claude-sm"
+                    : "bg-claude-neutral-100 text-claude-neutral-700 hover:bg-colorPrimaryBgHover hover:text-colorPrimary"
                   }
                 `}
               >
@@ -52,7 +52,7 @@ export function CategoryMenu({ categories, activeCategory, onSelectCategory, loa
                   <span
                     className={`
                       ml-1.5 text-xs px-1.5 py-0.5 rounded-full
-                      ${isActive ? "bg-white/20 text-white" : "bg-gray-200 text-gray-600"}
+                      ${isActive ? "bg-white/20 text-white" : "bg-claude-neutral-200 text-claude-neutral-600"}
                     `}
                   >
                     {category.count}
