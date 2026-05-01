@@ -12,6 +12,7 @@ import {
   RobotOutlined,
   SettingOutlined,
   TagsOutlined,
+  TeamOutlined,
   ThunderboltOutlined,
   UserOutlined,
 } from "@ant-design/icons";
@@ -85,6 +86,12 @@ const navigation: readonly NavigationItem[] = [
     cn: "产品类别",
     href: "/product-categories",
     icon: TagsOutlined,
+  },
+  {
+    name: "Worker Team Products",
+    cn: "Worker Team 产品",
+    href: "/worker-team-products",
+    icon: TeamOutlined,
   },
   {
     name: "实例管理",

@@ -12,6 +12,7 @@ import Login from "@/pages/Login";
 import ModelDashboard from "@/pages/ModelDashboard";
 import McpMonitor from "@/pages/McpMonitor";
 import SandboxConsoles from "@/pages/SandboxConsoles";
+import WorkerTeamProducts from "@/pages/WorkerTeamProducts";
 
 export const router = createBrowserRouter([
   {
@@ -78,6 +79,10 @@ export const router = createBrowserRouter([
       {
         path: "product-categories/:categoryId",
         element: <ProductCategoryDetail />,
+      },
+      {
+        path: "worker-team-products",
+        element: <WorkerTeamProducts />,
       },
       {
         path: "consoles",

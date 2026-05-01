@@ -10,6 +10,7 @@ import ApiDetail from "./pages/ApiDetail";
 import Consumers from "./pages/Consumers";
 import ConsumerDetail from "./pages/ConsumerDetail";
 import GettingStarted from "./pages/GettingStarted";
+import HomePage from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Profile from "./pages/Profile";
@@ -76,6 +77,7 @@ export function Router() {
       <MenuRedirectGuard />
       <Routes>
         <Route path="/" element={<DynamicHome />} />
+        <Route path="/home" element={<HomePage />} />
         <Route path="/models" element={<Square activeType="MODEL_API" />} />
         <Route path="/mcp" element={<McpSquare />} />
         <Route

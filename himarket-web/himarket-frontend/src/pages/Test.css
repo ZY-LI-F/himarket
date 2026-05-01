@@ -7,20 +7,20 @@
 
 .test-container h1 {
   text-align: center;
-  color: #333;
+  color: var(--color-neutral-800);
   margin-bottom: 2rem;
 }
 
 .demo-section {
   margin-bottom: 3rem;
   padding: 1.5rem;
-  border: 1px solid #e0e0e0;
+  border: 1px solid var(--color-neutral-200);
   border-radius: 8px;
-  background: #fafafa;
+  background: var(--color-neutral-50);
 }
 
 .demo-section h2 {
-  color: #555;
+  color: var(--color-neutral-600);
   margin-bottom: 1rem;
   font-size: 1.2rem;
 }
@@ -45,12 +45,12 @@
 .text-flow-primary {
   background-image: linear-gradient(
     to right,
-    #ff0000,
-    #ffffff 12.5%,
-    #ff0000 25%,
-    #ffffff 37.5%,
-    #ff0000 50%,
-    #ff0000 100%
+    var(--color-semantic-error),
+    white 12.5%,
+    var(--color-semantic-error) 25%,
+    white 37.5%,
+    var(--color-semantic-error) 50%,
+    var(--color-semantic-error) 100%
   );
   -webkit-text-fill-color: transparent;
   -webkit-background-clip: text;
@@ -63,12 +63,12 @@
 .text-flow-secondary {
   background-image: linear-gradient(
     to right,
-    #000000,
-    #000000 50%,
-    #ffffff 62.5%,
-    #000000 75%,
-    #ffffff 87.5%,
-    #000000 100%
+    var(--color-neutral-900),
+    var(--color-neutral-900) 50%,
+    white 62.5%,
+    var(--color-neutral-900) 75%,
+    white 87.5%,
+    var(--color-neutral-900) 100%
   );
   -webkit-text-fill-color: transparent;
   -webkit-background-clip: text;
@@ -80,12 +80,12 @@
 .text-flow-grey {
   background-image: linear-gradient(
     to right,
-    #4b5563,
-    #ffffff 12.5%,
-    #4b5563 25%,
-    #ffffff 37.5%,
-    #4b5563 50%,
-    #4b5563 100%
+    var(--color-neutral-600),
+    white 12.5%,
+    var(--color-neutral-600) 25%,
+    white 37.5%,
+    var(--color-neutral-600) 50%,
+    var(--color-neutral-600) 100%
   );
   -webkit-text-fill-color: transparent;
   -webkit-background-clip: text;
@@ -99,12 +99,12 @@
 .text-flow-blue {
   background-image: linear-gradient(
     to right,
-    #0066cc,
-    #ffffff 12.5%,
-    #0066cc 25%,
-    #ffffff 37.5%,
-    #0066cc 50%,
-    #0066cc 100%
+    var(--color-semantic-info),
+    white 12.5%,
+    var(--color-semantic-info) 25%,
+    white 37.5%,
+    var(--color-semantic-info) 50%,
+    var(--color-semantic-info) 100%
   );
   -webkit-text-fill-color: transparent;
   -webkit-background-clip: text;
@@ -117,12 +117,12 @@
 .text-flow-green {
   background-image: linear-gradient(
     to right,
-    #00cc00,
-    #ffffff 12.5%,
-    #00cc00 25%,
-    #ffffff 37.5%,
-    #00cc00 50%,
-    #00cc00 100%
+    var(--color-semantic-success),
+    white 12.5%,
+    var(--color-semantic-success) 25%,
+    white 37.5%,
+    var(--color-semantic-success) 50%,
+    var(--color-semantic-success) 100%
   );
   -webkit-text-fill-color: transparent;
   -webkit-background-clip: text;
@@ -135,12 +135,12 @@
 .text-flow-purple {
   background-image: linear-gradient(
     to right,
-    #6600cc,
-    #ffffff 12.5%,
-    #6600cc 25%,
-    #ffffff 37.5%,
-    #6600cc 50%,
-    #6600cc 100%
+    color-mix(in srgb, var(--color-brand) 55%, var(--color-semantic-info)),
+    white 12.5%,
+    color-mix(in srgb, var(--color-brand) 55%, var(--color-semantic-info)) 25%,
+    white 37.5%,
+    color-mix(in srgb, var(--color-brand) 55%, var(--color-semantic-info)) 50%,
+    color-mix(in srgb, var(--color-brand) 55%, var(--color-semantic-info)) 100%
   );
   -webkit-text-fill-color: transparent;
   -webkit-background-clip: text;
@@ -200,4 +200,4 @@
     font-size: 2.5rem;
     margin: 0 1rem;
   }
-} 
+}
