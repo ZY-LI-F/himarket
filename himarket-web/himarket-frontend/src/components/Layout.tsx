@@ -9,65 +9,115 @@ interface LayoutProps {
   loading?: boolean;
 }
 
-export function Layout({ children, className = "", loading = false }: LayoutProps) {
+export function Layout({
+  children,
+  className = "",
+  loading = false,
+}: LayoutProps) {
   return (
-    <div className={`min-h-screen flex flex-col ${className}`} >
+    <div
+      className={`min-h-screen flex flex-col bg-claude-neutral-50 text-claude-neutral-900 font-claude-sans ${className}`}
+    >
       <div
-        className={`min-h-screen  fixed w-full h-full z-[1]`}
+        aria-hidden="true"
+        className="fixed inset-0 z-[1] min-h-screen w-full"
         style={{
-          // background: "linear-gradient(254deg, rgba(234, 228, 248, .7) 32%, rgba(215, 229, 243, 0.7) 93%)",
-          backgroundImage: `url(${bgImage})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-          backgroundAttachment: 'fixed',
+          backgroundImage: `linear-gradient(135deg, color-mix(in srgb, var(--color-brand-surface-tint) 72%, transparent), color-mix(in srgb, var(--color-neutral-50) 92%, transparent)), url(${bgImage})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          backgroundAttachment: "fixed",
         }}
-      ></div>
+      />
       <div
-        className={`min-h-screen  fixed w-full h-full z-[2]`}
-        style={{ backdropFilter: 'blur(204px)' }}
-      ></div>
+        aria-hidden="true"
+        className="fixed inset-0 z-[2] min-h-screen w-full bg-claude-neutral-50/55"
+        style={{ backdropFilter: "blur(72px)" }}
+      />
       <Header />
-      <div className="flex-1 min-h-0 relative z-10">
-        <main className="h-full">
-          <div className="w-full mx-auto px-8 h-full">
+      <div className="relative z-10 flex min-h-0 flex-1 flex-col">
+        <main className="min-h-0 flex-1">
+          <div className="mx-auto h-full w-full max-w-[1600px] px-4 sm:px-6 lg:px-8">
             {loading ? (
               <div className="space-y-8 py-8">
-                {/* 页面标题骨架屏 */}
                 <div className="text-center mb-8">
-                  <Skeleton.Input active size="large" style={{ width: 300, height: 48, margin: '0 auto 16px' }} />
-                  <Skeleton.Input active size="small" style={{ width: '80%', height: 24, margin: '0 auto' }} />
+                  <Skeleton.Input
+                    active
+                    size="large"
+                    style={{ width: 300, height: 48, margin: "0 auto 16px" }}
+                  />
+                  <Skeleton.Input
+                    active
+                    size="small"
+                    style={{ width: "80%", height: 24, margin: "0 auto" }}
+                  />
                 </div>
 
-                {/* 搜索框骨架屏 */}
                 <div className="flex justify-center mb-8">
                   <div className="relative w-full max-w-2xl">
-                    <Skeleton.Input active size="large" style={{ width: '100%', height: 40 }} />
+                    <Skeleton.Input
+                      active
+                      size="large"
+                      style={{ width: "100%", height: 40 }}
+                    />
                   </div>
                 </div>
 
-                {/* 子标题骨架屏 */}
                 <div className="mb-6">
-                  <Skeleton.Input active size="small" style={{ width: 200, height: 32 }} />
+                  <Skeleton.Input
+                    active
+                    size="small"
+                    style={{ width: 200, height: 32 }}
+                  />
                 </div>
 
-                {/* 内容区域骨架屏 */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
                   {Array.from({ length: 6 }).map((_, index) => (
-                    <div key={index} className="h-full rounded-lg shadow-lg bg-white p-4">
+                    <div
+                      key={index}
+                      className="h-full rounded-claude-lg border border-claude-neutral-200/80 bg-claude-neutral-50/85 p-4 shadow-claude-sm"
+                    >
                       <div className="flex items-start space-x-4">
                         <Skeleton.Avatar size={48} active />
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center justify-between mb-2">
-                            <Skeleton.Input active size="small" style={{ width: 120 }} />
-                            <Skeleton.Input active size="small" style={{ width: 60 }} />
+                            <Skeleton.Input
+                              active
+                              size="small"
+                              style={{ width: 120 }}
+                            />
+                            <Skeleton.Input
+                              active
+                              size="small"
+                              style={{ width: 60 }}
+                            />
                           </div>
-                          <Skeleton.Input active size="small" style={{ width: 80, marginBottom: 8 }} />
-                          <Skeleton.Input active size="small" style={{ width: '100%', marginBottom: 12 }} />
-                          <Skeleton.Input active size="small" style={{ width: '100%', marginBottom: 12 }} />
+                          <Skeleton.Input
+                            active
+                            size="small"
+                            style={{ width: 80, marginBottom: 8 }}
+                          />
+                          <Skeleton.Input
+                            active
+                            size="small"
+                            style={{ width: "100%", marginBottom: 12 }}
+                          />
+                          <Skeleton.Input
+                            active
+                            size="small"
+                            style={{ width: "100%", marginBottom: 12 }}
+                          />
                           <div className="flex items-center justify-between">
-                            <Skeleton.Input active size="small" style={{ width: 60 }} />
-                            <Skeleton.Input active size="small" style={{ width: 80 }} />
+                            <Skeleton.Input
+                              active
+                              size="small"
+                              style={{ width: 60 }}
+                            />
+                            <Skeleton.Input
+                              active
+                              size="small"
+                              style={{ width: 80 }}
+                            />
                           </div>
                         </div>
                       </div>
@@ -80,8 +130,18 @@ export function Layout({ children, className = "", loading = false }: LayoutProp
             )}
           </div>
         </main>
-        {/* <Footer /> */}
+        <footer
+          aria-label="Site footer"
+          className="mt-auto border-t border-claude-neutral-200/70 bg-claude-neutral-50/70 backdrop-blur-md"
+        >
+          <div className="mx-auto flex w-full max-w-[1600px] flex-col gap-1 px-4 py-3 text-xs text-claude-neutral-500 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
+            <span className="font-medium text-claude-neutral-700">
+              HiMarket
+            </span>
+            <span>Enterprise AI Marketplace</span>
+          </div>
+        </footer>
       </div>
     </div>
   );
-} 
+}

@@ -1,7 +1,12 @@
 import { Link, useLocation } from "react-router-dom";
 import { Skeleton } from "antd";
-import { ApiOutlined, ToolOutlined, RobotOutlined, BulbOutlined } from "@ant-design/icons";
-import { useTranslation } from 'react-i18next';
+import {
+  ApiOutlined,
+  ToolOutlined,
+  RobotOutlined,
+  BulbOutlined,
+} from "@ant-design/icons";
+import { useTranslation } from "react-i18next";
 import { UserInfo } from "./UserInfo";
 
 interface NavigationProps {
@@ -10,64 +15,72 @@ interface NavigationProps {
 
 export function Navigation({ loading = false }: NavigationProps) {
   const location = useLocation();
-  const { t } = useTranslation('header');
+  const { t } = useTranslation("header");
 
   const isActive = (path: string) => {
-    if (path === '/') {
-      return location.pathname === '/';
+    if (path === "/") {
+      return location.pathname === "/";
     }
     return location.pathname.startsWith(path);
   };
 
   const navigationItems = [
     {
-      path: '/apis',
+      path: "/apis",
       icon: <ApiOutlined />,
-      title: 'APIs',
-      subtitle: t('navigation.restApi')
+      title: "APIs",
+      subtitle: t("navigation.restApi"),
     },
     {
-      path: '/mcp',
+      path: "/mcp",
       icon: <ToolOutlined />,
-      title: 'MCP',
-      subtitle: t('navigation.toolIntegration')
+      title: "MCP",
+      subtitle: t("navigation.toolIntegration"),
     },
     {
-      path: '/models',
+      path: "/models",
       icon: <BulbOutlined />,
-      title: 'Model',
-      subtitle: t('navigation.aiModel')
+      title: "Model",
+      subtitle: t("navigation.aiModel"),
     },
     {
-      path: '/agents',
+      path: "/agents",
       icon: <RobotOutlined />,
-      title: 'Agent',
-      subtitle: t('navigation.intelligentAssistant')
-    }
+      title: "Agent",
+      subtitle: t("navigation.intelligentAssistant"),
+    },
   ];
 
   return (
-    <nav className="sticky top-4 z-50">
-      <div className="w-full mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-[#f4f4f6]/95 backdrop-blur-sm rounded-xl border border-gray-200 flex justify-between items-center h-20 px-6">
+    <nav className="sticky top-4 z-40">
+      <div className="mx-auto w-full max-w-[1280px] px-4 sm:px-6 lg:px-8">
+        <div className="relative flex min-h-20 items-center justify-between rounded-claude-xl border border-claude-neutral-200/80 bg-claude-neutral-50/90 px-5 shadow-claude-sm backdrop-blur-md">
           <div className="flex items-center">
             {loading ? (
               <div className="flex items-center space-x-2">
                 <Skeleton.Avatar size={32} active />
-                <Skeleton.Input active size="small" style={{ width: 120, height: 24 }} />
+                <Skeleton.Input
+                  active
+                  size="small"
+                  style={{ width: 120, height: 24 }}
+                />
               </div>
             ) : (
-              <Link to="/" className="flex items-center space-x-2 hover:opacity-80 transition-opacity">
-                <div className="w-8 h-8 rounded-full flex items-center justify-center">
-                {/* LOGO区域 */}
-                <img
-                  src="/logo.png"
-                  alt="logo"
-                  className="w-6 h-6"
-                  style={{ display: "block" }}
-                />
+              <Link
+                to="/"
+                className="flex items-center gap-2 rounded-claude-full px-1 py-1 transition-all duration-claude-base ease-claude hover:bg-colorPrimaryBgHover"
+              >
+                <div className="flex h-9 w-9 items-center justify-center rounded-claude-lg bg-claude-neutral-900">
+                  <img
+                    src="/logo.png"
+                    alt="logo"
+                    className="w-6 h-6"
+                    style={{ display: "block" }}
+                  />
                 </div>
-                <span className="text-xl font-bold text-gray-900">HiMarket</span>
+                <span className="text-lg font-semibold text-claude-neutral-900">
+                  HiMarket
+                </span>
               </Link>
             )}
           </div>
@@ -75,46 +88,66 @@ export function Navigation({ loading = false }: NavigationProps) {
           <div className="hidden md:flex items-center absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
             {loading ? (
               <div className="flex space-x-3">
-                <Skeleton.Input active size="small" style={{ width: 100, height: 60 }} />
-                <Skeleton.Input active size="small" style={{ width: 100, height: 60 }} />
-                <Skeleton.Input active size="small" style={{ width: 100, height: 60 }} />
-                <Skeleton.Input active size="small" style={{ width: 100, height: 60 }} />
+                <Skeleton.Input
+                  active
+                  size="small"
+                  style={{ width: 100, height: 60 }}
+                />
+                <Skeleton.Input
+                  active
+                  size="small"
+                  style={{ width: 100, height: 60 }}
+                />
+                <Skeleton.Input
+                  active
+                  size="small"
+                  style={{ width: 100, height: 60 }}
+                />
+                <Skeleton.Input
+                  active
+                  size="small"
+                  style={{ width: 100, height: 60 }}
+                />
               </div>
             ) : (
               <div className="flex space-x-3">
-                {navigationItems.map((item) => (
-                  <Link
-                    key={item.path}
-                    to={item.path}
-                    className={`px-4 py-3 rounded-lg font-medium transition-all duration-200 flex flex-col items-center justify-center min-w-[100px] ${
-                      isActive(item.path)
-                        ? 'bg-blue-50/80 text-blue-700 border border-blue-200/50 shadow-sm'
-                        : 'text-gray-700 hover:text-gray-900 hover:bg-gray-50/50 border border-transparent'
-                    }`}
-                  >
-                    <div className="flex items-center space-x-1 mb-1">
-                      <div className={`text-lg ${isActive(item.path) ? 'text-blue-600' : 'text-gray-500'}`}>
-                        {item.icon}
+                {navigationItems.map(item => {
+                  const active = isActive(item.path);
+                  return (
+                    <Link
+                      key={item.path}
+                      to={item.path}
+                      aria-current={active ? "page" : undefined}
+                      className={`flex min-w-[108px] flex-col items-center justify-center rounded-claude-lg border px-4 py-3 font-medium transition-all duration-claude-base ease-claude ${
+                        active
+                          ? "border-colorPrimary/40 bg-colorPrimary text-claude-neutral-50 shadow-claude-sm"
+                          : "border-transparent text-claude-neutral-700 hover:border-colorPrimary/25 hover:bg-colorPrimaryBgHover hover:text-colorPrimary"
+                      }`}
+                    >
+                      <div className="mb-1 flex items-center space-x-1">
+                        <div
+                          className={`text-lg ${active ? "text-claude-neutral-50" : "text-colorPrimary"}`}
+                        >
+                          {item.icon}
+                        </div>
+                        <div className="text-sm font-semibold leading-tight">
+                          {item.title}
+                        </div>
                       </div>
-                      <div className="text-sm font-semibold leading-tight">
-                        {item.title}
+                      <div
+                        className={`text-xs leading-tight ${active ? "text-claude-neutral-50/80" : "text-claude-neutral-500"}`}
+                      >
+                        {item.subtitle}
                       </div>
-                    </div>
-                    <div className="text-xs text-gray-500 leading-tight">
-                      {item.subtitle}
-                    </div>
-                  </Link>
-                ))}
+                    </Link>
+                  );
+                })}
               </div>
             )}
           </div>
 
           <div className="flex items-center space-x-4">
-            {loading ? (
-              <Skeleton.Avatar size={32} active />
-            ) : (
-              <UserInfo />
-            )}
+            {loading ? <Skeleton.Avatar size={32} active /> : <UserInfo />}
           </div>
         </div>
       </div>
