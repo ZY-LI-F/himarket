@@ -6,6 +6,11 @@ const useActiveCodingSessionMock = vi.fn();
 
 vi.mock("../../context/CodingSessionContext", () => ({
   useActiveCodingSession: () => useActiveCodingSessionMock(),
+  useCodingState: () => ({
+    sessions: [],
+    activeSessionId: null,
+    sandboxStatus: { state: "idle", message: "" },
+  }),
 }));
 
 describe("ChatStream plan rendering", () => {

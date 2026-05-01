@@ -7,7 +7,7 @@ import enUS from "antd/locale/en_US";
 import { useTranslation } from "react-i18next";
 import "./App.css";
 import "./styles/table.css";
-import aliyunThemeToken from "./aliyunThemeToken.ts";
+import { claudeAntdTheme } from "./aliyunThemeToken.ts";
 import { PortalConfigProvider } from "./context/PortalConfigContext";
 
 function App() {
@@ -17,9 +17,7 @@ function App() {
   return (
     <ConfigProvider
       locale={antdLocale}
-      theme={{
-        token: aliyunThemeToken,
-      }}
+      theme={claudeAntdTheme}
     >
       <BrowserRouter>
         <PortalConfigProvider>
