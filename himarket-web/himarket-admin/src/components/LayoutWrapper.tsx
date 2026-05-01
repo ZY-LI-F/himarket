@@ -1,24 +1,18 @@
-import React from 'react';
-import { Outlet, useLocation, Navigate } from 'react-router-dom';
-import Layout from './Layout';
+import { Navigate, Outlet, useLocation } from "react-router-dom";
 
-const LayoutWrapper: React.FC = () => {
+import Layout from "./Layout";
+import { isAuthenticated } from "../lib/utils";
+
+const loginPath = "/login";
+
+const LayoutWrapper = () => {
   const location = useLocation();
+  const isLoginPage = location.pathname === loginPath;
 
-  // 权限验证
-  const isAuthenticated = () => {
-    return localStorage.getItem('access_token') !== null;
-  };
-
-  // 当前是否是登录页面
-  const isLoginPage = location.pathname === '/login';
-
-  // 未登录且不是登录页面 → 跳转到 /login
   if (!isAuthenticated() && !isLoginPage) {
-    return <Navigate to="/login" replace />;
+    return <Navigate replace to={loginPath} />;
   }
 
-  // 如果是登录页面，直接渲染
   if (isLoginPage) {
     return <Outlet />;
   }
