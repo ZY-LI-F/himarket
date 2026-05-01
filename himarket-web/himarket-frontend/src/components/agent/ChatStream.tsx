@@ -1,6 +1,7 @@
-import { Empty, Tag } from "antd";
+import { Tag } from "antd";
 import { Bot, User } from "lucide-react";
 import { useEffect, useRef } from "react";
+import { Empty, emptyImages } from "../common";
 
 export type AgentChatRole = "assistant" | "system" | "user";
 export type AgentMessageStatus = "done" | "error" | "streaming";
@@ -90,7 +91,7 @@ export function ChatStream({ messages }: ChatStreamProps) {
   if (messages.length === 0) {
     return (
       <div className="flex min-h-0 flex-1 items-center justify-center">
-        <Empty description="在下方输入消息开始对话" image={Empty.PRESENTED_IMAGE_SIMPLE} />
+        <Empty description="在下方输入消息开始对话" image={emptyImages.simple} compact />
         <div ref={bottomRef} />
       </div>
     );

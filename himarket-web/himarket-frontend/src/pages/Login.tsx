@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import { Form, Input, Button, message, Divider } from "antd";
+import { Divider, Form } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { useTranslation } from 'react-i18next';
+import { Button, Card, FormField, toast } from "../components/common";
 import request from "../lib/request";
 import type { IIdpProvider } from "../lib/apis";
 import { AxiosError } from "axios";
@@ -50,7 +51,7 @@ const Login: React.FC = () => {
       });
       // 登录成功后跳转到首页并携带access_token
       if (res && res.data && res.data.access_token) {
-        message.success(t('loginSuccess'), 1);
+        toast.success({ content: t('loginSuccess'), duration: 1 });
         localStorage.setItem('access_token', res.data.access_token)
 
         // 检查URL中是否有returnUrl参数
@@ -61,13 +62,13 @@ const Login: React.FC = () => {
           navigate('/');
         }
       } else {
-        message.error(t('loginFailedNoToken'));
+        toast.error(t('loginFailedNoToken'));
       }
     } catch (error) {
       if (error instanceof AxiosError) {
-        message.error(error.response?.data.message || t('loginFailedCheckCredentials'));
+        toast.error(error.response?.data.message || t('loginFailedCheckCredentials'));
       } else {
-        message.error(t('loginFailed'));
+        toast.error(t('loginFailed'));
       }
     } finally {
       setLoading(false);
@@ -96,7 +97,7 @@ const Login: React.FC = () => {
       >
         <div className="w-full max-w-md mx-4">
           {/* 登录卡片 */}
-          <div className="bg-white backdrop-blur-sm rounded-2xl p-8 shadow-lg">
+          <Card className="backdrop-blur-sm">
             <div className="mb-8">
               <h2 className="text-[32px] flex text-gray-900">
                 <span className="text-colorPrimary">
@@ -121,7 +122,7 @@ const Login: React.FC = () => {
                   { required: true, message: t('usernameRequired') }
                 ]}
               >
-                <Input
+                <FormField.Input
                   prefix={<UserOutlined className="text-gray-400" />}
                   placeholder={t('usernamePlaceholder')}
                   autoComplete="username"
@@ -135,7 +136,7 @@ const Login: React.FC = () => {
                   { required: true, message: t('passwordRequired') }
                 ]}
               >
-                <Input.Password
+                <FormField.Password
                   prefix={<LockOutlined className="text-gray-400" />}
                   placeholder={t('passwordPlaceholder')}
                   autoComplete="current-password"
@@ -145,7 +146,7 @@ const Login: React.FC = () => {
 
               <Form.Item>
                 <Button
-                  type="primary"
+                  variant="primary"
                   htmlType="submit"
                   loading={loading}
                   className="w-full rounded-lg h-10"
@@ -182,7 +183,7 @@ const Login: React.FC = () => {
             <div className="text-center text-subTitle">
               {t('noAccount')}<Link to="/register" className="text-colorPrimary hover:text-colorPrimary hover:underline">{t('registerLink')}</Link>
             </div>
-          </div>
+          </Card>
         </div>
       </div>
     </Layout>

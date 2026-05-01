@@ -1,5 +1,5 @@
-import { Button } from "antd";
 import { MessageSquare, Code2, Sparkles, Zap, Bot, Globe } from "lucide-react";
+import { Button, Card } from "./common";
 import { useAuth } from "../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 
@@ -70,28 +70,20 @@ export function WelcomeView({ type }: WelcomeViewProps) {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-10">
           {features.map((f, i) => (
-            <div
+            <Card
               key={i}
-              className="rounded-claude-xl border border-claude-neutral-200/80 bg-claude-neutral-50/85 p-5 text-left shadow-claude-sm backdrop-blur-md transition-all duration-claude-base ease-claude hover:-translate-y-0.5 hover:border-colorPrimary/30 hover:shadow-claude-md"
+              className="bg-white/60 backdrop-blur-sm text-left h-full"
+              variant="interactive"
             >
-              <div className="mb-3 text-colorPrimary">{f.icon}</div>
-              <div className="mb-1 font-medium text-claude-neutral-800">
-                {f.title}
-              </div>
-              <div className="text-sm leading-6 text-claude-neutral-600">
-                {f.desc}
-              </div>
-            </div>
+              <div className="text-blue-500 mb-3">{f.icon}</div>
+              <div className="font-medium text-gray-800 mb-1">{f.title}</div>
+              <div className="text-gray-500 text-sm">{f.desc}</div>
+            </Card>
           ))}
         </div>
 
         <div className="flex items-center justify-center gap-4">
-          <Button
-            type="primary"
-            size="large"
-            className="rounded-claude-lg"
-            onClick={() => login()}
-          >
+          <Button variant="primary" size="large" onClick={() => login()}>
             {ctaText}
           </Button>
           <Button

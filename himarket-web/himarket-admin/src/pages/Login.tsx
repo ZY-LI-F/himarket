@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../lib/api";
 import { authApi } from '@/lib/api'
-import { Form, Input, Button, Alert } from "antd";
+import { Alert, Form } from "antd";
+import { Button, Card, FormField } from "@/components/common";
 
 const Login: React.FC = () => {
   const [loading, setLoading] = useState(false);
@@ -89,8 +90,8 @@ const Login: React.FC = () => {
       </div>
 
       {/* 右侧表单区域 */}
-      <div className="w-full md:w-1/2 flex items-center justify-center bg-gradient-to-br from-indigo-50 to-white md:bg-white">
-        <div className="w-full max-w-md px-8">
+      <div className="w-full md:w-1/2 flex items-center justify-center bg-gradient-to-br from-indigo-50 to-white md:bg-white px-4">
+        <Card className="w-full max-w-md">
           {/* 移动端 Logo */}
           <div className="md:hidden mb-6 text-center">
             <img src="/logo.png" alt="Logo" className="w-16 h-16 mx-auto mb-4" />
@@ -111,18 +112,18 @@ const Login: React.FC = () => {
                 name="username"
                 rules={[{ required: true, message: "请输入账号" }]}
               >
-                <Input placeholder="账号" size="large" />
+                <FormField.Input placeholder="账号" size="large" />
               </Form.Item>
               <Form.Item
                 name="password"
                 rules={[{ required: true, message: "请输入密码" }]}
               >
-                <Input.Password placeholder="密码" size="large" />
+                <FormField.Password placeholder="密码" size="large" />
               </Form.Item>
               {error && <Alert message={error} type="error" showIcon className="mb-2" />}
               <Form.Item>
                 <Button
-                  type="primary"
+                  variant="primary"
                   htmlType="submit"
                   className="w-full"
                   loading={loading}
@@ -145,24 +146,24 @@ const Login: React.FC = () => {
                 name="username"
                 rules={[{ required: true, message: "请输入账号" }]}
               >
-                <Input placeholder="账号" size="large" />
+                <FormField.Input placeholder="账号" size="large" />
               </Form.Item>
               <Form.Item
                 name="password"
                 rules={[{ required: true, message: "请输入密码" }]}
               >
-                <Input.Password placeholder="密码" size="large" />
+                <FormField.Password placeholder="密码" size="large" />
               </Form.Item>
               <Form.Item
                 name="confirmPassword"
                 rules={[{ required: true, message: "请确认密码" }]}
               >
-                <Input.Password placeholder="确认密码" size="large" />
+                <FormField.Password placeholder="确认密码" size="large" />
               </Form.Item>
               {error && <Alert message={error} type="error" showIcon className="mb-2" />}
               <Form.Item>
                 <Button
-                  type="primary"
+                  variant="primary"
                   htmlType="submit"
                   className="w-full"
                   loading={loading}
@@ -173,7 +174,7 @@ const Login: React.FC = () => {
               </Form.Item>
             </Form>
           )}
-        </div>
+        </Card>
       </div>
     </div>
   );
