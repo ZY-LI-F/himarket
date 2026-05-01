@@ -34,6 +34,7 @@ import {
   generateEmptyChartOption,
   generateTableColumns,
 } from "../utils/chartUtils";
+import { adminEchartsTheme } from "../utils/echartsTheme";
 
 const { RangePicker } = DatePicker;
 
@@ -84,14 +85,21 @@ const McpMonitor: React.FC = () => {
   useEffect(() => {
     if (successRateChartRef.current) {
       successRateChartInstance.current = echarts.init(
-        successRateChartRef.current
+        successRateChartRef.current,
+        adminEchartsTheme
       );
     }
     if (qpsChartRef.current) {
-      qpsChartInstance.current = echarts.init(qpsChartRef.current);
+      qpsChartInstance.current = echarts.init(
+        qpsChartRef.current,
+        adminEchartsTheme
+      );
     }
     if (rtChartRef.current) {
-      rtChartInstance.current = echarts.init(rtChartRef.current);
+      rtChartInstance.current = echarts.init(
+        rtChartRef.current,
+        adminEchartsTheme
+      );
     }
 
     // 组件卸载时销毁实例

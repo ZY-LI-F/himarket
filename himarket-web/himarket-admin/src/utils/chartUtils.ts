@@ -1,5 +1,6 @@
 import * as echarts from "echarts";
 import { DataPoint } from "../types/sls";
+import { adminEchartsTheme } from "./echartsTheme";
 
 /**
  * ECharts通用配置选项
@@ -39,8 +40,16 @@ export function generateLineChartOption(
   });
 
   return {
-    title: title ? { text: title, left: "center" } : undefined,
+    color: [...adminEchartsTheme.color],
+    title: title
+      ? {
+          text: title,
+          left: "center",
+          textStyle: adminEchartsTheme.title.textStyle,
+        }
+      : undefined,
     tooltip: {
+      ...adminEchartsTheme.tooltip,
       trigger: "axis",
       formatter: params => {
         if (!Array.isArray(params) || params.length === 0) return "";
@@ -54,6 +63,8 @@ export function generateLineChartOption(
     legend: {
       top: "top",
       left: "center",
+      textStyle: adminEchartsTheme.legend.textStyle,
+      itemGap: adminEchartsTheme.legend.itemGap,
     },
     grid: {
       left: 40,
@@ -66,7 +77,11 @@ export function generateLineChartOption(
       type: "category",
       data: timestamps,
       name: xAxisLabel,
+      axisLine: adminEchartsTheme.categoryAxis.axisLine,
+      axisTick: adminEchartsTheme.categoryAxis.axisTick,
+      splitLine: adminEchartsTheme.categoryAxis.splitLine,
       axisLabel: {
+        ...adminEchartsTheme.categoryAxis.axisLabel,
         rotate: 45,
         formatter: (value: string) => {
           // 简化时间显示：只显示时分秒
@@ -78,7 +93,11 @@ export function generateLineChartOption(
     yAxis: {
       type: "value",
       name: yAxisLabel,
+      axisLine: adminEchartsTheme.valueAxis.axisLine,
+      axisTick: adminEchartsTheme.valueAxis.axisTick,
+      splitLine: adminEchartsTheme.valueAxis.splitLine,
       axisLabel: {
+        ...adminEchartsTheme.valueAxis.axisLabel,
         formatter: isPercentage ? "{value}%" : "{value}",
       },
     },
@@ -88,7 +107,9 @@ export function generateLineChartOption(
         type: "line" as const,
         smooth: true,
         showSymbol: false,
-        areaStyle: {},
+        lineStyle: adminEchartsTheme.line.lineStyle,
+        areaStyle: adminEchartsTheme.line.areaStyle,
+        symbolSize: adminEchartsTheme.line.symbolSize,
         data: values,
       },
     ],
@@ -127,14 +148,24 @@ export function generateMultiLineChartOption(
       type: "line" as const,
       smooth: true,
       showSymbol: false,
-      areaStyle: {},
+      lineStyle: adminEchartsTheme.line.lineStyle,
+      areaStyle: adminEchartsTheme.line.areaStyle,
+      symbolSize: adminEchartsTheme.line.symbolSize,
       data: values,
     };
   });
 
   return {
-    title: title ? { text: title, left: "center" } : undefined,
+    color: [...adminEchartsTheme.color],
+    title: title
+      ? {
+          text: title,
+          left: "center",
+          textStyle: adminEchartsTheme.title.textStyle,
+        }
+      : undefined,
     tooltip: {
+      ...adminEchartsTheme.tooltip,
       trigger: "axis",
       formatter: params => {
         if (!Array.isArray(params) || params.length === 0) return "";
@@ -151,6 +182,8 @@ export function generateMultiLineChartOption(
     legend: {
       top: "top",
       left: "center",
+      textStyle: adminEchartsTheme.legend.textStyle,
+      itemGap: adminEchartsTheme.legend.itemGap,
     },
     grid: {
       left: 40,
@@ -163,7 +196,11 @@ export function generateMultiLineChartOption(
       type: "category",
       data: timestamps,
       name: xAxisLabel,
+      axisLine: adminEchartsTheme.categoryAxis.axisLine,
+      axisTick: adminEchartsTheme.categoryAxis.axisTick,
+      splitLine: adminEchartsTheme.categoryAxis.splitLine,
       axisLabel: {
+        ...adminEchartsTheme.categoryAxis.axisLabel,
         rotate: 45,
         formatter: (value: string) => {
           const parts = value.split(" ");
@@ -174,7 +211,11 @@ export function generateMultiLineChartOption(
     yAxis: {
       type: "value",
       name: yAxisLabel,
+      axisLine: adminEchartsTheme.valueAxis.axisLine,
+      axisTick: adminEchartsTheme.valueAxis.axisTick,
+      splitLine: adminEchartsTheme.valueAxis.splitLine,
       axisLabel: {
+        ...adminEchartsTheme.valueAxis.axisLabel,
         formatter: isPercentage ? "{value}%" : "{value}",
       },
     },
@@ -195,10 +236,7 @@ export function generateEmptyChartOption(
       text: message,
       left: "center",
       top: "middle",
-      textStyle: {
-        color: "#999",
-        fontSize: 14,
-      },
+      textStyle: adminEchartsTheme.legend.textStyle,
     },
     xAxis: { show: false },
     yAxis: { show: false },

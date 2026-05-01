@@ -33,6 +33,7 @@ import {
   generateEmptyChartOption,
   generateTableColumns,
 } from "../utils/chartUtils";
+import { adminEchartsTheme } from "../utils/echartsTheme";
 
 const { RangePicker } = DatePicker;
 
@@ -96,28 +97,40 @@ const ModelDashboard: React.FC = () => {
   // 初始化ECharts实例
   useEffect(() => {
     if (qpsChartRef.current) {
-      qpsChartInstance.current = echarts.init(qpsChartRef.current);
+      qpsChartInstance.current = echarts.init(
+        qpsChartRef.current,
+        adminEchartsTheme
+      );
     }
     if (successRateChartRef.current) {
       successRateChartInstance.current = echarts.init(
-        successRateChartRef.current
+        successRateChartRef.current,
+        adminEchartsTheme
       );
     }
     if (tokenPerSecChartRef.current) {
       tokenPerSecChartInstance.current = echarts.init(
-        tokenPerSecChartRef.current
+        tokenPerSecChartRef.current,
+        adminEchartsTheme
       );
     }
     if (rtChartRef.current) {
-      rtChartInstance.current = echarts.init(rtChartRef.current);
+      rtChartInstance.current = echarts.init(
+        rtChartRef.current,
+        adminEchartsTheme
+      );
     }
     if (ratelimitedChartRef.current) {
       ratelimitedChartInstance.current = echarts.init(
-        ratelimitedChartRef.current
+        ratelimitedChartRef.current,
+        adminEchartsTheme
       );
     }
     if (cacheChartRef.current) {
-      cacheChartInstance.current = echarts.init(cacheChartRef.current);
+      cacheChartInstance.current = echarts.init(
+        cacheChartRef.current,
+        adminEchartsTheme
+      );
     }
 
     // 组件卸载时销毁实例
