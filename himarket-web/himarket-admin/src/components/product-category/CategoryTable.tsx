@@ -1,13 +1,13 @@
 import { useCallback, useEffect, useState, useImperativeHandle, forwardRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Table, Tooltip, Dropdown } from 'antd';
+import { Tooltip, Dropdown } from 'antd';
 import type { TableProps, MenuProps } from 'antd';
 import {
   SearchOutlined,
   ExclamationCircleOutlined,
   MoreOutlined,
 } from '@ant-design/icons';
-import { Button, Empty, emptyImages, FormField, Modal, toast } from '@/components/common';
+import { Button, Empty, emptyImages, FormField, Modal, Table, toast } from '@/components/common';
 import { getProductCategoriesByPage, deleteProductCategory } from '@/lib/productCategoryApi';
 import CategoryFormModal from '@/components/product-category/CategoryFormModal';
 import type { ProductCategory, QueryProductCategoryParam } from '@/types/product-category';
@@ -178,7 +178,7 @@ const CategoryTable = forwardRef<CategoryTableRef>((_, ref) => {
       {/* Search toolbar */}
       <div className="flex items-center mb-4">
         <div
-          className="flex items-center border border-gray-300 rounded-md overflow-hidden hover:border-colorPrimary focus-within:border-colorPrimary"
+          className="flex items-center border border-claude-neutral-300 rounded-claude-md overflow-hidden hover:border-colorPrimary focus-within:border-colorPrimary"
           style={{ minWidth: 260 }}
         >
           <FormField.Input

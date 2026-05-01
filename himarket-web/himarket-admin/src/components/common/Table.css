@@ -1,0 +1,37 @@
+.hm-table.ant-table-wrapper {
+  color: var(--color-neutral-800);
+}
+
+.hm-table.ant-table-wrapper .ant-table {
+  background: var(--color-neutral-50);
+  color: var(--color-neutral-800);
+}
+
+.hm-table.ant-table-wrapper .ant-table-container {
+  border-color: var(--color-neutral-200);
+}
+
+.hm-table.ant-table-wrapper .ant-table-thead > tr > th {
+  background: var(--color-neutral-100);
+  border-bottom-color: var(--color-neutral-200);
+  color: var(--color-neutral-700);
+  font-weight: 600;
+}
+
+.hm-table.ant-table-wrapper .ant-table-tbody > tr > td {
+  border-bottom-color: var(--color-neutral-100);
+  color: var(--color-neutral-800);
+}
+
+.hm-table.ant-table-wrapper .ant-table-tbody > tr.ant-table-row:hover > td,
+.hm-table.ant-table-wrapper .ant-table-tbody > tr > td.ant-table-cell-row-hover {
+  background: var(--color-brand-surface-tint);
+}
+
+.hm-table.ant-table-wrapper .ant-pagination-item-active {
+  border-color: var(--color-brand);
+}
+
+.hm-table.ant-table-wrapper .ant-pagination-item-active a {
+  color: var(--color-brand);
+}

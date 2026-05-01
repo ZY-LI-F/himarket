@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Modal, Form, Input, Button, Tag, Radio, Space, Select, Switch, Table, message, Steps } from 'antd'
+import { Modal, Form, Input, Button, Tag, Radio, Space, Select, Switch, message, Steps } from 'antd'
 import {
   InfoCircleOutlined, SettingOutlined, FileTextOutlined, CloudServerOutlined,
   PlusOutlined, CheckCircleFilled,
@@ -8,6 +8,7 @@ import {
 } from '@ant-design/icons'
 import { sandboxApi } from '@/lib/api'
 import type { ProductIcon } from '@/types/api-product'
+import { Table } from '@/components/common'
 
 interface McpCustomConfigModalProps {
   visible: boolean

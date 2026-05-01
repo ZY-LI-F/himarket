@@ -1,9 +1,10 @@
-import { Card, Tag, Tabs, Table, Collapse, Descriptions, Select } from "antd";
+import { Tag, Tabs, Collapse, Descriptions, Select } from "antd";
 import { useEffect, useMemo, useState } from "react";
 import type { ApiProduct } from "@/types/api-product";
 import MonacoEditor from "react-monaco-editor";
 import * as yaml from "js-yaml";
 import { ProductTypeMap } from "@/lib/utils";
+import { Card, Table } from "@/components/common";
 
 // 来源类型映射
 const FromTypeMap: Record<string, string> = {

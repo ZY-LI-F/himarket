@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import type { CSSProperties } from 'react';
 import {
   Form,
   Radio,
@@ -9,6 +10,9 @@ import type { UploadFile } from 'antd/es/upload/interface';
 import { FormField, Modal, toast } from '@/components/common';
 import type { ProductCategory, CreateProductCategoryParam, UpdateProductCategoryParam, ProductIcon } from '@/types/product-category';
 import { createProductCategory, updateProductCategory } from '@/lib/productCategoryApi';
+import { colors } from '../../../../shared/design-tokens/colors';
+import { motion } from '../../../../shared/design-tokens/motion';
+import { radiiPx } from '../../../../shared/design-tokens/radii';
 
 interface CategoryFormModalProps {
   visible: boolean;
@@ -17,6 +21,27 @@ interface CategoryFormModalProps {
   category?: ProductCategory | null;
   isEdit?: boolean;
 }
+
+const uploadBoxStyle: CSSProperties = {
+  width: '80px',
+  height: '80px',
+  border: `1px dashed ${colors.neutral[300]}`,
+  borderRadius: radiiPx.md,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  cursor: 'pointer',
+  transition: `border-color ${motion.durationMs.base}`,
+  position: 'relative',
+};
+
+const uploadPlaceholderStyle: CSSProperties = {
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+  color: colors.neutral[500],
+};
 
 const CategoryFormModal: React.FC<CategoryFormModalProps> = ({
   visible,
@@ -177,18 +202,7 @@ const CategoryFormModal: React.FC<CategoryFormModalProps> = ({
             ) : (
               <Form.Item name="icon" style={{ marginBottom: 0 }}>
                 <div 
-                  style={{ 
-                    width: '80px', 
-                    height: '80px',
-                    border: '1px dashed #d9d9d9',
-                    borderRadius: '8px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    cursor: 'pointer',
-                    transition: 'border-color 0.3s',
-                    position: 'relative'
-                  }}
+                  style={uploadBoxStyle}
                   onClick={() => {
                     const input = document.createElement('input');
                     input.type = 'file';
@@ -217,10 +231,10 @@ const CategoryFormModal: React.FC<CategoryFormModalProps> = ({
                     input.click();
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.borderColor = '#1890ff';
+                    e.currentTarget.style.borderColor = colors.brand.primary;
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.borderColor = '#d9d9d9';
+                    e.currentTarget.style.borderColor = colors.neutral[300];
                   }}
                 >
                   {fileList.length >= 1 ? (
@@ -230,15 +244,9 @@ const CategoryFormModal: React.FC<CategoryFormModalProps> = ({
                       style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '6px' }}
                     />
                   ) : (
-                    <div style={{ 
-                      display: 'flex', 
-                      flexDirection: 'column', 
-                      alignItems: 'center', 
-                      justifyContent: 'center',
-                      color: '#999'
-                    }}>
+                    <div style={uploadPlaceholderStyle}>
                       <CameraOutlined style={{ fontSize: '16px', marginBottom: '6px' }} />
-                      <span style={{ fontSize: '12px', color: '#999' }}>上传图片</span>
+                      <span style={{ fontSize: '12px', color: colors.neutral[500] }}>上传图片</span>
                     </div>
                   )}
                 </div>

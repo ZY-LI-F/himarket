@@ -2,9 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { 
   Button, 
-  Card, 
   Skeleton, 
-  Empty, 
   Divider,
   message,
   Checkbox,
@@ -34,6 +32,8 @@ import type { ApiProduct } from '@/types/api-product';
 import CategoryFormModal from '@/components/product-category/CategoryFormModal';
 import AddProductModal from '@/components/product-category/AddProductModal';
 import McpServerIcon from '@/components/icons/McpServerIcon';
+import { Card, Empty, emptyImages } from '@/components/common';
+import { colors } from '../../../shared/design-tokens/colors';
 
 export default function ProductCategoryDetail() {
   const { categoryId } = useParams<{ categoryId: string }>();
@@ -96,10 +96,10 @@ export default function ProductCategoryDetail() {
     if (!category.icon) {
       return (
         <div 
-          className="flex items-center justify-center rounded-lg bg-gradient-to-br from-gray-100 to-gray-200 shadow-sm"
+          className="flex items-center justify-center rounded-lg bg-gradient-to-br from-claude-neutral-100 to-claude-neutral-200 shadow-sm"
           style={{ width: size, height: size }}
         >
-          <FolderOutlined style={{ color: '#666', fontSize: size * 0.4 }} />
+          <FolderOutlined style={{ color: colors.neutral[600], fontSize: size * 0.4 }} />
         </div>
       );
     }
@@ -113,8 +113,8 @@ export default function ProductCategoryDetail() {
           style={{ width: size, height: size }}
           onError={(e) => {
             e.currentTarget.outerHTML = `
-              <div class="w-16 h-16 rounded-lg bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center shadow-sm">
-                <svg class="w-6 h-6 text-gray-600" fill="currentColor" viewBox="0 0 24 24">
+              <div class="w-16 h-16 rounded-lg bg-gradient-to-br from-claude-neutral-100 to-claude-neutral-200 flex items-center justify-center shadow-sm">
+                <svg class="w-6 h-6 text-claude-neutral-600" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M10 4H4c-1.11 0-2 .89-2 2v12c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V8c0-1.11-.89-2-2-2h-8l-2-2z"/>
                 </svg>
               </div>
@@ -128,7 +128,7 @@ export default function ProductCategoryDetail() {
         // 是emoji
         return (
           <div 
-            className="flex items-center justify-center rounded-lg bg-gradient-to-br from-blue-50 to-indigo-50 shadow-sm"
+            className="flex items-center justify-center rounded-lg bg-gradient-to-br from-colorPrimaryBg to-claude-neutral-50 shadow-sm"
             style={{ width: size, height: size, fontSize: size * 0.4 }}
           >
             {category.icon.value}
@@ -282,7 +282,7 @@ export default function ProductCategoryDetail() {
           type="text" 
           icon={<ArrowLeftOutlined />}
           onClick={() => navigate('/product-categories')}
-          className="text-gray-600 hover:text-gray-800"
+          className="text-claude-neutral-600 hover:text-claude-neutral-800"
         >
           返回
         </Button>
@@ -297,7 +297,7 @@ export default function ProductCategoryDetail() {
       </div>
 
       {/* 类别详情卡片 */}
-      <Card className="bg-gradient-to-br from-white to-gray-50/30 border border-gray-100 shadow-sm">
+      <Card>
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center space-x-4">
             {/* 类别图标 */}
@@ -307,13 +307,13 @@ export default function ProductCategoryDetail() {
             
             {/* 类别信息 */}
             <div className="flex-1 min-w-0">
-              <h1 className="text-xl font-bold text-gray-800 mb-2">
+              <h1 className="text-xl font-bold text-claude-neutral-800 mb-2">
                 {category.name}
               </h1>
-              <p className="text-sm text-gray-500 mb-3">
-                {category.description || <span className="italic text-gray-400">暂无描述</span>}
+              <p className="text-sm text-claude-neutral-500 mb-3">
+                {category.description || <span className="italic text-claude-neutral-400">暂无描述</span>}
               </p>
-              <div className="flex items-center space-x-4 text-xs text-gray-400">
+              <div className="flex items-center space-x-4 text-xs text-claude-neutral-400">
                 <span className="font-mono">ID: {category.categoryId}</span>
                 {category.createAt && (
                   <span>创建于 {formatDateTime(category.createAt)}</span>
@@ -365,7 +365,7 @@ export default function ProductCategoryDetail() {
       {productsLoading ? (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {Array.from({ length: 6 }).map((_, index) => (
-            <Card key={index} className="bg-gradient-to-br from-white to-gray-50/30 border border-gray-100">
+            <Card key={index}>
               <div className="flex items-center space-x-4">
                 <Skeleton.Avatar size={48} />
                 <div className="flex-1">
@@ -381,7 +381,8 @@ export default function ProductCategoryDetail() {
           {products.map((product) => (
             <Card
               key={product.productId}
-              className="hover:shadow-lg transition-shadow cursor-pointer rounded-xl border border-gray-200 shadow-sm hover:border-blue-300"
+              variant="interactive"
+              className="cursor-pointer"
               onClick={() => navigate(`/api-products/${product.productId}`)}
               bodyStyle={{ padding: '16px' }}
             >
@@ -397,7 +398,7 @@ export default function ProductCategoryDetail() {
                     onClick={(e) => e.stopPropagation()}
                   />
                   {/* 产品图标 */}
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-100">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-colorPrimaryBg text-colorPrimary">
                     {getTypeIcon(product.icon, product.type)}
                   </div>
                   {/* 产品信息 */}
@@ -406,29 +407,29 @@ export default function ProductCategoryDetail() {
                     <div className="flex items-center gap-3 mt-1 flex-wrap">
                       <div className="flex items-center">
                         {product.type === "REST_API" ? (
-                          <ApiOutlined className="text-blue-500 mr-1" style={{fontSize: '12px', width: '12px', height: '12px'}} />
+                          <ApiOutlined className="text-colorPrimary mr-1" style={{fontSize: '12px', width: '12px', height: '12px'}} />
                         ) : product.type === "AGENT_API" ? (
-                          <RobotOutlined className="text-gray-600 mr-1" style={{fontSize: '12px', width: '12px', height: '12px'}} />
+                          <RobotOutlined className="text-claude-neutral-600 mr-1" style={{fontSize: '12px', width: '12px', height: '12px'}} />
                         ) : product.type === "MODEL_API" ? (
-                          <BulbOutlined className="text-gray-600 mr-1" style={{fontSize: '12px', width: '12px', height: '12px'}} />
+                          <BulbOutlined className="text-claude-neutral-600 mr-1" style={{fontSize: '12px', width: '12px', height: '12px'}} />
                         ) : product.type === "WORKER" ? (
-                          <UserOutlined className="text-gray-600 mr-1" style={{fontSize: '12px', width: '12px', height: '12px'}} />
+                          <UserOutlined className="text-claude-neutral-600 mr-1" style={{fontSize: '12px', width: '12px', height: '12px'}} />
                         ) : (
-                          <McpServerIcon className="text-black mr-1" style={{fontSize: '12px', width: '12px', height: '12px'}} />
+                          <McpServerIcon className="text-claude-neutral-900 mr-1" style={{fontSize: '12px', width: '12px', height: '12px'}} />
                         )}
-                        <span className="text-xs text-gray-700">
+                        <span className="text-xs text-claude-neutral-700">
                           {getTypeLabel(product.type)}
                         </span>
                       </div>
                       <div className="flex items-center">
                         {product.status === "PENDING" ? (
-                          <ExclamationCircleFilled className="text-yellow-500 mr-1" style={{fontSize: '12px', width: '12px', height: '12px'}} />
+                          <ExclamationCircleFilled className="text-claude-semantic-warning mr-1" style={{fontSize: '12px', width: '12px', height: '12px'}} />
                         ) : product.status === "READY" ? (
-                          <ClockCircleFilled className="text-blue-500 mr-1" style={{fontSize: '12px', width: '12px', height: '12px'}} />
+                          <ClockCircleFilled className="text-claude-semantic-info mr-1" style={{fontSize: '12px', width: '12px', height: '12px'}} />
                         ) : (
-                          <CheckCircleFilled className="text-green-500 mr-1" style={{fontSize: '12px', width: '12px', height: '12px'}} />
+                          <CheckCircleFilled className="text-claude-semantic-success mr-1" style={{fontSize: '12px', width: '12px', height: '12px'}} />
                         )}
-                        <span className="text-xs text-gray-700">
+                        <span className="text-xs text-claude-neutral-700">
                           {product.status === "PENDING" ? "待配置" : product.status === "READY" ? "待发布" : "已发布"}
                         </span>
                       </div>
@@ -439,17 +440,17 @@ export default function ProductCategoryDetail() {
 
               <div className="space-y-4">
                 {product.description && (
-                  <p className="text-sm text-gray-600">{product.description}</p>
+                  <p className="text-sm text-claude-neutral-600">{product.description}</p>
                 )}
               </div>
             </Card>
           ))}
         </div>
       ) : (
-        <Card className="bg-gradient-to-br from-white to-gray-50/30 border border-gray-100 shadow-sm">
+        <Card>
           <div className="text-center py-8">
             <Empty
-              image={Empty.PRESENTED_IMAGE_SIMPLE}
+              image={emptyImages.simple}
               description="该类别下暂无产品"
             />
           </div>

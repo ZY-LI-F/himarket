@@ -101,7 +101,7 @@ export const SwaggerUIWrapper: React.FC<SwaggerUIWrapperProps> = ({ apiSpec }) =
                 border-radius: 4px;
                 padding: 6px 8px;
                 cursor: pointer;
-                color: #666;
+                color: var(--color-neutral-600);
                 transition: all 0.2s;
                 z-index: 10;
                 display: flex;
@@ -123,13 +123,13 @@ export const SwaggerUIWrapper: React.FC<SwaggerUIWrapperProps> = ({ apiSpec }) =
 
               // 添加hover效果
               copyBtn.addEventListener('mouseenter', () => {
-                copyBtn.style.background = '#f5f5f5';
-                copyBtn.style.color = '#1890ff';
+                copyBtn.style.background = 'var(--color-neutral-100)';
+                copyBtn.style.color = 'var(--color-brand)';
               });
               
               copyBtn.addEventListener('mouseleave', () => {
                 copyBtn.style.background = 'transparent';
-                copyBtn.style.color = '#666';
+                copyBtn.style.color = 'var(--color-neutral-600)';
               });
 
               serversContainer.appendChild(copyBtn);
