@@ -1,7 +1,9 @@
 import { agentTokens, colors } from "./src/aliyunThemeToken.ts";
+import designTokensPreset from "../shared/design-tokens/tailwindPreset.cjs";
 
 /** @type {import('tailwindcss').Config} */
 export default {
+  presets: [designTokensPreset],
   darkMode: ["class"],
   content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
