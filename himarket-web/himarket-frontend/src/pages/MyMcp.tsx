@@ -11,6 +11,7 @@ import type { IProductDetail, IMcpMeta } from "../lib/apis/product";
 import { getProductMcpMetaBatch, getProductMcpMetaBatchPublic } from "../lib/apis/product";
 import dayjs from "dayjs";
 import { CardGridSkeleton } from "../components/loading";
+import "./mcpTheme.css";
 
 interface McpProductItem {
   product: IProductDetail;
@@ -118,9 +119,9 @@ function MyMcp() {
 
   return (
     <Layout>
-      <div className="flex flex-col h-[calc(100vh-96px)] overflow-auto scrollbar-hide">
+      <div className="hm-mcp-surface flex flex-col h-[calc(100vh-96px)] overflow-auto scrollbar-hide">
         {/* 顶部区域 */}
-        <div className="flex-shrink-0 px-6 py-4">
+        <div className="hm-mcp-panel-muted flex-shrink-0 mx-4 mt-4 px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <Button

@@ -25,6 +25,7 @@ import { useAuth } from "../hooks/useAuth";
 import { DetailSkeleton } from "../components/loading";
 import { hasAvailableEndpoint } from "../lib/utils/mcpUtils";
 import dayjs from "dayjs";
+import "./mcpTheme.css";
 
 function McpDetail() {
   const { mcpProductId } = useParams();
@@ -386,7 +387,7 @@ function McpDetail() {
 
   return (
     <Layout>
-      <div className="max-w-6xl mx-auto px-4 py-4">
+      <div className="hm-mcp-surface max-w-6xl mx-auto px-4 py-4">
         {/* 返回按钮 */}
         <button
           onClick={() => navigate(-1)}
@@ -397,15 +398,15 @@ function McpDetail() {
         </button>
 
         {/* Header - 毛玻璃卡片 */}
-        <div className="bg-white/70 backdrop-blur-sm rounded-2xl border border-white/50 p-6 mb-6">
+        <div className="hm-mcp-panel backdrop-blur-sm p-6 mb-6">
           <div className="flex items-start justify-between gap-6">
             {/* 左侧: 图标 + 信息 */}
             <div className="flex items-start gap-4 flex-1 min-w-0">
-              <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-purple-100 to-indigo-100 flex items-center justify-center flex-shrink-0 overflow-hidden">
+              <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-colorPrimary/10 to-colorPrimary/5 flex items-center justify-center flex-shrink-0 overflow-hidden">
                 {meta?.icon || product.icon ? (
                   <ProductIconRenderer className="w-full h-full object-cover" iconType={getIconString(parseMetaIcon(meta?.icon) || product.icon)} />
                 ) : (
-                  <AppstoreOutlined className="text-purple-500 text-2xl" />
+                  <AppstoreOutlined className="text-colorPrimary text-2xl" />
                 )}
               </div>
               <div className="flex-1 min-w-0">
@@ -451,18 +452,18 @@ function McpDetail() {
         <div className="flex flex-col lg:flex-row gap-6">
           {/* 左侧: Tab 内容 */}
           <div className="w-full lg:w-[65%]">
-            <div className="bg-white/70 backdrop-blur-sm rounded-2xl border border-white/50">
+            <div className="hm-mcp-panel backdrop-blur-sm">
               <Tabs
                 activeKey={activeTab}
                 onChange={setActiveTab}
-                className="px-6 pt-2"
+                className="hm-mcp-tabs px-6 pt-2"
                 items={[
                   {
                     key: "intro",
                     label: "介绍",
                     children: (
                       <div className="pb-6 min-h-[300px]">
-                        <div className="markdown-body text-sm" style={{ backgroundColor: 'transparent' }}>
+                        <div className="hm-mcp-markdown-pane markdown-body text-sm">
                           <MarkdownRender content={serviceIntro || description || "暂无详细介绍"} />
                         </div>
                       </div>
@@ -493,15 +494,15 @@ function McpDetail() {
                               return (
                                 <div
                                   key={idx}
-                                  className="rounded-xl border border-gray-100 bg-white/80 hover:border-indigo-200 hover:shadow-sm transition-all duration-200"
+                                  className="hm-mcp-card rounded-xl bg-white/80 hover:shadow-sm transition-all duration-200"
                                 >
                                   {/* 工具头部 */}
                                   <div
                                     className="flex items-start gap-3 p-4 cursor-pointer select-none"
                                     onClick={() => toggleToolExpand(idx)}
                                   >
-                                    <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-50 to-purple-50 flex items-center justify-center flex-shrink-0 mt-0.5">
-                                      <CodeOutlined className="text-indigo-400 text-sm" />
+                                    <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-colorPrimary/10 to-colorPrimary/5 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                      <CodeOutlined className="text-colorPrimary text-sm" />
                                     </div>
                                     <div className="flex-1 min-w-0">
                                       <div className="flex items-center gap-2 mb-1">
@@ -527,13 +528,13 @@ function McpDetail() {
                                               <span
                                                 className={`inline-flex items-center gap-1 text-[11px] px-2 py-0.5 rounded-md ${
                                                   required.includes(key)
-                                                    ? "bg-indigo-50 text-indigo-600 border border-indigo-100"
+                                                    ? "bg-colorPrimaryBg text-colorPrimary border border-colorPrimary/20"
                                                     : "bg-gray-50 text-gray-500 border border-gray-100"
                                                 }`}
                                               >
                                                 {key}
                                                 <span className="text-[10px] opacity-60">{getTypeLabel(properties[key])}</span>
-                                                {required.includes(key) && <span className="text-indigo-400">*</span>}
+                                                {required.includes(key) && <span className="text-colorPrimary">*</span>}
                                               </span>
                                             </Tooltip>
                                           ))}
@@ -563,7 +564,7 @@ function McpDetail() {
                                             const isRequired = required.includes(key);
                                             return (
                                               <div key={key} className="px-3 py-2.5 flex items-start gap-3">
-                                                <div className="flex items-center gap-1.5 min-w-0 flex-shrink-0" style={{ width: 140 }}>
+                                                <div className="hm-mcp-param-name flex items-center gap-1.5 min-w-0 flex-shrink-0">
                                                   <span className="font-mono text-xs text-gray-700 truncate">{key}</span>
                                                   {isRequired && (
                                                     <Tag color="blue" className="m-0 border-0 text-[10px] leading-4 px-1">必填</Tag>
@@ -571,7 +572,7 @@ function McpDetail() {
                                                 </div>
                                                 <div className="flex-1 min-w-0">
                                                   <div className="flex items-center gap-2 mb-0.5">
-                                                    <Tag className="m-0 border-0 bg-purple-50 text-purple-500 text-[10px] leading-4 px-1.5">
+                                                    <Tag className="m-0 border-0 bg-colorPrimaryBg text-colorPrimary text-[10px] leading-4 px-1.5">
                                                       {getTypeLabel(prop)}
                                                     </Tag>
                                                     {prop?.default !== undefined && prop?.default !== "" && (
@@ -622,7 +623,7 @@ function McpDetail() {
           <div className="w-full lg:w-[35%]">
             <div className="lg:sticky lg:top-4 space-y-4">
               {/* 连接配置 */}
-              <div className="bg-white/70 backdrop-blur-sm rounded-2xl border border-white/50 p-5">
+              <div className="hm-mcp-panel backdrop-blur-sm p-5">
                 <h3 className="text-sm font-semibold text-gray-900 mb-3 flex items-center gap-2">
                   <LinkOutlined className="text-green-500" />
                   连接配置
@@ -656,7 +657,7 @@ function McpDetail() {
                           <Tag color="green" className="m-0 border-0">已订阅</Tag>
                         </div>
                       )}
-                      <Tabs size="small" defaultActiveKey={tabItems[0]?.key} items={tabItems} />
+                      <Tabs className="hm-mcp-connection-tabs" size="small" defaultActiveKey={tabItems[0]?.key} items={tabItems} />
                       {/* 订阅/管理订阅 */}
                       <div className="mt-3">
                         {(hasAvailableEndpoint(meta) || subscribed) && (
@@ -675,7 +676,7 @@ function McpDetail() {
                   );
                 })()}
               </div>
-              <div className="bg-white/70 backdrop-blur-sm rounded-2xl border border-white/50 p-5">
+              <div className="hm-mcp-panel backdrop-blur-sm p-5">
                 <h3 className="text-sm font-semibold text-gray-900 mb-3">基本信息</h3>
                 <Descriptions column={1} size="small">
                   {originTag && (
@@ -719,7 +720,7 @@ function McpDetail() {
                     <Descriptions.Item label="标签">
                       <div className="flex flex-wrap gap-1">
                         {tags.map(t => (
-                          <Tag key={t} className="m-0 border-0 bg-purple-50 text-purple-600 text-xs">{t}</Tag>
+                          <Tag key={t} className="m-0 border-0 bg-colorPrimaryBg text-colorPrimary text-xs">{t}</Tag>
                         ))}
                       </div>
                     </Descriptions.Item>
@@ -753,11 +754,11 @@ function McpDetail() {
                     </div>
                     <div className="w-20 flex items-center pr-4">
                       {item.status === "APPROVED" ? (
-                        <><CheckCircleFilled className="text-green-500 mr-1" style={{ fontSize: 10 }} /><span className="text-xs text-gray-700">已通过</span></>
+                        <><CheckCircleFilled className="hm-mcp-status-icon text-green-500 mr-1" /><span className="text-xs text-gray-700">已通过</span></>
                       ) : item.status === "PENDING" ? (
-                        <><ClockCircleFilled className="text-blue-500 mr-1" style={{ fontSize: 10 }} /><span className="text-xs text-gray-700">审核中</span></>
+                        <><ClockCircleFilled className="hm-mcp-status-icon text-colorPrimary mr-1" /><span className="text-xs text-gray-700">审核中</span></>
                       ) : (
-                        <><ExclamationCircleFilled className="text-red-500 mr-1" style={{ fontSize: 10 }} /><span className="text-xs text-gray-700">已拒绝</span></>
+                        <><ExclamationCircleFilled className="hm-mcp-status-icon text-red-500 mr-1" /><span className="text-xs text-gray-700">已拒绝</span></>
                       )}
                     </div>
                     <div className="w-20">
@@ -787,7 +788,7 @@ function McpDetail() {
                       <label className="block text-sm font-medium text-gray-700 mb-2">选择消费者</label>
                       <Select
                         placeholder="搜索或选择消费者"
-                        style={{ width: "100%" }}
+                        className="hm-mcp-full-width"
                         value={selectedConsumerId || undefined}
                         onChange={setSelectedConsumerId}
                         showSearch
@@ -832,22 +833,22 @@ function McpDetail() {
     // 1. key 高亮：匹配 JSON key（冒号前的字符串）
     let result = escaped.replace(
       /(&quot;|")((?:\\.|[^"\\])*)(&quot;|")\s*:/g,
-      '<span style="color:#6366f1">"$2"</span>:'
+      '<span class="hm-mcp-json-key">"$2"</span>:'
     );
     // 2. 字符串值高亮：仅匹配 key 后的 value 部分
     result = result.replace(
       /(<\/span>:\s*)(&quot;|")((?:\\.|[^"\\])*)(&quot;|")/g,
-      '$1<span style="color:#059669">"$3"</span>'
+      '$1<span class="hm-mcp-json-string">"$3"</span>'
     );
     // 3. 数字值高亮
     result = result.replace(
       /(<\/span>:\s*)(\d+)/g,
-      '$1<span style="color:#d97706">$2</span>'
+      '$1<span class="hm-mcp-json-number">$2</span>'
     );
     // 4. 布尔/null 值高亮
     result = result.replace(
       /(<\/span>:\s*)(true|false|null)/g,
-      '$1<span style="color:#dc2626">$2</span>'
+      '$1<span class="hm-mcp-json-literal">$2</span>'
     );
     return result;
   }
@@ -859,7 +860,7 @@ function McpDetail() {
     }
     return (
       <div className="relative group/json">
-        <div className="rounded-lg p-3 overflow-x-auto border border-purple-100 bg-purple-50/30">
+        <div className="hm-mcp-json-block p-3 overflow-x-auto">
           <Button
             type="text"
             size="small"

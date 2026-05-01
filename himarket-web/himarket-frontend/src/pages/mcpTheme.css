@@ -1,0 +1,166 @@
+.hm-mcp-surface {
+  color: var(--color-neutral-900);
+}
+
+.hm-mcp-panel {
+  background: color-mix(in srgb, var(--color-neutral-50) 90%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-neutral-200) 76%, transparent);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sm);
+}
+
+.hm-mcp-panel-muted {
+  background: color-mix(in srgb, var(--color-neutral-100) 72%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-neutral-200) 86%, transparent);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sm);
+}
+
+.hm-mcp-card {
+  background: color-mix(in srgb, var(--color-neutral-50) 88%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-neutral-200) 82%, transparent);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  transition:
+    background var(--motion-duration-base) var(--motion-easing-standard),
+    border-color var(--motion-duration-base) var(--motion-easing-standard),
+    box-shadow var(--motion-duration-base) var(--motion-easing-standard),
+    transform var(--motion-duration-base) var(--motion-easing-standard);
+}
+
+.hm-mcp-card:hover {
+  background: var(--color-neutral-50);
+  border-color: color-mix(in srgb, var(--color-brand) 34%, var(--color-neutral-200));
+  box-shadow: var(--shadow-md);
+}
+
+.hm-mcp-input-shell {
+  width: 100%;
+  max-width: 500px;
+  border: 1px solid var(--color-neutral-300);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  transition:
+    border-color var(--motion-duration-fast) var(--motion-easing-standard),
+    box-shadow var(--motion-duration-fast) var(--motion-easing-standard);
+}
+
+.hm-mcp-input-shell:hover,
+.hm-mcp-input-shell:focus-within {
+  border-color: var(--color-brand);
+  box-shadow: var(--shadow-focus);
+}
+
+.hm-mcp-category-strip {
+  background: color-mix(in srgb, var(--color-neutral-100) 82%, transparent);
+  border: 1px solid var(--color-neutral-200);
+  border-radius: var(--radius-lg);
+}
+
+.hm-mcp-category-icon {
+  color: var(--color-neutral-300);
+  font-size: 18px;
+}
+
+.hm-mcp-icon-sm {
+  width: 18px;
+  height: 18px;
+}
+
+.hm-mcp-hero {
+  background:
+    linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--color-brand-surface-tint) 66%, transparent),
+      color-mix(in srgb, var(--color-neutral-50) 92%, transparent)
+    );
+  border: 1px solid color-mix(in srgb, var(--color-neutral-200) 78%, transparent);
+  border-radius: var(--radius-xl);
+}
+
+.hm-mcp-sticky-bar {
+  background: color-mix(in srgb, var(--color-neutral-50) 86%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--color-neutral-200) 74%, transparent);
+}
+
+.hm-mcp-primary-action {
+  background: var(--color-brand);
+  color: var(--color-neutral-50);
+}
+
+.hm-mcp-primary-action:hover {
+  background: var(--color-brand-hover);
+  color: var(--color-neutral-50);
+}
+
+.hm-mcp-create-shell .ant-form-item-label > label {
+  color: var(--color-neutral-800);
+  font-weight: 600;
+}
+
+.hm-mcp-create-step-card {
+  min-height: 560px;
+}
+
+.hm-mcp-markdown-pane {
+  background-color: transparent;
+}
+
+.hm-mcp-param-name {
+  width: 140px;
+}
+
+.hm-mcp-full-width {
+  width: 100%;
+}
+
+.hm-mcp-status-icon {
+  font-size: 10px;
+}
+
+.hm-mcp-json-block {
+  background: color-mix(in srgb, var(--color-brand-surface-tint) 42%, var(--color-neutral-50));
+  border: 1px solid color-mix(in srgb, var(--color-brand) 18%, var(--color-neutral-200));
+  border-radius: var(--radius-md);
+}
+
+.hm-mcp-json-key {
+  color: var(--color-brand-active);
+}
+
+.hm-mcp-json-string {
+  color: var(--color-semantic-success);
+}
+
+.hm-mcp-json-number {
+  color: var(--color-semantic-warning);
+}
+
+.hm-mcp-json-literal {
+  color: var(--color-semantic-error);
+}
+
+.hm-mcp-tabs.ant-tabs .ant-tabs-nav::before,
+.hm-mcp-connection-tabs.ant-tabs .ant-tabs-nav::before {
+  border-bottom-color: var(--color-neutral-200);
+}
+
+.hm-mcp-tabs.ant-tabs .ant-tabs-tab,
+.hm-mcp-connection-tabs.ant-tabs .ant-tabs-tab {
+  color: var(--color-neutral-600);
+}
+
+.hm-mcp-tabs.ant-tabs .ant-tabs-tab:hover,
+.hm-mcp-connection-tabs.ant-tabs .ant-tabs-tab:hover {
+  color: var(--color-brand-hover);
+}
+
+.hm-mcp-tabs.ant-tabs .ant-tabs-tab-active .ant-tabs-tab-btn,
+.hm-mcp-connection-tabs.ant-tabs .ant-tabs-tab-active .ant-tabs-tab-btn {
+  color: var(--color-brand);
+}
+
+.hm-mcp-tabs.ant-tabs .ant-tabs-ink-bar,
+.hm-mcp-connection-tabs.ant-tabs .ant-tabs-ink-bar {
+  background: var(--color-brand);
+}

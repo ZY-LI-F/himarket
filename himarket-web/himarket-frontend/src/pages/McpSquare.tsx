@@ -31,6 +31,7 @@ import { ProductIconRenderer } from "../components/icon/ProductIconRenderer";
 import dayjs from "dayjs";
 import BackToTopButton from "../components/scroll-to-top";
 import { CardGridSkeleton } from "../components/loading";
+import "./mcpTheme.css";
 
 interface McpProductItem {
   product: IProductDetail;
@@ -282,7 +283,7 @@ function McpSquare({ embedded = false, renderActions }: McpSquareProps) {
 
         {/* 搜索区域 - sticky */}
         <div
-          className={`sticky top-0 z-50 backdrop-blur-md transition-shadow duration-200 flex-shrink-0 ${isStuck ? "shadow-sm bg-white/80" : ""}`}
+          className={`sticky top-0 z-50 backdrop-blur-md transition-shadow duration-200 flex-shrink-0 ${isStuck ? "hm-mcp-sticky-bar shadow-sm" : ""}`}
         >
           <div className="flex flex-col gap-4 px-6 py-4">
             {/* 第一行：统计信息 */}
@@ -301,7 +302,7 @@ function McpSquare({ embedded = false, renderActions }: McpSquareProps) {
               {!embedded && isLoggedIn && (
                 <button
                   onClick={() => navigate("/mcp/create")}
-                  className="group flex items-center gap-0 h-10 px-3 rounded-xl bg-black text-white hover:shadow-md transition-all duration-300 flex-shrink-0 overflow-hidden"
+                  className="hm-mcp-primary-action group flex items-center gap-0 h-10 px-3 rounded-xl hover:shadow-md transition-all duration-300 flex-shrink-0 overflow-hidden"
                 >
                   <PlusOutlined className="text-base" />
                   <span className="max-w-0 overflow-hidden group-hover:max-w-[60px] transition-all duration-300 whitespace-nowrap group-hover:ml-1.5">
@@ -322,7 +323,7 @@ function McpSquare({ embedded = false, renderActions }: McpSquareProps) {
                   suffix={
                     <button
                       onClick={handleSearchCommit}
-                      className="bg-black hover:bg-gray-800 text-white rounded-lg p-2 transition-colors"
+                      className="hm-mcp-primary-action rounded-lg p-2 transition-colors"
                       type="button"
                     >
                       <SearchOutlined className="text-lg" />
@@ -339,7 +340,7 @@ function McpSquare({ embedded = false, renderActions }: McpSquareProps) {
               {!embedded && isLoggedIn && (
                 <button
                   onClick={() => navigate("/mcp/my")}
-                  className="absolute right-0 flex items-center gap-1.5 h-10 px-4 rounded-xl border border-gray-200 bg-white text-gray-700 text-sm font-medium transition-all duration-200 flex-shrink-0 hover:bg-black hover:text-white hover:border-black hover:shadow-md"
+                  className="absolute right-0 flex items-center gap-1.5 h-10 px-4 rounded-xl border border-gray-200 bg-white text-gray-700 text-sm font-medium transition-all duration-200 flex-shrink-0 hover:bg-colorPrimary hover:text-white hover:border-colorPrimary hover:shadow-md"
                 >
                   <StarOutlined className="text-sm" />
                   我的 MCP
@@ -550,8 +551,7 @@ function McpCard({
     <div
       onClick={onViewDetail}
       className="
-        bg-white/60 backdrop-blur-sm rounded-xl p-4
-        border border-white/40
+        hm-mcp-card backdrop-blur-sm p-4
         cursor-pointer
         transition-all duration-300 ease-in-out
         hover:bg-white hover:shadow-md hover:scale-[1.02] hover:border-colorPrimary/30
@@ -611,7 +611,7 @@ function McpCard({
       </div>
 
       {/* 描述 */}
-      <p className="text-sm mb-2 line-clamp-2 leading-relaxed flex-1 text-[#a3a3a3]">
+      <p className="text-sm mb-2 line-clamp-2 leading-relaxed flex-1 text-claude-neutral-500">
         {description || "暂无描述"}
       </p>
 
@@ -633,7 +633,7 @@ function McpCard({
           )}
         </div>
         <div className="flex flex-shrink-0 items-center gap-2">
-          <span className="text-[#a3a3a3]">
+          <span className="text-claude-neutral-500">
             {dayjs(product.createAt).format("YYYY-MM-DD")}
           </span>
           {actions}
@@ -753,8 +753,7 @@ function MyMcpCard({
     <div
       onClick={onViewDetail}
       className="
-        bg-white/60 backdrop-blur-sm rounded-xl p-4
-        border border-white/40
+        hm-mcp-card backdrop-blur-sm p-4
         cursor-pointer
         transition-all duration-300 ease-in-out
         hover:bg-white hover:shadow-md hover:scale-[1.02] hover:border-colorPrimary/30
@@ -806,7 +805,7 @@ function MyMcpCard({
       </div>
 
       {/* 描述 */}
-      <p className="text-sm mb-2 line-clamp-2 leading-relaxed flex-1 text-[#a3a3a3]">
+      <p className="text-sm mb-2 line-clamp-2 leading-relaxed flex-1 text-claude-neutral-500">
         {description || "暂无描述"}
       </p>
 
@@ -815,7 +814,7 @@ function MyMcpCard({
         <span className="text-[10px] font-medium px-1.5 py-0.5 rounded-full bg-green-50 text-green-600 border border-green-100">
           已订阅
         </span>
-        <span className="flex-shrink-0 text-[#a3a3a3]">
+        <span className="flex-shrink-0 text-claude-neutral-500">
           {dayjs(product.createAt).format("YYYY-MM-DD")}
         </span>
       </div>

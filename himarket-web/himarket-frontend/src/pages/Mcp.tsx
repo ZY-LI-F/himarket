@@ -8,6 +8,7 @@ import { ProductStatus } from "../types";
 import type { IMCPConfig, IProductIcon } from "../lib/apis/typing";
 import type { ICategory } from "../lib/apis";
 import APIs from "../lib/apis";
+import "./mcpTheme.css";
 // import { getCategoryText, getCategoryColor } from "../lib/statusUtils"
 
 interface IMcpServer {
@@ -116,7 +117,7 @@ function McpPage() {
     if (!icon || !icon.value) {
       // "全部"使用打开的文件夹图标，其他使用普通文件夹图标
       const IconComponent = isAll ? FolderOpenFilled : FolderFilled;
-      return <IconComponent style={{ fontSize: '18px', color: '#D1D5DB' }} />;
+      return <IconComponent className="hm-mcp-category-icon" />;
     }
 
     let iconUrl = '';
@@ -131,7 +132,7 @@ function McpPage() {
       <img
         src={iconUrl}
         alt=""
-        style={{ width: '18px', height: '18px' }}
+        className="hm-mcp-icon-sm"
         onError={(e) => {
           e.currentTarget.style.display = 'none';
         }}
@@ -148,7 +149,7 @@ function McpPage() {
   return (
     <Layout>
       {/* Header Section */}
-      <div className="text-center mb-8">
+      <div className="hm-mcp-hero text-center mb-8 px-6 py-8">
         <Title level={1} className="mb-4">
           MCP 市场
         </Title>
@@ -160,7 +161,7 @@ function McpPage() {
       {/* Search Section */}
       <div className="flex justify-center mb-8">
         <div className="relative w-full max-w-lg">
-          <div className="border border-gray-300 rounded-md overflow-hidden hover:border-blue-500 focus-within:border-blue-500 focus-within:shadow-sm" style={{ width: '100%', maxWidth: '500px' }}>
+          <div className="hm-mcp-input-shell">
             <Input.Search
               placeholder="请输入内容"
               size="large"
@@ -175,16 +176,16 @@ function McpPage() {
 
       {/* Category Tags Section */}
       <div className="mb-2">
-        <div className="py-3 px-4 border border-gray-200 rounded-lg bg-[#f4f4f6]">
+        <div className="hm-mcp-category-strip py-3 px-4">
           <div className="flex flex-wrap items-center gap-4">
             <div
               className={`cursor-pointer transition-all duration-200 px-3 py-1.5 rounded-md flex items-center gap-2 text-sm border ${selectedCategory === 'all'
-                  ? 'bg-white shadow-sm text-blue-600 border-blue-200'
+                  ? 'bg-white shadow-sm text-colorPrimary border-colorPrimary/20'
                   : 'text-gray-600 border-transparent hover:bg-white hover:shadow-sm hover:border-gray-200'
                 }`}
               onClick={() => handleCategoryChange('all')}
             >
-              <div className={`w-4 h-4 rounded border flex items-center justify-center ${selectedCategory === 'all' ? 'border-blue-500 bg-blue-500' : 'border-gray-300 bg-white'
+              <div className={`w-4 h-4 rounded border flex items-center justify-center ${selectedCategory === 'all' ? 'border-colorPrimary bg-colorPrimary' : 'border-gray-300 bg-white'
                 }`}>
                 {selectedCategory === 'all' && (
                   <svg className="w-2.5 h-2.5 text-white" viewBox="0 0 20 20" fill="currentColor">
@@ -199,12 +200,12 @@ function McpPage() {
               <div
                 key={category.categoryId}
                 className={`cursor-pointer transition-all duration-200 px-3 py-1.5 rounded-md flex items-center gap-2 text-sm border ${selectedCategory === category.categoryId
-                    ? 'bg-white shadow-sm text-blue-600 border-blue-200'
+                    ? 'bg-white shadow-sm text-colorPrimary border-colorPrimary/20'
                     : 'text-gray-600 border-transparent hover:bg-white hover:shadow-sm hover:border-gray-200'
                   }`}
                 onClick={() => handleCategoryChange(category.categoryId)}
               >
-                <div className={`w-4 h-4 rounded border flex items-center justify-center ${selectedCategory === category.categoryId ? 'border-blue-500 bg-blue-500' : 'border-gray-300 bg-white'
+                <div className={`w-4 h-4 rounded border flex items-center justify-center ${selectedCategory === category.categoryId ? 'border-colorPrimary bg-colorPrimary' : 'border-gray-300 bg-white'
                   }`}>
                   {selectedCategory === category.categoryId && (
                     <svg className="w-2.5 h-2.5 text-white" viewBox="0 0 20 20" fill="currentColor">
@@ -257,7 +258,7 @@ function McpPage() {
                   ) : (
                     <Avatar
                       size={48}
-                      className="bg-gradient-to-br from-blue-500 to-blue-600 shadow-lg"
+                      className="bg-gradient-to-br from-colorPrimary/90 to-colorPrimary shadow-lg"
                       style={{ fontSize: "18px", fontWeight: "600" }}
                     >
                       {server.name[0]}

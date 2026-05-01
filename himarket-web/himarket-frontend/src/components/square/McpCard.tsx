@@ -27,8 +27,7 @@ export function McpCard({
     <div
       onClick={onClick}
       className="
-        group bg-white/70 backdrop-blur-sm rounded-2xl p-5
-        border border-gray-100/80
+        hm-mcp-card group backdrop-blur-sm p-5
         cursor-pointer
         transition-all duration-300 ease-out
         hover:bg-white hover:shadow-lg hover:shadow-gray-200/50 hover:-translate-y-0.5 hover:border-gray-200/60

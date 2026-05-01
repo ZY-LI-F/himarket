@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Form, Input, Button, Tag, Radio, Select, Switch, Table, Space, Image, message, Modal } from "antd";
+import { Form, Button, Tag, Radio, Switch, Table, Space, Image, message, Modal } from "antd";
 import type { UploadFile } from "antd";
 import {
   InfoCircleOutlined, SettingOutlined, FileTextOutlined,
@@ -9,7 +9,9 @@ import {
 } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import { Layout } from "../components/Layout";
+import { FormField } from "../components/common";
 import APIs from "../lib/apis";
+import "./mcpTheme.css";
 
 interface ExtraParam {
   key: string;
@@ -150,32 +152,32 @@ function McpCreatePage() {
             { max: 63, message: "不超过 63 个字符" },
           ]}
         >
-          <Input placeholder="weather-mcp-server" />
+          <FormField.Input placeholder="weather-mcp-server" />
         </Form.Item>
         <Form.Item
           name="mcpDisplayName"
           label="MCP 中文名称"
           rules={[{ required: true, message: "请输入 MCP 中文名称" }, { max: 100, message: "不超过 100 个字符" }]}
         >
-          <Input placeholder="天气查询服务" />
+          <FormField.Input placeholder="天气查询服务" />
         </Form.Item>
       </div>
 
       <Form.Item name="description" label="描述">
-        <Input.TextArea placeholder="简要描述 MCP Server 的功能和用途" rows={2} autoSize={{ minRows: 2, maxRows: 4 }} />
+        <FormField.TextArea placeholder="简要描述 MCP Server 的功能和用途" rows={2} autoSize={{ minRows: 2, maxRows: 4 }} />
       </Form.Item>
 
       <Form.Item name="repoUrl" label="仓库地址"
         rules={[{ type: "url", message: "请输入合法的 URL" }]}
       >
-        <Input placeholder="https://github.com/org/mcp-server" />
+        <FormField.Input placeholder="https://github.com/org/mcp-server" />
       </Form.Item>
 
       {/* 标签 */}
       <Form.Item label="自定义标签">
-        <Form.Item name="tags" hidden><Input /></Form.Item>
+        <Form.Item name="tags" hidden><FormField.Input /></Form.Item>
         <div className="flex items-center gap-2 mb-2">
-          <Input value={tagInput} onChange={(e) => setTagInput(e.target.value)}
+          <FormField.Input value={tagInput} onChange={(e) => setTagInput(e.target.value)}
             onPressEnter={(e) => { e.preventDefault(); handleAddTag(); }}
             placeholder="输入后按回车添加" size="small"
             suffix={<PlusOutlined className="text-gray-400 hover:text-colorPrimary cursor-pointer" onClick={handleAddTag} />}
@@ -222,7 +224,7 @@ function McpCreatePage() {
             </div>
           ) : (
             <Form.Item name="iconUrl" noStyle rules={[{ type: "url", message: "请输入有效的图片链接" }]}>
-              <Input placeholder="图片链接地址" className="flex-1" />
+              <FormField.Input placeholder="图片链接地址" className="flex-1" />
             </Form.Item>
           )}
           <Radio.Group value={iconMode} onChange={(e) => handleIconModeChange(e.target.value)} size="small" optionType="button" buttonStyle="solid" className="flex-shrink-0">
@@ -256,7 +258,7 @@ function McpCreatePage() {
     return (
       <>
         <Form.Item name="protocolType" hidden initialValue="sse" rules={[{ required: true }]}>
-          <Input />
+          <FormField.Input />
         </Form.Item>
         <Form.Item label="协议类型">
           <div className="grid grid-cols-3 gap-3">
@@ -293,7 +295,7 @@ function McpCreatePage() {
             },
           ]}
         >
-          <Input.TextArea placeholder={exampleJson} autoSize={{ minRows: 8, maxRows: 14 }} className="font-mono text-xs" />
+          <FormField.TextArea placeholder={exampleJson} autoSize={{ minRows: 8, maxRows: 14 }} className="font-mono text-xs" />
         </Form.Item>
 
         <div className="flex items-center gap-3 -mt-3 mb-4">
@@ -385,7 +387,7 @@ function McpCreatePage() {
         <Tag color="blue" className="m-0 border-0">Markdown</Tag>
       </div>
       <Form.Item name="serviceIntro" className="mb-0">
-        <Input.TextArea
+        <FormField.TextArea
           placeholder={"# 服务介绍\n\n简要描述你的 MCP Server...\n\n## 功能特性\n\n- 特性一\n- 特性二"}
           autoSize={{ minRows: 16, maxRows: 22 }}
           className="font-mono text-xs"
@@ -398,7 +400,7 @@ function McpCreatePage() {
 
   return (
     <Layout>
-      <div className="h-[calc(100vh-96px)] overflow-auto">
+      <div className="hm-mcp-surface h-[calc(100vh-96px)] overflow-auto">
         {/* 顶部面包屑 */}
         <div className="px-8 pt-4 pb-2">
           <button onClick={() => navigate("/mcp")}
@@ -415,8 +417,8 @@ function McpCreatePage() {
             <p className="text-sm text-gray-400 mt-1">填写信息后提交，管理员审核通过后将发布到广场</p>
           </div>
 
-          <div className="bg-white/60 backdrop-blur-sm rounded-2xl border border-white/40 shadow-sm overflow-hidden">
-            <div className="flex" style={{ minHeight: 560 }}>
+          <div className="hm-mcp-panel hm-mcp-create-shell backdrop-blur-sm overflow-hidden">
+            <div className="hm-mcp-create-step-card flex">
               {/* 左侧步骤导航 */}
               <div className="w-56 bg-gray-50/60 border-r border-gray-100/80 p-6 flex flex-col flex-shrink-0">
                 <nav className="flex-1 space-y-0">
@@ -506,25 +508,28 @@ function McpCreatePage() {
       >
         <Form form={paramForm} layout="vertical" className="mt-4">
           <Form.Item name="name" label="参数名" rules={[{ required: true, message: "请输入参数名" }]}>
-            <Input placeholder={protocolType === "stdio" ? "例如: API_KEY" : "例如: Authorization"} />
+            <FormField.Input placeholder={protocolType === "stdio" ? "例如: API_KEY" : "例如: Authorization"} />
           </Form.Item>
           <Form.Item name="position" label="参数位置" initialValue={protocolType === "stdio" ? "env" : "header"} rules={[{ required: true }]}>
-            <Select>
-              {protocolType === "stdio" ? (
-                <Select.Option value="env">环境变量 (env)</Select.Option>
-              ) : (
-                <><Select.Option value="header">请求头 (header)</Select.Option><Select.Option value="query">查询参数 (query)</Select.Option></>
-              )}
-            </Select>
+            <FormField.Select
+              options={
+                protocolType === "stdio"
+                  ? [{ value: "env", label: "环境变量 (env)" }]
+                  : [
+                      { value: "header", label: "请求头 (header)" },
+                      { value: "query", label: "查询参数 (query)" },
+                    ]
+              }
+            />
           </Form.Item>
           <Form.Item name="required" label="是否必填" valuePropName="checked" initialValue={false}>
             <Switch checkedChildren="必填" unCheckedChildren="可选" />
           </Form.Item>
           <Form.Item name="description" label="参数说明">
-            <Input.TextArea placeholder="描述该参数的用途" rows={2} autoSize={{ minRows: 2, maxRows: 4 }} />
+            <FormField.TextArea placeholder="描述该参数的用途" rows={2} autoSize={{ minRows: 2, maxRows: 4 }} />
           </Form.Item>
           <Form.Item name="example" label="参数示例">
-            <Input placeholder={protocolType === "stdio" ? "例如: sk-xxxxxxxxxxxx" : "例如: Bearer sk-xxx"} />
+            <FormField.Input placeholder={protocolType === "stdio" ? "例如: sk-xxxxxxxxxxxx" : "例如: Bearer sk-xxx"} />
           </Form.Item>
         </Form>
       </Modal>
