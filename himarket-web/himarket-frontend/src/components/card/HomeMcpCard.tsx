@@ -8,10 +8,7 @@ function HomeMCPCard() {
   return (
     <CommonCard to="/mcp">
       <div
-        className="absolute w-full h-full z-[1] animate-[fadeIn_0.8s_ease-out_0.2s_both]"
-        style={{
-          background: "linear-gradient(324deg, #C6D1FF 0%, #E1E7FF 21%, #FFFFFF 100%)",
-        }}
+        className="absolute w-full h-full z-[1] animate-[fadeIn_0.8s_ease-out_0.2s_both] bg-gradient-to-br from-colorPrimaryBgHover via-claude-neutral-50 to-white"
       />
       <div className="h-full relative z-[3] flex flex-col justify-between p-6">
         <div className="flex flex-col gap-4">
@@ -90,7 +87,7 @@ function ProductCard(props: {
     <div
       className="
         bg-white/60 backdrop-blur-sm rounded-2xl p-5
-        border border-[#e5e5e5]
+        border border-claude-neutral-200
         cursor-pointer
         transition-all duration-300 ease-in-out
         hover:bg-white hover:shadow-md hover:scale-[1.02] hover:border-colorPrimary/30

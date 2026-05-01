@@ -45,10 +45,7 @@ function HomeAPICard() {
   return (
     <CommonCard to="/apis">
       <div
-        className="absolute w-full h-full z-[1] animate-[fadeIn_0.8s_ease-out_0.2s_both]"
-        style={{
-          background: "linear-gradient(324deg, #C6D9FF 0%, #E1EBFF 21%, #FFFFFF 99%)",
-        }}
+        className="absolute w-full h-full z-[1] animate-[fadeIn_0.8s_ease-out_0.2s_both] bg-gradient-to-br from-colorPrimary/20 via-colorPrimaryBgHover to-white"
       />
       <div className="absolute w-full h-full z-[2] left-[-10%] animate-[fadeIn_1s_ease-out_0.5s_both]">
         <pre className="text-white/60 text-xs px-2">
@@ -62,7 +59,7 @@ function HomeAPICard() {
             {
               [
                 <Type />,
-                <Image className="fill-[#0A0A0A] w-5 h-5" />,
+                <Image className="fill-claude-neutral-900 w-5 h-5" />,
                 <SquarePlay />,
                 <AudioLines />,
               ].map((icon, i) => (
@@ -120,11 +117,11 @@ function Terminal(props: React.PropsWithChildren<{ className?: string }>) {
   return (
     <div className={`rounded-md overflow-hidden ${className}`}>
       <div className="px-3 bg-white h-3 w-full flex items-center gap-1">
-        <div className="w-[6px] h-[6px] rounded-full bg-[#EF4444]"></div>
-        <div className="w-[6px] h-[6px] rounded-full bg-[#EAB308]"></div>
-        <div className="w-[6px] h-[6px] rounded-full bg-[#22C55E]"></div>
+        <div className="w-[6px] h-[6px] rounded-full bg-red-500"></div>
+        <div className="w-[6px] h-[6px] rounded-full bg-yellow-500"></div>
+        <div className="w-[6px] h-[6px] rounded-full bg-green-500"></div>
       </div>
-      <div className="min-h-20" style={{ background: "linear-gradient(138deg, rgba(82, 82, 82, 0.8) 0%, rgba(31, 31, 31, 0.95) 79%)" }}>
+      <div className="min-h-20 bg-gradient-to-br from-claude-neutral-700 to-claude-neutral-900">
         {children}
       </div>
     </div>

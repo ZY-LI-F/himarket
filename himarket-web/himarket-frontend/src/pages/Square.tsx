@@ -171,6 +171,21 @@ function Square(props: SquareProps) {
   // 根据产品类型获取引导语
   const getSlogan = (): { title: string; subtitleKey: string } | null => {
     switch (activeType) {
+      case "MODEL_API":
+        return {
+          title: t("modelMarketTitle"),
+          subtitleKey: "modelMarketSubtitle",
+        };
+      case "AGENT_API":
+        return {
+          title: t("agentMarketTitle"),
+          subtitleKey: "agentMarketSubtitle",
+        };
+      case "REST_API":
+        return {
+          title: t("apiMarketTitle"),
+          subtitleKey: "apiMarketSubtitle",
+        };
       case "AGENT_SKILL":
         return {
           title: t("skillMarketTitle"),
@@ -229,16 +244,19 @@ function Square(props: SquareProps) {
       >
         {/* 引导语 */}
         {slogan && (
-          <div className="text-center py-6">
-            <h1 className="text-4xl font-bold mb-3">{slogan.title}</h1>
-            <p className="text-gray-500 text-base flex items-baseline justify-center gap-0">
+          <div className="mx-auto my-6 max-w-4xl rounded-claude-xl border border-colorPrimary/20 bg-gradient-to-br from-colorPrimaryBgHover via-white to-claude-neutral-50 px-6 py-8 text-center shadow-claude-sm">
+            <div className="mb-3 inline-flex rounded-claude-full bg-white/70 px-3 py-1 text-xs font-semibold uppercase tracking-normal text-colorPrimary">
+              Marketplace
+            </div>
+            <h1 className="mb-3 text-4xl font-bold text-claude-neutral-900">{slogan.title}</h1>
+            <p className="text-claude-neutral-600 text-base flex items-baseline justify-center gap-0">
               <Trans
                 t={t}
                 i18nKey={slogan.subtitleKey}
                 values={{ count: totalElements }}
                 components={{
                   1: (
-                    <span className="text-4xl font-extrabold text-blue-500 mx-1 tabular-nums leading-none relative -top-[2px]" />
+                    <span className="text-4xl font-extrabold text-colorPrimary mx-1 tabular-nums leading-none relative -top-[2px]" />
                   ),
                 }}
               />
@@ -252,7 +270,7 @@ function Square(props: SquareProps) {
             {/* 排序 */}
             {showSortControl && (
               <div className="flex items-center justify-center text-sm">
-                <div className="inline-flex items-center p-[3px] rounded-xl bg-gray-100/80 backdrop-blur-sm">
+                <div className="inline-flex items-center p-[3px] rounded-xl bg-claude-neutral-100/80 backdrop-blur-sm shadow-claude-sm">
                   {[
                     {
                       label: t("sortMostDownloads"),
@@ -277,13 +295,13 @@ function Square(props: SquareProps) {
                         transition-all duration-200 ease-out cursor-pointer select-none
                         ${
                           sortBy === option.value
-                            ? "bg-white text-gray-900 shadow-[0_1px_3px_rgba(0,0,0,0.08),0_0_0_1px_rgba(0,0,0,0.04)]"
-                            : "text-gray-500 hover:text-gray-700"
+                            ? "bg-white text-claude-neutral-900 shadow-claude-sm"
+                            : "text-claude-neutral-500 hover:text-colorPrimary"
                         }
                       `}
                     >
                       <span
-                        className={`text-xs transition-colors duration-200 ${sortBy === option.value ? "text-indigo-500" : "text-gray-500"}`}
+                        className={`text-xs transition-colors duration-200 ${sortBy === option.value ? "text-colorPrimary" : "text-claude-neutral-500"}`}
                       >
                         {option.icon}
                       </span>
@@ -306,7 +324,7 @@ function Square(props: SquareProps) {
                   suffix={
                     <button
                       onClick={handleSearch}
-                      className="bg-black hover:bg-gray-800 text-white rounded-lg p-2 transition-colors"
+                      className="bg-colorPrimary hover:bg-colorPrimaryHover text-white rounded-lg p-2 transition-colors"
                       type="button"
                     >
                       <SearchOutlined className="text-lg" />

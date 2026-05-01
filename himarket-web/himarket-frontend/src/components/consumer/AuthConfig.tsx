@@ -12,6 +12,7 @@ import type {
 import type { ApiResponse } from "../../types";
 import MultiSwitchButton from "../switch-button.tsx";
 import { modelStyles } from "../../lib/styles.ts";
+import { Empty } from "../common";
 
 const { Text } = Typography;
 
@@ -287,18 +288,18 @@ export function AuthConfig({ consumerId }: AuthConfigProps) {
   // API Key 列
   const apiKeyColumns = [
     {
-      title: <span className="text-[#737373]">API Key</span>,
+      title: <span className="text-claude-neutral-500">API Key</span>,
       dataIndex: 'apiKey',
       key: 'apiKey',
       render: (apiKey: string) => (
         <div className="flex items-center space-x-2">
-          <code className="text-sm px-2 py-1 border border-[#e5e5e5] rounded-lg">{apiKey}</code>
+          <code className="text-sm px-2 py-1 border border-claude-neutral-200 rounded-lg">{apiKey}</code>
           <Button type="text" size="small" icon={<CopyOutlined className="text-colorPrimary" />} onClick={() => handleCopyCredential(apiKey)} />
         </div>
       ),
     },
     {
-      title: <span className="text-[#737373]">操作</span>,
+      title: <span className="text-claude-neutral-500">操作</span>,
       key: 'action',
       render: (record: ConsumerCredential) => (
         <Popconfirm title="确定要删除该API Key凭证吗？" onConfirm={() => handleDeleteCredential('API_KEY', record)}>
@@ -316,7 +317,7 @@ export function AuthConfig({ consumerId }: AuthConfigProps) {
       key: 'ak',
       render: (ak: string) => (
         <div className="flex items-center space-x-2">
-          <code className="text-sm px-2 py-1 border border-[#e5e5e5] rounded-lg">{ak}</code>
+          <code className="text-sm px-2 py-1 border border-claude-neutral-200 rounded-lg">{ak}</code>
           <Button type="text" size="small" icon={<CopyOutlined className="text-colorPrimary" />} onClick={() => handleCopyCredential(ak)} />
         </div>
       ),
@@ -327,7 +328,7 @@ export function AuthConfig({ consumerId }: AuthConfigProps) {
       key: 'sk',
       render: (sk: string) => (
         <div className="flex items-center space-x-2">
-          <code className="text-sm px-2 py-1 border border-[#e5e5e5] rounded-lg">{maskSecretKey(sk)}</code>
+          <code className="text-sm px-2 py-1 border border-claude-neutral-200 rounded-lg">{maskSecretKey(sk)}</code>
           <Button type="text" size="small" icon={<CopyOutlined className="text-colorPrimary" />} onClick={() => handleCopyCredential(sk)} />
         </div>
       ),
@@ -352,9 +353,9 @@ export function AuthConfig({ consumerId }: AuthConfigProps) {
   }, [])
 
   return (
-    <div className="bg-white backdrop-blur-sm rounded-xl border border-white/60 shadow-sm overflow-hidden">
+    <div className="bg-white/80 backdrop-blur-sm rounded-xl border border-claude-neutral-200 shadow-claude-sm overflow-hidden">
       <div className="p-6">
-        <h3 className="text-base font-semibold text-gray-900 mb-4 ">认证方式</h3>
+        <h3 className="text-base font-semibold text-claude-neutral-900 mb-4 ">认证方式</h3>
         <MultiSwitchButton
           initialValue={activeTab}
           onChange={(val) => {
@@ -368,7 +369,7 @@ export function AuthConfig({ consumerId }: AuthConfigProps) {
               <div>
                 <div className="mb-4">
                   {/* 凭证来源配置 */}
-                  <div className="mb-6 p-4 backdrop-blur-sm rounded-lg border border-[#e5e5e5]">
+                  <div className="mb-6 p-4 backdrop-blur-sm rounded-lg border border-claude-neutral-200 bg-claude-neutral-50/60">
                     <div className="flex items-center">
                       <div className="flex items-center gap-4">
                         <span className="font-medium">凭证来源：</span>
@@ -398,13 +399,13 @@ export function AuthConfig({ consumerId }: AuthConfigProps) {
                     新增凭证
                   </Button>
                 </div>
-                <div className="p-1 border border-[#e5e5e5] rounded-lg overflow-hidden">
+                <div className="p-1 border border-claude-neutral-200 rounded-lg overflow-hidden">
                   <Table
                     columns={apiKeyColumns}
                     dataSource={currentConfig?.apiKeyConfig?.credentials || []}
                     rowKey={(record) => record.apiKey || Math.random().toString()}
                     pagination={false}
-                    locale={{ emptyText: '暂无API Key凭证，请点击上方按钮创建' }}
+                    locale={{ emptyText: <Empty compact description="暂无API Key凭证，请点击上方按钮创建" /> }}
                   />
                 </div>
               </div>
@@ -426,14 +427,14 @@ export function AuthConfig({ consumerId }: AuthConfigProps) {
                     添加AK/SK
                   </Button>
                 </div>
-                <div className="border border-[#e5e5e5] rounded-lg overflow-hidden">
+                <div className="border border-claude-neutral-200 rounded-lg overflow-hidden">
                   <Table
                     columns={hmacColumns}
                     dataSource={currentConfig?.hmacConfig?.credentials || []}
                     rowKey={(record) => record.ak || record.sk || Math.random().toString()}
                     pagination={false}
                     size="small"
-                    locale={{ emptyText: '暂无AK/SK凭证，请点击上方按钮创建' }}
+                    locale={{ emptyText: <Empty compact description="暂无AK/SK凭证，请点击上方按钮创建" /> }}
                   />
                 </div>
               </div>
@@ -441,8 +442,8 @@ export function AuthConfig({ consumerId }: AuthConfigProps) {
           }
           {
             activeTab === "JWT" && (
-              <div className="text-center py-8 text-gray-500">
-                JWT功能暂未开放
+              <div className="py-8">
+                <Empty compact description="JWT功能暂未开放" />
               </div>
             )
           }

@@ -8,6 +8,7 @@ import { CopyOutlined, DownloadOutlined } from "@ant-design/icons";
 import type { IProductDetail } from "../lib/apis";
 import APIs from "../lib/apis";
 import MarkdownRender from "../components/MarkdownRender";
+import { Card, Empty } from "../components/common";
 
 
 function ApiDetailPage() {
@@ -79,7 +80,7 @@ function ApiDetailPage() {
   }, [apiProductId, fetchApiDetail]);
 
   const leftContent = apiData ? (
-    <div className="bg-white/60 backdrop-blur-sm rounded-2xl border border-white/40 p-6 pt-0">
+    <Card className="bg-white/85 backdrop-blur-sm border-claude-neutral-200">
       <Tabs
               size="large"
               defaultActiveKey="overview"
@@ -92,8 +93,8 @@ function ApiDetailPage() {
                       <MarkdownRender content={apiData.document} />
                     </div>
                   ) : (
-                    <div className="text-gray-500 text-center py-16">
-                      暂无概览信息
+                    <div className="py-16">
+                      <Empty description="暂无概览信息" />
                     </div>
                   ),
                 },
@@ -105,8 +106,8 @@ function ApiDetailPage() {
                       {apiData.apiConfig && apiData.apiConfig.spec ? (
                         <SwaggerUIWrapper apiSpec={apiData.apiConfig.spec} />
                       ) : (
-                        <div className="text-gray-500 text-center py-16">
-                          暂无OpenAPI规范
+                        <div className="py-16">
+                          <Empty description="暂无OpenAPI规范" />
                         </div>
                       )}
                     </div>
@@ -114,12 +115,12 @@ function ApiDetailPage() {
                 },
               ]}
             />
-          </div>
+          </Card>
   ) : null;
 
   const rightContent = (
-    <div className="bg-white/60 backdrop-blur-sm rounded-2xl border border-white/40 p-6">
-      <h3 className="text-base font-semibold mb-4 text-gray-900">快速开始</h3>
+    <Card className="bg-white/85 backdrop-blur-sm border-claude-neutral-200">
+      <h3 className="text-base font-semibold mb-4 text-claude-neutral-900">快速开始</h3>
             <Tabs
               defaultActiveKey="curl"
               items={[
@@ -217,7 +218,7 @@ function ApiDetailPage() {
                 },
               ]}
             />
-      </div>
+      </Card>
   );
 
   return (

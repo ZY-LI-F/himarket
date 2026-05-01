@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { Card, Tag, Typography, Input, Avatar, Skeleton } from "antd";
+import { Tag, Typography, Input, Avatar, Skeleton } from "antd";
 const { Title, Paragraph } = Typography;
 import { FolderFilled, FolderOpenFilled } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import { Layout } from "../components/Layout";
+import { Card, Empty } from "../components/common";
 import { ProductStatus } from "../types";
 // import { getCategoryText, getCategoryColor } from "../lib/statusUtils";
 import './Test.css';
@@ -53,9 +54,23 @@ function APIsPage() {
         // 如果value已经包含data URL前缀，直接使用；否则添加前缀
         return icon.value ? (icon.value.startsWith('data:') ? icon.value : `data:image/png;base64,${icon.value}`) : fallback;
       default:
-        return fallback;
+      return fallback;
     }
   };
+
+  const getApiIconClass = (name: string) => {
+    const classes = [
+      'bg-colorPrimary',
+      'bg-claude-neutral-700',
+      'bg-claude-semantic-success',
+      'bg-claude-semantic-warning',
+      'bg-claude-semantic-info',
+      'bg-claude-neutral-500',
+    ];
+    const index = name.charCodeAt(0) % classes.length;
+    return classes[index];
+  };
+
   // 获取类别列表
   const fetchCategories = async () => {
     try {
@@ -117,7 +132,7 @@ function APIsPage() {
     if (!icon || !icon.value) {
       // "全部"使用打开的文件夹图标，其他使用普通文件夹图标
       const IconComponent = isAll ? FolderOpenFilled : FolderFilled;
-      return <IconComponent style={{ fontSize: '18px', color: '#D1D5DB' }} />;
+      return <IconComponent className="text-lg text-claude-neutral-300" />;
     }
 
     let iconUrl = '';
@@ -132,7 +147,7 @@ function APIsPage() {
       <img
         src={iconUrl}
         alt=""
-        style={{ width: '18px', height: '18px' }}
+        className="h-[18px] w-[18px]"
         onError={(e) => {
           // 如果图标加载失败，显示默认图标
           e.currentTarget.style.display = 'none';
@@ -156,20 +171,17 @@ function APIsPage() {
     return name.substring(0, 2).toUpperCase();
   };
 
-  const getApiIconColor = (name: string) => {
-    const colors = ['#1890ff', '#52c41a', '#faad14', '#f5222d', '#722ed1', '#13c2c2'];
-    const index = name.charCodeAt(0) % colors.length;
-    return colors[index];
-  };
-
   return (
     <Layout>
       {/* Header Section */}
-      <div className="text-center mb-8">
-        <Title level={1} className="mb-4">
+      <div className="mb-8 rounded-claude-xl border border-colorPrimary/20 bg-gradient-to-br from-colorPrimaryBgHover via-white to-claude-neutral-50 px-6 py-8 text-center shadow-claude-sm">
+        <div className="mb-3 inline-flex rounded-claude-full bg-white/75 px-3 py-1 text-xs font-semibold uppercase tracking-normal text-colorPrimary">
+          REST
+        </div>
+        <Title level={1} className="mb-4 text-claude-neutral-900">
           API 市场
         </Title>
-        <Paragraph className="text-gray-600 text-lg max-w-4xl mx-auto text-flow text-flow-grey slow">
+        <Paragraph className="text-claude-neutral-600 text-lg max-w-4xl mx-auto text-flow text-flow-grey slow">
           支持私有化部署，具备更多管理能力，支持自动注册、智能路由的API市场
         </Paragraph>
       </div>
@@ -177,7 +189,7 @@ function APIsPage() {
       {/* Search Section */}
       <div className="flex justify-center mb-8">
         <div className="relative w-full max-w-lg">
-          <div className="border border-gray-300 rounded-md overflow-hidden hover:border-blue-500 focus-within:border-blue-500 focus-within:shadow-sm" style={{ width: '100%', maxWidth: '500px' }}>
+          <div className="w-full max-w-[500px] overflow-hidden rounded-claude-md border border-claude-neutral-300 bg-white hover:border-colorPrimary focus-within:border-colorPrimary focus-within:shadow-claude-sm">
             <Input.Search
               placeholder="请输入内容"
               size="large"
@@ -192,16 +204,16 @@ function APIsPage() {
 
       {/* Category Tags Section */}
       <div className="mb-2">
-        <div className="py-3 px-4 border border-gray-200 rounded-lg bg-[#f4f4f6]">
+        <div className="py-3 px-4 border border-claude-neutral-200 rounded-claude-lg bg-claude-neutral-100">
           <div className="flex flex-wrap items-center gap-4">
             <div
               className={`cursor-pointer transition-all duration-200 px-3 py-1.5 rounded-md flex items-center gap-2 text-sm border ${selectedCategory === 'all'
-                ? 'bg-white shadow-sm text-blue-600 border-blue-200'
-                : 'text-gray-600 border-transparent hover:bg-white hover:shadow-sm hover:border-gray-200'
+                ? 'bg-white shadow-sm text-colorPrimary border-colorPrimary/30'
+                : 'text-claude-neutral-600 border-transparent hover:bg-white hover:shadow-sm hover:border-claude-neutral-200'
                 }`}
               onClick={() => handleCategoryChange('all')}
             >
-              <div className={`w-4 h-4 rounded border flex items-center justify-center ${selectedCategory === 'all' ? 'border-blue-500 bg-blue-500' : 'border-gray-300 bg-white'
+              <div className={`w-4 h-4 rounded border flex items-center justify-center ${selectedCategory === 'all' ? 'border-colorPrimary bg-colorPrimary' : 'border-claude-neutral-300 bg-white'
                 }`}>
                 {selectedCategory === 'all' && (
                   <svg className="w-2.5 h-2.5 text-white" viewBox="0 0 20 20" fill="currentColor">
@@ -216,12 +228,12 @@ function APIsPage() {
               <div
                 key={category.categoryId}
                 className={`cursor-pointer transition-all duration-200 px-3 py-1.5 rounded-md flex items-center gap-2 text-sm border ${selectedCategory === category.categoryId
-                  ? 'bg-white shadow-sm text-blue-600 border-blue-200'
-                  : 'text-gray-600 border-transparent hover:bg-white hover:shadow-sm hover:border-gray-200'
+                  ? 'bg-white shadow-sm text-colorPrimary border-colorPrimary/30'
+                  : 'text-claude-neutral-600 border-transparent hover:bg-white hover:shadow-sm hover:border-claude-neutral-200'
                   }`}
                 onClick={() => handleCategoryChange(category.categoryId)}
               >
-                <div className={`w-4 h-4 rounded border flex items-center justify-center ${selectedCategory === category.categoryId ? 'border-blue-500 bg-blue-500' : 'border-gray-300 bg-white'
+                <div className={`w-4 h-4 rounded border flex items-center justify-center ${selectedCategory === category.categoryId ? 'border-colorPrimary bg-colorPrimary' : 'border-claude-neutral-300 bg-white'
                   }`}>
                   {selectedCategory === category.categoryId && (
                     <svg className="w-2.5 h-2.5 text-white" viewBox="0 0 20 20" fill="currentColor">
@@ -242,7 +254,7 @@ function APIsPage() {
       {loading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
           {Array.from({ length: 6 }).map((_, index) => (
-            <Card key={index} className="h-full rounded-lg shadow-lg">
+            <Card key={index} variant="muted" className="h-full rounded-claude-lg shadow-claude-sm">
               <Skeleton loading active>
                 <div className="flex items-start space-x-4">
                   <Skeleton.Avatar size={48} active />
@@ -261,8 +273,9 @@ function APIsPage() {
           {filteredApiProducts.map((product) => (
             <Link key={product.key} to={`/apis/${product.key}`} className="block">
               <Card
+                variant="interactive"
                 hoverable
-                className="h-full transition-all duration-200 hover:shadow-lg cursor-pointer rounded-lg shadow-lg"
+                className="h-full cursor-pointer rounded-claude-lg border-claude-neutral-200 bg-white/85 transition-all duration-200 hover:border-colorPrimary/40 hover:shadow-claude-md"
               >
                 <div className="flex items-start space-x-4">
                   {/* API Icon */}
@@ -274,11 +287,7 @@ function APIsPage() {
                   ) : (
                     <Avatar
                       size={48}
-                      style={{
-                        backgroundColor: getApiIconColor(product.name),
-                        fontSize: '18px',
-                        fontWeight: 'bold'
-                      }}
+                      className={`${getApiIconClass(product.name)} text-[18px] font-bold text-white`}
                     >
                       {getApiIcon(product.name)}
                     </Avatar>
@@ -314,8 +323,8 @@ function APIsPage() {
 
       {/* Empty State */}
       {!loading && filteredApiProducts.length === 0 && (
-        <div className="text-center py-8">
-          <div className="text-gray-500">暂无API服务</div>
+        <div className="py-10">
+          <Empty description="暂无API服务" />
         </div>
       )}
     </Layout>

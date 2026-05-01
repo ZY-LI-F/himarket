@@ -18,6 +18,7 @@ import type { ApiResponse, Product } from "../../types";
 import { getSubscriptionStatusText, getSubscriptionStatusColor, ProductTypeMap } from "../../lib/statusUtils";
 import { formatDateTime } from "../../lib/utils";
 import { AdvancedSearch, type SearchParam } from "../common";
+import { Empty } from "../common";
 import type { ISubscription } from "../../lib/apis";
 import { modelStyles } from "../../lib/styles";
 
@@ -210,7 +211,7 @@ export function SubscriptionManager({ consumerId, subscriptions, onSubscriptions
 
   return (
     <>
-      <div className="bg-white">
+      <div className="bg-transparent">
         {/* 搜索框和订阅按钮在同一行 */}
         <div className="mb-4 flex justify-between">
           <div className="flex items-center gap-4">
@@ -230,7 +231,7 @@ export function SubscriptionManager({ consumerId, subscriptions, onSubscriptions
           </div>
           <Button onClick={onRefresh} className="rounded-lg" icon={<ReloadOutlined />} />
         </div>
-        <div className="border border-[#e5e5e5] rounded-lg overflow-hidden">
+        <div className="border border-claude-neutral-200 rounded-claude-lg overflow-hidden">
           <Table
             columns={subscriptionColumns}
             dataSource={safeSubscriptions}
@@ -238,7 +239,7 @@ export function SubscriptionManager({ consumerId, subscriptions, onSubscriptions
             pagination={false}
             size="small"
             loading={loading}
-            locale={{ emptyText: '暂无订阅记录，请点击上方按钮进行订阅' }}
+            locale={{ emptyText: <Empty compact description="暂无订阅记录，请点击上方按钮进行订阅" /> }}
           />
         </div>
       </div>

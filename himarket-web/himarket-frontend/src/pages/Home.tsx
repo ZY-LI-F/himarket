@@ -24,20 +24,19 @@ function HomePage() {
 
   return (
     <Layout>
-      <div className="h-[calc(100vh-64px)] grid items-center">
-        <div className="h-[68%] flex flex-col">
+      <div className="min-h-[calc(100vh-96px)] grid items-center py-8">
+        <div className="flex min-h-[68vh] flex-col rounded-claude-xl border border-colorPrimary/20 bg-gradient-to-br from-colorPrimaryBgHover via-claude-neutral-50 to-white p-6 shadow-claude-lg sm:p-8">
           {/* 标题区域 */}
-          <div className="mb-10">
-            <Title level={1} className="text-5xl font-bold text-gray-900 mb-8">
-              <span style={{
-                background: "linear-gradient(249deg, #8FA1FF 0%, #2B2B3B 25%)",
-                backgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-              }}>
+          <div className="mb-10 max-w-4xl">
+            <div className="mb-4 inline-flex rounded-claude-full border border-colorPrimary/20 bg-white/70 px-4 py-1.5 text-sm font-medium text-colorPrimary shadow-claude-sm">
+              Marketplace
+            </div>
+            <Title level={1} className="mb-6 text-5xl font-bold tracking-normal text-claude-neutral-900">
+              <span className="bg-gradient-to-r from-colorPrimary via-claude-neutral-800 to-claude-neutral-900 bg-clip-text text-transparent">
                 HiMarket 企业级AI开放平台
               </span>
             </Title>
-            <Paragraph className="text-xl text-subTitle">
+            <Paragraph className="max-w-2xl text-xl text-subTitle">
               <TextType
                 text={["开箱即用，快速集成"]}
                 typingSpeed={120}
@@ -48,7 +47,7 @@ function HomePage() {
           </div>
 
           {/* 特色功能卡片 */}
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 flex-1">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 flex-1">
             <div className="animate-[fadeInUp_0.6s_ease-out_0.1s_both]">
               <HomeModelCard />
             </div>
