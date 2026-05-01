@@ -72,16 +72,16 @@ function SkillOverview({ content }: { content: string }) {
       {fmEntries.length > 0 && (
         <table className="mb-6 w-full text-[13px] border-collapse">
           <thead>
-            <tr className="bg-[#f6f8fa]">
+            <tr className="bg-claude-neutral-100">
               {fmEntries.map(([k]) => (
-                <th key={k} className="border border-[#d0d7de] px-3 py-1.5 text-left font-semibold text-[#1f2328]">{k}</th>
+                <th key={k} className="border border-claude-neutral-200 px-3 py-1.5 text-left font-semibold text-claude-neutral-800">{k}</th>
               ))}
             </tr>
           </thead>
           <tbody>
             <tr>
               {fmEntries.map(([k, v]) => (
-                <td key={k} className="border border-[#d0d7de] px-3 py-1.5 text-[#1f2328] align-top">{v}</td>
+                <td key={k} className="border border-claude-neutral-200 px-3 py-1.5 text-claude-neutral-800 align-top">{v}</td>
               ))}
             </tr>
           </tbody>
@@ -319,7 +319,7 @@ function SkillDetail() {
         }
       })();
       const lineCount = fileContent.content.split("\n").length;
-      const codeFont = "'Menlo', 'Monaco', 'Courier New', monospace";
+      const codeFont = "var(--font-mono)";
       return (
         <div className="flex-1 overflow-auto bg-white h-full flex flex-col relative">
           {/* Toggle button - floats top-right */}
@@ -338,7 +338,7 @@ function SkillDetail() {
             <div className="flex flex-1 overflow-auto">
               <div
                 className="flex-shrink-0 py-3 pr-3 pl-4 text-right select-none sticky left-0 bg-white z-10"
-                style={{ fontFamily: codeFont, fontSize: "13px", lineHeight: "20px", borderRight: "1px solid #f0f0f0" }}
+                style={{ fontFamily: codeFont, fontSize: "13px", lineHeight: "20px", borderRight: "1px solid var(--color-neutral-200)" }}
               >
                 {Array.from({ length: lineCount }, (_, i) => (
                   <div key={i} className="text-gray-300">{i + 1}</div>
@@ -369,14 +369,14 @@ function SkillDetail() {
     })();
 
     const lineCount = fileContent.content.split("\n").length;
-    const codeFont = "'Menlo', 'Monaco', 'Courier New', monospace";
+    const codeFont = "var(--font-mono)";
 
     return (
       <div className="flex-1 overflow-auto bg-white h-full">
         <div className="flex min-h-full">
           <div
             className="flex-shrink-0 py-3 pr-3 pl-4 text-right select-none sticky left-0 bg-white z-10"
-            style={{ fontFamily: codeFont, fontSize: "13px", lineHeight: "20px", borderRight: '1px solid #f0f0f0' }}
+            style={{ fontFamily: codeFont, fontSize: "13px", lineHeight: "20px", borderRight: '1px solid var(--color-neutral-200)' }}
           >
             {Array.from({ length: lineCount }, (_, i) => (
               <div key={i} className="text-gray-300">{i + 1}</div>
@@ -447,9 +447,9 @@ function SkillDetail() {
         <div className="flex flex-col lg:flex-row gap-4">
           {/* Left: file viewer with Overview / File tabs */}
           <div className="flex-1 min-w-0">
-            <div className="bg-white rounded-lg overflow-hidden flex flex-col" style={{ height: 'calc(100vh - 280px)', minHeight: 500, border: '1px solid #f0f0f0' }}>
+            <div className="bg-claude-neutral-50/90 rounded-claude-lg overflow-hidden flex flex-col" style={{ height: 'calc(100vh - 280px)', minHeight: 500, border: '1px solid var(--color-neutral-200)' }}>
             {/* Tab header */}
-            <div className="flex gap-6 px-4 pt-3 flex-shrink-0" style={{ borderBottom: '1px solid #f0f0f0' }}>
+            <div className="flex gap-6 px-4 pt-3 flex-shrink-0" style={{ borderBottom: '1px solid var(--color-neutral-200)' }}>
               <button
                 className={`pb-2 text-sm font-medium transition-colors border-b-2 ${
                   activeTab === 'overview'
@@ -491,7 +491,7 @@ function SkillDetail() {
             {activeTab === 'file' && (
               <div className="flex flex-1 min-h-0">
                 {/* File tree */}
-                <div className="bg-white overflow-y-auto overflow-x-hidden flex-shrink-0 p-2" style={{ width: treeWidth, borderRight: '1px solid #f0f0f0' }}>
+                <div className="bg-claude-neutral-50 overflow-y-auto overflow-x-hidden flex-shrink-0 p-2" style={{ width: treeWidth, borderRight: '1px solid var(--color-neutral-200)' }}>
                   {hasFiles ? (
                     <SkillFileTree
                       nodes={fileTree}
@@ -518,9 +518,9 @@ function SkillDetail() {
 
         {/* Right sidebar: download card + related */}
         <div className="w-full lg:w-[420px] flex-shrink-0 order-1 lg:order-2 space-y-3">
-          <div className="bg-white rounded-xl overflow-hidden shadow-sm" style={{ border: '1px solid #e8eaef' }}>
+          <div className="bg-claude-neutral-50/90 rounded-claude-lg overflow-hidden shadow-claude-sm" style={{ border: '1px solid var(--color-neutral-200)' }}>
             {/* Card header: title + version selector */}
-            <div className="flex items-center justify-between px-4 py-3" style={{ borderBottom: '1px solid #edeef3' }}>
+            <div className="flex items-center justify-between px-4 py-3" style={{ borderBottom: '1px solid var(--color-neutral-200)' }}>
               <span className="text-sm font-semibold text-gray-800">{t('download')}</span>
               <Select
                 value={selectedVersion}
@@ -544,7 +544,7 @@ function SkillDetail() {
             </div>
 
             {/* Action buttons */}
-            <div className="px-4 py-3" style={{ borderBottom: '1px solid #edeef3' }}>
+            <div className="px-4 py-3" style={{ borderBottom: '1px solid var(--color-neutral-200)' }}>
               <Button
                 type="primary"
                 icon={<DownloadOutlined />}
@@ -559,7 +559,7 @@ function SkillDetail() {
 
             {/* Nacos CLI command */}
             {cliInfo && (
-              <div className="px-4 py-3" style={{ borderBottom: '1px solid #edeef3' }}>
+              <div className="px-4 py-3" style={{ borderBottom: '1px solid var(--color-neutral-200)' }}>
                 <div className="flex items-center gap-1.5 mb-3">
                   <CodeOutlined className="text-indigo-400/80 text-[13px]" />
                   <span className="text-xs font-semibold text-gray-600 tracking-wide">{t('npxDownload')}</span>

@@ -72,11 +72,11 @@ function McpCard(props: McpCardProps) {
   return (
     <div
       className="
-        bg-white/60 backdrop-blur-sm rounded-2xl p-5
-        border border-[#e5e5e5]
+        bg-claude-neutral-50/80 backdrop-blur-sm rounded-claude-lg p-5
+        border border-claude-neutral-200
         cursor-pointer
         transition-all duration-300 ease-in-out
-        hover:bg-white hover:shadow-md hover:scale-[1.02] hover:border-colorPrimary/30
+        hover:bg-claude-neutral-50 hover:shadow-claude-md hover:scale-[1.02] hover:border-colorPrimary/30
         active:scale-[0.98]
         relative overflow-hidden group
         h-[200px] flex flex-col gap-4
@@ -93,7 +93,7 @@ function McpCard(props: McpCardProps) {
             <div>
               <span className={`text-xs px-2 py-1 rounded-lg ${isSubscribed
                 ? 'bg-colorPrimaryBgHover text-colorPrimary'
-                : 'bg-gray-100 text-gray-600'
+                : 'bg-claude-neutral-100 text-claude-neutral-600'
                 }`}>
                 {isSubscribed ? '已订阅' : '未订阅'}
               </span>
@@ -120,14 +120,14 @@ function McpCard(props: McpCardProps) {
                   <div>
                     <div className="font-medium text-base mb-3">工具({tools.length})</div>
                     {tools.length === 0 ? (
-                      <div className="text-sm text-gray-400">暂无工具</div>
+                      <div className="text-sm text-claude-neutral-400">暂无工具</div>
                     ) : (
                       <div className="space-y-3">
                         {tools.map((tool, index) => (
                           <div key={tool.name}>
                             <div className="space-y-1">
-                              <div className="font-medium text-sm text-gray-900">{tool.name}</div>
-                              <div className="text-xs text-gray-500 leading-relaxed">{tool.description || '暂无描述'}</div>
+                              <div className="font-medium text-sm text-claude-neutral-900">{tool.name}</div>
+                              <div className="text-xs text-claude-neutral-500 leading-relaxed">{tool.description || '暂无描述'}</div>
                             </div>
                             {index < tools.length - 1 && <Divider style={{ margin: '12px 0' }} />}
                           </div>

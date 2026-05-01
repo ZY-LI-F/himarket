@@ -130,7 +130,7 @@ const MultiSwitchButton: React.FC<MultiSwitchProps> = ({
   return (
     // Main container: uses inline-flex to fit content width, rounded full for capsule shape
     // p-1 adds padding inside the container
-    <div ref={containerRef} className={`gap-1 relative inline-flex bg-[#f5f5f5] rounded-lg p-1 select-none ${className}`}>
+    <div ref={containerRef} className={`gap-1 relative inline-flex bg-claude-neutral-100 rounded-lg p-1 select-none ${className}`}>
       {/* Animated background element */}
       {/* Positioned absolutely within the container, accounting for padding with top-1, left-1 */}
       {/* Height adjusted to fill space within padding: h-[calc(100%-8px)] */}

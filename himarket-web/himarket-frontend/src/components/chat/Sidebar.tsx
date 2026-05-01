@@ -505,13 +505,13 @@ export function Sidebar({
                 <FileVideo className="fill-mainTitle text-base transition-transform duration-200 hover:scale-110" />
                 文生视频
               </div>
-              <div className="py-1 px-2 rounded-xl bg-[#F3F4F6] text-[#99A1AF]">
+              <div className="py-1 px-2 rounded-xl bg-claude-neutral-100 text-claude-neutral-400">
                 敬请期待
               </div>
             </div>
           )}
         </div>
-        {!isCollapsed && <div className="h-[1px] bg-[#e5e5e5] my-2"></div>}
+        {!isCollapsed && <div className="h-[1px] bg-claude-neutral-200 my-2"></div>}
       </div>
 
       {/* 历史会话列表 */}

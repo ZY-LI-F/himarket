@@ -247,7 +247,7 @@ export default function RoomListPage() {
             type="error"
           />
         )}
-        <div className="overflow-hidden rounded-lg border border-[#e5e5e5]">
+        <div className="overflow-hidden rounded-lg border border-claude-neutral-200">
           <Table
             columns={columns}
             dataSource={state.rooms}

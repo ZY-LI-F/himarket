@@ -20,7 +20,7 @@
   margin: 2px 0 !important;
   padding: 8px 12px !important;
   transition: all 0.2s ease-in-out !important;
-  color: #4b5563 !important;
+  color: var(--color-neutral-600) !important;
   font-size: 14px !important;
 }
 
@@ -30,12 +30,12 @@
 }
 
 .coding-session-menu-dropdown .ant-dropdown-menu-item-danger {
-  color: #ef4444 !important;
+  color: var(--color-semantic-error) !important;
 }
 
 .coding-session-menu-dropdown .ant-dropdown-menu-item-danger:hover {
   background: rgba(254, 226, 226, 0.8) !important;
-  color: #dc2626 !important;
+  color: var(--color-semantic-error) !important;
 }
 
 .coding-session-menu-dropdown .ant-dropdown-menu-item-icon {

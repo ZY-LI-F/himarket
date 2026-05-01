@@ -82,16 +82,16 @@ function SkillMdViewer({ document }: SkillMdViewerProps) {
                 {fmEntries.length > 0 && (
                   <table className="mb-6 w-full text-[13px] border-collapse">
                     <thead>
-                      <tr className="bg-[#f6f8fa]">
+                      <tr className="bg-claude-neutral-100">
                         {fmEntries.map(([k]) => (
-                          <th key={k} className="border border-[#d0d7de] px-3 py-1.5 text-left font-semibold text-[#1f2328]">{k}</th>
+                          <th key={k} className="border border-claude-neutral-200 px-3 py-1.5 text-left font-semibold text-claude-neutral-800">{k}</th>
                         ))}
                       </tr>
                     </thead>
                     <tbody>
                       <tr>
                         {fmEntries.map(([k, v]) => (
-                          <td key={k} className="border border-[#d0d7de] px-3 py-1.5 text-[#1f2328] align-top">{v}</td>
+                          <td key={k} className="border border-claude-neutral-200 px-3 py-1.5 text-claude-neutral-800 align-top">{v}</td>
                         ))}
                       </tr>
                     </tbody>

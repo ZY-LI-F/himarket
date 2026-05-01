@@ -24,6 +24,15 @@ interface ModelAPI {
   updatedAt: string;
 }
 
+const AVATAR_TOKEN_COLORS = [
+  "var(--color-brand)",
+  "var(--color-brand-hover)",
+  "var(--color-brand-active)",
+  "var(--color-neutral-600)",
+  "var(--color-neutral-700)",
+  "var(--color-semantic-info)",
+] as const;
+
 function ModelPage() {
   const [loading, setLoading] = useState(false);
   const [modelAPIs, setModelAPIs] = useState<ModelAPI[]>([]);
@@ -78,9 +87,8 @@ function ModelPage() {
   };
 
   const getModelIconColor = (name: string) => {
-    const colors = ['#722ed1', '#9254de', '#b37feb', '#d3adf7', '#efdbff', '#f9f0ff'];
-    const index = name.charCodeAt(0) % colors.length;
-    return colors[index];
+    const index = name.charCodeAt(0) % AVATAR_TOKEN_COLORS.length;
+    return AVATAR_TOKEN_COLORS[index];
   };
 
   // 获取适用场景英文标识
@@ -161,7 +169,7 @@ function ModelPage() {
     if (!icon || !icon.value) {
       // "全部"使用打开的文件夹图标，其他使用普通文件夹图标
       const IconComponent = isAll ? FolderOpenFilled : FolderFilled;
-      return <IconComponent style={{ fontSize: '18px', color: '#D1D5DB' }} />;
+      return <IconComponent style={{ fontSize: '18px', color: "var(--color-neutral-300)" }} />;
     }
 
     let iconUrl = '';
@@ -193,10 +201,10 @@ function ModelPage() {
     <Layout>
       {/* Header Section */}
       <div className="text-center mb-8">
-        <Title level={1} className="mb-4">
+        <Title level={1} className="!mb-4 !text-claude-neutral-900">
           Model 市场
         </Title>
-        <Paragraph className="text-gray-600 text-lg max-w-4xl mx-auto text-flow text-flow-grey slow">
+        <Paragraph className="!text-claude-neutral-600 text-lg max-w-4xl mx-auto text-flow slow">
           智能Model API服务集合，提供丰富的AI模型能力接口，支持自动注册、智能路由
         </Paragraph>
       </div>
@@ -204,7 +212,7 @@ function ModelPage() {
       {/* Search Section */}
       <div className="flex justify-center mb-8">
         <div className="relative w-full max-w-lg">
-          <div className="border border-gray-300 rounded-md overflow-hidden hover:border-blue-500 focus-within:border-blue-500 focus-within:shadow-sm" style={{ width: '100%', maxWidth: '500px' }}>
+          <div className="border border-claude-neutral-300 rounded-claude-md overflow-hidden bg-claude-neutral-50/90 hover:border-colorPrimary focus-within:border-colorPrimary focus-within:shadow-claude-sm" style={{ width: '100%', maxWidth: '500px' }}>
             <Input.Search
               placeholder="请输入内容"
               size="large"
@@ -219,19 +227,19 @@ function ModelPage() {
 
       {/* Category Tags Section */}
       <div className="mb-2">
-        <div className="py-3 px-4 border border-gray-200 rounded-lg bg-[#f4f4f6]">
+        <div className="py-3 px-4 border border-claude-neutral-200 rounded-claude-lg bg-claude-neutral-100/90">
           <div className="flex flex-wrap items-center gap-4">
             <div
               className={`cursor-pointer transition-all duration-200 px-3 py-1.5 rounded-md flex items-center gap-2 text-sm border ${selectedCategory === 'all'
-                ? 'bg-white shadow-sm text-blue-600 border-blue-200'
-                : 'text-gray-600 border-transparent hover:bg-white hover:shadow-sm hover:border-gray-200'
+                ? 'bg-claude-neutral-50 shadow-claude-sm text-colorPrimary border-colorPrimary/30'
+                : 'text-claude-neutral-600 border-transparent hover:bg-claude-neutral-50 hover:shadow-claude-sm hover:border-claude-neutral-200'
                 }`}
               onClick={() => handleCategoryChange('all')}
             >
-              <div className={`w-4 h-4 rounded border flex items-center justify-center ${selectedCategory === 'all' ? 'border-blue-500 bg-blue-500' : 'border-gray-300 bg-white'
+              <div className={`w-4 h-4 rounded border flex items-center justify-center ${selectedCategory === 'all' ? 'border-colorPrimary bg-colorPrimary' : 'border-claude-neutral-300 bg-claude-neutral-50'
                 }`}>
                 {selectedCategory === 'all' && (
-                  <svg className="w-2.5 h-2.5 text-white" viewBox="0 0 20 20" fill="currentColor">
+                  <svg className="w-2.5 h-2.5 text-claude-neutral-50" viewBox="0 0 20 20" fill="currentColor">
                     <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                   </svg>
                 )}
@@ -243,15 +251,15 @@ function ModelPage() {
               <div
                 key={category.categoryId}
                 className={`cursor-pointer transition-all duration-200 px-3 py-1.5 rounded-md flex items-center gap-2 text-sm border ${selectedCategory === category.categoryId
-                  ? 'bg-white shadow-sm text-blue-600 border-blue-200'
-                  : 'text-gray-600 border-transparent hover:bg-white hover:shadow-sm hover:border-gray-200'
+                  ? 'bg-claude-neutral-50 shadow-claude-sm text-colorPrimary border-colorPrimary/30'
+                  : 'text-claude-neutral-600 border-transparent hover:bg-claude-neutral-50 hover:shadow-claude-sm hover:border-claude-neutral-200'
                   }`}
                 onClick={() => handleCategoryChange(category.categoryId)}
               >
-                <div className={`w-4 h-4 rounded border flex items-center justify-center ${selectedCategory === category.categoryId ? 'border-blue-500 bg-blue-500' : 'border-gray-300 bg-white'
+                <div className={`w-4 h-4 rounded border flex items-center justify-center ${selectedCategory === category.categoryId ? 'border-colorPrimary bg-colorPrimary' : 'border-claude-neutral-300 bg-claude-neutral-50'
                   }`}>
                   {selectedCategory === category.categoryId && (
-                    <svg className="w-2.5 h-2.5 text-white" viewBox="0 0 20 20" fill="currentColor">
+                    <svg className="w-2.5 h-2.5 text-claude-neutral-50" viewBox="0 0 20 20" fill="currentColor">
                       <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                     </svg>
                   )}
@@ -268,7 +276,7 @@ function ModelPage() {
       {loading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
           {Array.from({ length: 6 }).map((_, index) => (
-            <Card key={index} className="h-full rounded-lg shadow-lg">
+            <Card key={index} className="h-full rounded-claude-lg border-claude-neutral-200 shadow-claude-sm">
               <Skeleton loading active>
                 <div className="flex items-start space-x-4">
                   <Skeleton.Avatar size={48} active />
@@ -288,7 +296,7 @@ function ModelPage() {
             <Link key={model.key} to={`/models/${model.key}`} className="block">
               <Card
                 hoverable
-                className="h-full transition-all duration-200 hover:shadow-lg cursor-pointer rounded-lg shadow-lg"
+                className="h-full cursor-pointer rounded-claude-lg border-claude-neutral-200 shadow-claude-sm transition-all duration-claude-base ease-claude hover:border-colorPrimary/30 hover:shadow-claude-md"
               >
                 <div className="flex items-start space-x-4 mb-2">
                   {/* Model Icon */}
@@ -316,17 +324,17 @@ function ModelPage() {
                       <Title level={5} className="mb-0 truncate">
                         {model.name}
                       </Title>
-                      <Tag className="text-xs text-gray-500 border-0 bg-transparent px-0">
+                      <Tag className="text-xs text-claude-neutral-500 border-0 bg-transparent px-0">
                         {getModelCategoryLabel(model.modelConfig)}
                       </Tag>
                     </div>
 
-                    <Paragraph className="text-sm text-gray-600 mb-3 line-clamp-2">
+                    <Paragraph className="text-sm !text-claude-neutral-600 mb-3 line-clamp-2">
                       {model.description}
                     </Paragraph>
 
                     <div className="flex items-center justify-between">
-                      <div className="text-xs text-gray-400">
+                      <div className="text-xs text-claude-neutral-400">
                         更新 {model.updatedAt}
                       </div>
                     </div>
@@ -339,11 +347,7 @@ function ModelPage() {
       )}
 
       {!loading && filteredModelAPIs.length === 0 && (
-        <div style={{
-          textAlign: 'center',
-          padding: '60px 20px',
-          color: '#999'
-        }}>
+        <div className="py-[60px] px-5 text-center text-claude-neutral-500">
           {searchText ? (
             <>
               <div style={{ fontSize: '16px', marginBottom: '8px' }}>

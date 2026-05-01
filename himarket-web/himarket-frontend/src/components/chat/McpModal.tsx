@@ -72,7 +72,7 @@ function McpModal(props: McpModal) {
             <div className="flex flex-col gap-5">
               <div
                 className={`flex items-center bg-white rounded-lg border-[4px] border-colorPrimaryBgHover/50
-            transition-all duration-200 ease-in-out hover:bg-gray-50 hover:shadow-md hover:scale-[1.02] active:scale-95 text-nowrap overflow-hidden
+            transition-all duration-200 ease-in-out hover:bg-claude-neutral-50 hover:shadow-claude-md hover:scale-[1.02] active:scale-95 text-nowrap overflow-hidden
             w-full px-5 py-2 justify-between`}
               >
                 <div className="flex w-full justify-between items-center gap-2">
@@ -96,7 +96,7 @@ function McpModal(props: McpModal) {
                 已添加 Server
               </button>
             </div>
-            <div className="border-t border-gray-200"></div>
+            <div className="border-t border-claude-neutral-200"></div>
             <div className="flex flex-col gap-2">
               {
                 categories.map((item) => (
@@ -155,7 +155,7 @@ function McpModal(props: McpModal) {
                 {Array.from({ length: 6 }).map((_, index) => (
                   <div
                     key={index}
-                    className="bg-white/60 backdrop-blur-sm rounded-2xl p-5 border border-[#e5e5e5] h-[200px] flex flex-col gap-4"
+                    className="bg-claude-neutral-50/80 backdrop-blur-sm rounded-claude-lg p-5 border border-claude-neutral-200 h-[200px] flex flex-col gap-4"
                   >
                     {/* 上部：Logo、名称和��态 */}
                     <div className="flex gap-3 items-start">
@@ -236,12 +236,12 @@ function Empty({ active, onViewAll }: { active: string; onViewAll: () => void })
           <Button type="primary" onClick={onViewAll}>预览全部 Server</Button>
         </div>
       </div>
-      <div className="absolute w-full h-full z-10" style={{ background: "linear-gradient(326deg, #FFFFFF 18%, rgba(255, 255, 255, 0) 81%)" }}></div>
+      <div className="absolute w-full h-full z-10" style={{ background: "linear-gradient(326deg, var(--color-neutral-50) 18%, transparent 81%)" }}></div>
       {
         Array.from({ length: 9 }).map((_, index) => (
           <div
             key={index}
-            className="bg-[#F9FAFB] backdrop-blur-sm rounded-2xl p-5  flex flex-col gap-4"
+            className="bg-claude-neutral-50 backdrop-blur-sm rounded-claude-lg p-5  flex flex-col gap-4"
           >
           </div>
         ))

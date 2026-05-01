@@ -1,6 +1,6 @@
 :root {
-  --aliyun-blue: #0064D2;
-  --agent-accent: #FA8C16;
+  --aliyun-blue: var(--color-semantic-info);
+  --agent-accent: var(--color-brand);
   --agent-radius-r6: 6px;
   --agent-radius-r10: 10px;
   --agent-radius-r14: 14px;
