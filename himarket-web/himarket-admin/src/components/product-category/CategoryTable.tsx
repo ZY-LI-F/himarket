@@ -1,12 +1,13 @@
 import { useCallback, useEffect, useState, useImperativeHandle, forwardRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Table, Input, Button, Modal, Tooltip, Dropdown, message, Empty } from 'antd';
+import { Table, Tooltip, Dropdown } from 'antd';
 import type { TableProps, MenuProps } from 'antd';
 import {
   SearchOutlined,
   ExclamationCircleOutlined,
   MoreOutlined,
 } from '@ant-design/icons';
+import { Button, Empty, emptyImages, FormField, Modal, toast } from '@/components/common';
 import { getProductCategoriesByPage, deleteProductCategory } from '@/lib/productCategoryApi';
 import CategoryFormModal from '@/components/product-category/CategoryFormModal';
 import type { ProductCategory, QueryProductCategoryParam } from '@/types/product-category';
@@ -49,7 +50,7 @@ const CategoryTable = forwardRef<CategoryTableRef>((_, ref) => {
         });
       })
       .catch(() => {
-        message.error('获取产品类别失败');
+        toast.error('获取产品类别失败');
       })
       .finally(() => setLoading(false));
   }, [nameFilter]);
@@ -79,10 +80,10 @@ const CategoryTable = forwardRef<CategoryTableRef>((_, ref) => {
       cancelText: '取消',
       onOk() {
         return deleteProductCategory(categoryId).then(() => {
-          message.success('类别删除成功');
+          toast.success('类别删除成功');
           fetchCategories(pagination.current, pagination.pageSize);
         }).catch(() => {
-          message.error('删除类别失败，可能该类别正在使用中');
+          toast.error('删除类别失败，可能该类别正在使用中');
         });
       },
     });
@@ -165,7 +166,7 @@ const CategoryTable = forwardRef<CategoryTableRef>((_, ref) => {
         ];
         return (
           <Dropdown menu={{ items }} trigger={['click']}>
-            <Button type="text" icon={<MoreOutlined />} onClick={(e) => e.stopPropagation()} />
+            <Button variant="ghost" icon={<MoreOutlined />} onClick={(e) => e.stopPropagation()} />
           </Dropdown>
         );
       },
@@ -180,7 +181,7 @@ const CategoryTable = forwardRef<CategoryTableRef>((_, ref) => {
           className="flex items-center border border-gray-300 rounded-md overflow-hidden hover:border-colorPrimary focus-within:border-colorPrimary"
           style={{ minWidth: 260 }}
         >
-          <Input
+          <FormField.Input
             placeholder="搜索类别名称"
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
@@ -196,7 +197,7 @@ const CategoryTable = forwardRef<CategoryTableRef>((_, ref) => {
             onClick={handleSearch}
             style={{ width: 40 }}
             className="border-0 rounded-none"
-            type="text"
+            variant="ghost"
           />
         </div>
       </div>
@@ -220,8 +221,9 @@ const CategoryTable = forwardRef<CategoryTableRef>((_, ref) => {
         locale={{
           emptyText: (
             <Empty
-              image={Empty.PRESENTED_IMAGE_SIMPLE}
+              image={emptyImages.simple}
               description="暂无产品类别"
+              compact
             />
           ),
         }}

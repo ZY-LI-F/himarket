@@ -1,0 +1,175 @@
+.hm-button.ant-btn {
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  letter-spacing: 0;
+  transition:
+    background var(--motion-duration-fast) var(--motion-easing-standard),
+    border-color var(--motion-duration-fast) var(--motion-easing-standard),
+    color var(--motion-duration-fast) var(--motion-easing-standard),
+    box-shadow var(--motion-duration-fast) var(--motion-easing-standard),
+    transform var(--motion-duration-fast) var(--motion-easing-standard);
+}
+
+.hm-button.ant-btn:focus-visible {
+  box-shadow: var(--shadow-focus);
+}
+
+.hm-button--primary.ant-btn-primary {
+  background: var(--color-brand);
+  border-color: var(--color-brand);
+  color: #fff;
+}
+
+.hm-button--primary.ant-btn-primary:not(:disabled):hover {
+  background: var(--color-brand-hover);
+  border-color: var(--color-brand-hover);
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.hm-button--primary.ant-btn-primary:not(:disabled):active {
+  background: var(--color-brand-active);
+  border-color: var(--color-brand-active);
+  transform: translateY(0);
+}
+
+.hm-button--secondary.ant-btn {
+  background: #fff;
+  border-color: var(--color-neutral-300);
+  color: var(--color-neutral-800);
+}
+
+.hm-button--secondary.ant-btn:not(:disabled):hover {
+  background: var(--color-neutral-50);
+  border-color: var(--color-brand-hover);
+  color: var(--color-brand-hover);
+}
+
+.hm-button--ghost.ant-btn {
+  background: transparent;
+  border-color: transparent;
+  color: var(--color-neutral-600);
+}
+
+.hm-button--ghost.ant-btn:not(:disabled):hover {
+  background: var(--color-brand-surface-tint);
+  color: var(--color-brand-hover);
+}
+
+.hm-card.ant-card {
+  background: #fff;
+  border: 1px solid var(--color-neutral-200);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  color: var(--color-neutral-900);
+}
+
+.hm-card.ant-card .ant-card-body {
+  padding: var(--spacing-24);
+}
+
+.hm-card--muted.ant-card {
+  background: var(--color-neutral-50);
+  box-shadow: none;
+}
+
+.hm-card--interactive.ant-card {
+  transition:
+    border-color var(--motion-duration-fast) var(--motion-easing-standard),
+    box-shadow var(--motion-duration-fast) var(--motion-easing-standard),
+    transform var(--motion-duration-fast) var(--motion-easing-standard);
+}
+
+.hm-card--interactive.ant-card:hover {
+  border-color: var(--color-brand-hover);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.hm-empty {
+  color: var(--color-neutral-600);
+  text-align: center;
+}
+
+.hm-empty--compact .ant-empty {
+  margin-block: 0;
+}
+
+.hm-empty .ant-empty-description {
+  color: var(--color-neutral-500);
+}
+
+.hm-empty__action {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--spacing-16);
+}
+
+.hm-modal .ant-modal-content {
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  padding: 0;
+}
+
+.hm-modal .ant-modal-header {
+  border-bottom: 1px solid var(--color-neutral-200);
+  margin-bottom: 0;
+  padding: var(--spacing-20) var(--spacing-24) var(--spacing-12);
+}
+
+.hm-modal .ant-modal-title {
+  color: var(--color-neutral-900);
+  font-weight: 700;
+}
+
+.hm-modal .ant-modal-body {
+  padding: var(--spacing-24);
+}
+
+.hm-modal .ant-modal-footer {
+  border-top: 1px solid var(--color-neutral-100);
+  margin-top: 0;
+  padding: var(--spacing-12) var(--spacing-24) var(--spacing-20);
+}
+
+.hm-form-input.ant-input,
+.hm-form-input.ant-input-affix-wrapper,
+.hm-form-select.ant-select .ant-select-selector {
+  border-color: var(--color-neutral-300);
+  border-radius: var(--radius-md);
+  transition:
+    border-color var(--motion-duration-fast) var(--motion-easing-standard),
+    box-shadow var(--motion-duration-fast) var(--motion-easing-standard);
+}
+
+.hm-form-input.ant-input:hover,
+.hm-form-input.ant-input-affix-wrapper:hover,
+.hm-form-select.ant-select:not(.ant-select-disabled):hover .ant-select-selector {
+  border-color: var(--color-brand-hover);
+}
+
+.hm-form-input.ant-input:focus,
+.hm-form-input.ant-input-affix-wrapper-focused,
+.hm-form-select.ant-select-focused .ant-select-selector {
+  border-color: var(--color-brand);
+  box-shadow: var(--shadow-focus);
+}
+
+.hm-form-checkbox.ant-checkbox-wrapper {
+  color: var(--color-neutral-800);
+}
+
+.hm-form-checkbox.ant-checkbox-wrapper .ant-checkbox-checked .ant-checkbox-inner {
+  background-color: var(--color-brand);
+  border-color: var(--color-brand);
+}
+
+.hm-toast.ant-message-notice .ant-message-notice-content,
+.hm-toast .ant-message-notice-content {
+  border: 1px solid var(--color-neutral-200);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  color: var(--color-neutral-800);
+}
+

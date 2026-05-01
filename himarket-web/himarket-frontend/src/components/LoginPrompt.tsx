@@ -1,6 +1,6 @@
-import { Modal, Button } from "antd";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
+import { Button, Modal } from "./common";
 
 interface LoginPromptProps {
   open: boolean;
@@ -37,7 +37,7 @@ export function LoginPrompt({
           {contextMessage}
         </p>
         <div className="flex flex-col gap-3">
-          <Button type="primary" size="large" block onClick={handleLogin}>
+          <Button variant="primary" size="large" block onClick={handleLogin}>
             {t('login')}
           </Button>
           <Button size="large" block onClick={handleRegister}>

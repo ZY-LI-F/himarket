@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { Form, Input, Button, message } from 'antd'
+import { Form } from 'antd'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
 import { useTranslation } from 'react-i18next'
+import { Button, Card, FormField, toast } from '../components/common'
 import request from '../lib/request'
 import { Layout } from '../components/Layout'
 
@@ -22,11 +23,11 @@ const Register: React.FC = () => {
         username: values.username,
         password: values.password,
       })
-      message.success(t('registerSuccess'))
+      toast.success(t('registerSuccess'))
       // 注册成功后跳转到登录页
       navigate('/login')
     } catch {
-      message.error(t('registerFailed'))
+      toast.error(t('registerFailed'))
     } finally {
       setLoading(false)
     }
@@ -39,7 +40,7 @@ const Register: React.FC = () => {
         WebkitBackdropFilter: 'blur(204px)',
       }}>
         <div className="w-full max-w-md mx-4">
-          <div className='bg-white backdrop-blur-sm rounded-2xl p-8 shadow-lg'>
+          <Card className="backdrop-blur-sm">
             <div className="mb-8">
               <h2 className="text-[32px] flex text-gray-900">
                 <span className="text-colorPrimary">{t('greeting')}</span>
@@ -62,7 +63,7 @@ const Register: React.FC = () => {
                   { min: 3, message: t('usernameMinLength') }
                 ]}
               >
-                <Input
+                <FormField.Input
                   prefix={<UserOutlined className='text-gray-400' />}
                   placeholder={t('usernamePlaceholder')}
                   autoComplete="username"
@@ -77,7 +78,7 @@ const Register: React.FC = () => {
                   { min: 6, message: t('passwordMinLength') }
                 ]}
               >
-                <Input.Password
+                <FormField.Password
                   prefix={<LockOutlined className='text-gray-400' />}
                   placeholder={t('passwordPlaceholder')}
                   autoComplete="new-password"
@@ -100,7 +101,7 @@ const Register: React.FC = () => {
                   }),
                 ]}
               >
-                <Input.Password
+                <FormField.Password
                   prefix={<LockOutlined className='text-gray-400' />}
                   placeholder={t('confirmPasswordPlaceholder')}
                   autoComplete="new-password"
@@ -110,7 +111,7 @@ const Register: React.FC = () => {
 
               <Form.Item>
                 <Button
-                  type="primary"
+                  variant="primary"
                   htmlType="submit"
                   loading={loading}
                   className="rounded-lg w-full"
@@ -124,7 +125,7 @@ const Register: React.FC = () => {
             <div className="text-center text-subTitle">
               {t('hasAccount')}<Link to="/login" className="text-colorPrimary hover:text-colorPrimary hover:underline">{t('loginLink')}</Link>
             </div>
-          </div>
+          </Card>
         </div>
       </div>
     </Layout>

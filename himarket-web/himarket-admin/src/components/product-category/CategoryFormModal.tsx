@@ -1,14 +1,12 @@
 import { useState, useEffect } from 'react';
 import {
-  Modal,
   Form,
-  Input,
-  message,
   Radio,
   Space,
 } from 'antd';
 import { CameraOutlined } from '@ant-design/icons';
 import type { UploadFile } from 'antd/es/upload/interface';
+import { FormField, Modal, toast } from '@/components/common';
 import type { ProductCategory, CreateProductCategoryParam, UpdateProductCategoryParam, ProductIcon } from '@/types/product-category';
 import { createProductCategory, updateProductCategory } from '@/lib/productCategoryApi';
 
@@ -96,18 +94,18 @@ const CategoryFormModal: React.FC<CategoryFormModalProps> = ({
       if (isEdit && category) {
         // 调用更新API
         await updateProductCategory(category.categoryId, categoryData as UpdateProductCategoryParam);
-        message.success('更新成功');
+        toast.success('更新成功');
       } else {
         // 调用创建API
         await createProductCategory(categoryData as CreateProductCategoryParam);
-        message.success('创建成功');
+        toast.success('创建成功');
       }
 
       onSuccess();
       handleCancel();
     } catch (error) {
       console.error('操作失败:', error);
-      message.error(isEdit ? '更新失败' : '创建失败');
+      toast.error(isEdit ? '更新失败' : '创建失败');
     } finally {
       setLoading(false);
     }
@@ -133,7 +131,7 @@ const CategoryFormModal: React.FC<CategoryFormModalProps> = ({
             { max: 50, message: '名称不能超过50个字符' }
           ]}
         >
-          <Input placeholder="如：数据分析、API网关、支付服务等" />
+          <FormField.Input placeholder="如：数据分析、API网关、支付服务等" />
         </Form.Item>
 
         <Form.Item
@@ -141,7 +139,7 @@ const CategoryFormModal: React.FC<CategoryFormModalProps> = ({
           name="description"
           rules={[{ max: 256, message: '描述不能超过256个字符' }]}
         >
-          <Input.TextArea 
+          <FormField.TextArea
             placeholder="描述用途和特点，帮助用户更好地理解..."
             rows={3}
             showCount
@@ -174,7 +172,7 @@ const CategoryFormModal: React.FC<CategoryFormModalProps> = ({
                   }
                 ]}
               >
-                <Input placeholder="请输入图片链接地址" />
+                <FormField.Input placeholder="请输入图片链接地址" />
               </Form.Item>
             ) : (
               <Form.Item name="icon" style={{ marginBottom: 0 }}>
@@ -200,7 +198,7 @@ const CategoryFormModal: React.FC<CategoryFormModalProps> = ({
                       if (file) {
                         const maxSize = 16 * 1024; // 16KB
                         if (file.size > maxSize) {
-                          message.error(`图片大小不能超过 16KB，当前图片大小为 ${Math.round(file.size / 1024)}KB`);
+                          toast.error(`图片大小不能超过 16KB，当前图片大小为 ${Math.round(file.size / 1024)}KB`);
                           return;
                         }
                         

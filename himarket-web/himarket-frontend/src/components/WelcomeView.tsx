@@ -1,5 +1,5 @@
-import { Button } from "antd";
 import { MessageSquare, Code2, Sparkles, Zap, Bot, Globe } from "lucide-react";
+import { Button, Card } from "./common";
 import { useAuth } from "../hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 
@@ -65,19 +65,20 @@ export function WelcomeView({ type }: WelcomeViewProps) {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-10">
           {features.map((f, i) => (
-            <div
+            <Card
               key={i}
-              className="bg-white/60 backdrop-blur-sm rounded-xl p-5 text-left border border-gray-100 hover:shadow-md transition-shadow"
+              className="bg-white/60 backdrop-blur-sm text-left h-full"
+              variant="interactive"
             >
               <div className="text-blue-500 mb-3">{f.icon}</div>
               <div className="font-medium text-gray-800 mb-1">{f.title}</div>
               <div className="text-gray-500 text-sm">{f.desc}</div>
-            </div>
+            </Card>
           ))}
         </div>
 
         <div className="flex items-center justify-center gap-4">
-          <Button type="primary" size="large" onClick={() => login()}>
+          <Button variant="primary" size="large" onClick={() => login()}>
             {ctaText}
           </Button>
           <Button size="large" onClick={() => navigate("/register")}>

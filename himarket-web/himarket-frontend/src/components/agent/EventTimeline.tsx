@@ -1,6 +1,7 @@
-import { Button, Empty, Tag } from "antd";
+import { Tag } from "antd";
 import ReactMarkdown from "react-markdown";
 import { useState } from "react";
+import { Button, Empty, emptyImages } from "../common";
 import { FailureExpand } from "./FailureExpand";
 import type { TaskEvent } from "../../lib/apis/agent";
 
@@ -289,7 +290,8 @@ export function EventTimeline({ events }: EventTimelineProps) {
       >
         <Empty
           description="No task events yet"
-          image={Empty.PRESENTED_IMAGE_SIMPLE}
+          image={emptyImages.simple}
+          compact
         />
       </div>
     );

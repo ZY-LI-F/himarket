@@ -1,6 +1,6 @@
 import { useRef } from 'react';
-import { Button } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
+import { Button } from '@/components/common';
 import CategoryTable from '@/components/product-category/CategoryTable';
 import type { CategoryTableRef } from '@/components/product-category/CategoryTable';
 
@@ -18,7 +18,7 @@ export default function ProductCategories() {
           </p>
         </div>
         <Button
-          type="primary"
+          variant="primary"
           icon={<PlusOutlined />}
           onClick={() => tableRef.current?.handleCreate()}
         >
