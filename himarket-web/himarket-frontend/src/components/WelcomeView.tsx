@@ -56,31 +56,49 @@ export function WelcomeView({ type }: WelcomeViewProps) {
   const ctaText = isChatType ? "登录后开始对话" : "登录后开始编码";
 
   return (
-    <div className="flex flex-col items-center justify-center py-16 px-4">
-      <div className="max-w-2xl w-full text-center">
-        <h1 className="text-4xl font-bold mb-3 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+    <div className="flex min-h-[calc(100vh-160px)] flex-col items-center justify-center px-4 py-16">
+      <div className="w-full max-w-4xl text-center">
+        <div className="mx-auto mb-4 inline-flex items-center rounded-claude-full bg-colorPrimaryBgHover px-4 py-1.5 text-sm font-medium text-colorPrimary">
+          {isChatType ? "AI Chat" : "AI Coding"}
+        </div>
+        <h1 className="mb-3 text-claude-h1 font-semibold text-claude-neutral-900">
           {title}
         </h1>
-        <p className="text-gray-500 text-lg mb-10">{subtitle}</p>
+        <p className="mx-auto mb-10 max-w-2xl text-claude-body-lg text-claude-neutral-600">
+          {subtitle}
+        </p>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-10">
           {features.map((f, i) => (
             <div
               key={i}
-              className="bg-white/60 backdrop-blur-sm rounded-xl p-5 text-left border border-gray-100 hover:shadow-md transition-shadow"
+              className="rounded-claude-xl border border-claude-neutral-200/80 bg-claude-neutral-50/85 p-5 text-left shadow-claude-sm backdrop-blur-md transition-all duration-claude-base ease-claude hover:-translate-y-0.5 hover:border-colorPrimary/30 hover:shadow-claude-md"
             >
-              <div className="text-blue-500 mb-3">{f.icon}</div>
-              <div className="font-medium text-gray-800 mb-1">{f.title}</div>
-              <div className="text-gray-500 text-sm">{f.desc}</div>
+              <div className="mb-3 text-colorPrimary">{f.icon}</div>
+              <div className="mb-1 font-medium text-claude-neutral-800">
+                {f.title}
+              </div>
+              <div className="text-sm leading-6 text-claude-neutral-600">
+                {f.desc}
+              </div>
             </div>
           ))}
         </div>
 
         <div className="flex items-center justify-center gap-4">
-          <Button type="primary" size="large" onClick={() => login()}>
+          <Button
+            type="primary"
+            size="large"
+            className="rounded-claude-lg"
+            onClick={() => login()}
+          >
             {ctaText}
           </Button>
-          <Button size="large" onClick={() => navigate("/register")}>
+          <Button
+            size="large"
+            className="rounded-claude-lg"
+            onClick={() => navigate("/register")}
+          >
             注册新账号
           </Button>
         </div>

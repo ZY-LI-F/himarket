@@ -10,7 +10,7 @@ export function Header() {
   const location = useLocation();
   const [isScrolled, setIsScrolled] = useState(false);
   const { visibleTabs, loading } = usePortalConfig();
-  const { t } = useTranslation('header');
+  const { t } = useTranslation("header");
 
   useEffect(() => {
     const handleScroll = () => {
@@ -29,62 +29,65 @@ export function Header() {
   return (
     <nav
       className={`
-        sticky top-0 z-50 transition-all duration-1000 ease-in-out h-auto
+        sticky top-0 z-50 border-b transition-all duration-claude-base ease-claude
         ${
           isScrolled
-            ? "bg-gray-100/90 shadow-sm"
-            : "backdrop-blur-md bg-transparent"
+            ? "border-claude-neutral-200/80 bg-claude-neutral-50/90 shadow-claude-sm"
+            : "border-claude-neutral-200/40 bg-claude-neutral-50/70 backdrop-blur-md"
         }
       `}
     >
-      <div className="w-full mx-auto">
-        <div className="flex justify-between items-center px-8 py-1">
-          <div className="flex items-center">
+      <div className="mx-auto w-full max-w-[1600px] px-4 sm:px-6 lg:px-8">
+        <div className="flex min-h-16 items-center justify-between gap-4">
+          <div className="flex min-w-0 items-center gap-4">
             <Link
               to="/"
-              className="flex items-center space-x-2 hover:opacity-80 transition-all duration-300"
+              className="flex shrink-0 items-center gap-2 rounded-claude-full px-1 py-1 transition-all duration-claude-base ease-claude hover:bg-colorPrimaryBgHover"
+              aria-label="HiMarket home"
             >
-              <div className="w-8 h-8 rounded-full flex items-center justify-center">
-                {/* LOGO区域 */}
+              <div className="flex h-9 w-9 items-center justify-center rounded-claude-lg bg-claude-neutral-900 shadow-claude-sm">
                 <Logo className="w-6 h-6" />
               </div>
               <HiMarket />
             </Link>
-            <div className="h-6 w-[1px] bg-gray-200 mx-5"></div>
-            {/* Tab 区域 - loading 时显示占位骨架，避免突然出现 */}
+            <div className="hidden h-7 w-px bg-claude-neutral-200 sm:block" />
             {loading ? (
-              <div className="flex items-center gap-1.5">
+              <div className="hidden items-center gap-2 overflow-hidden md:flex">
                 {Array.from({ length: 6 }).map((_, i) => (
                   <div
                     key={i}
-                    className="h-8 rounded-full bg-gray-200/60 animate-pulse"
+                    className="h-9 rounded-claude-full bg-claude-neutral-200/70 animate-pulse"
                     style={{ width: `${56 + (i % 3) * 8}px` }}
                   />
                 ))}
               </div>
             ) : (
-            <div className="flex items-center gap-1.5 animate-in fade-in duration-300">
-              {visibleTabs.map(tab => (
-                <Link key={tab.path} to={tab.path}>
-                  <div
-                    className={`
-                      px-4 py-1.5 rounded-full
-                      transition-all duration-300 ease-in-out
-                      ${
-                        isActiveTab(tab.path)
-                          ? "bg-white text-gray-900 font-medium shadow-sm scale-[1.02]"
-                          : "text-gray-600 hover:bg-white/60 hover:text-gray-900 hover:shadow-sm hover:scale-[1.02]"
-                      }
-                    `}
-                  >
-                    {t(tab.label)}
-                  </div>
-                </Link>
-              ))}
-            </div>
+              <div className="flex min-w-0 items-center gap-1 overflow-x-auto scrollbar-hide animate-in fade-in duration-300">
+                {visibleTabs.map(tab => {
+                  const active = isActiveTab(tab.path);
+                  return (
+                    <Link
+                      key={tab.path}
+                      to={tab.path}
+                      aria-current={active ? "page" : undefined}
+                      className={`
+                        whitespace-nowrap rounded-claude-full px-4 py-2 text-sm font-medium
+                        transition-all duration-claude-base ease-claude
+                        ${
+                          active
+                            ? "bg-colorPrimary text-claude-neutral-50 shadow-claude-sm"
+                            : "text-claude-neutral-600 hover:bg-colorPrimaryBgHover hover:text-colorPrimary"
+                        }
+                      `}
+                    >
+                      {t(tab.label)}
+                    </Link>
+                  );
+                })}
+              </div>
             )}
           </div>
-          <div className="flex items-center space-x-4">
+          <div className="flex shrink-0 items-center gap-2 sm:gap-3">
             <LanguageSwitcher />
             {location.pathname !== "/login" &&
               location.pathname !== "/register" && <UserInfo />}

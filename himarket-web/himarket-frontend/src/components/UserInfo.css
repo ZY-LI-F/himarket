@@ -1,26 +1,31 @@
 /* 用户菜单下拉框样式 */
 .user-dropdown .ant-dropdown-menu {
-  background: rgba(255, 255, 255, 0.8) !important;
+  background: color-mix(
+    in srgb,
+    var(--color-neutral-50) 88%,
+    transparent
+  ) !important;
   backdrop-filter: blur(20px) !important;
   -webkit-backdrop-filter: blur(20px) !important;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08) !important;
-  border: 1px solid rgba(255, 255, 255, 0.4) !important;
-  border-radius: 12px !important;
-  padding: 8px !important;
+  box-shadow: var(--shadow-lg) !important;
+  border: 1px solid
+    color-mix(in srgb, var(--color-neutral-200) 72%, transparent) !important;
+  border-radius: var(--radius-lg) !important;
+  padding: var(--spacing-8) !important;
   min-width: 200px !important;
 }
 
 .user-dropdown .ant-dropdown-menu-item {
-  border-radius: 8px !important;
+  border-radius: var(--radius-md) !important;
   margin: 2px 0 !important;
   padding: 10px 12px !important;
-  transition: all 0.2s ease-in-out !important;
-  color: #4b5563 !important;
+  transition: all var(--motion-duration-base) var(--motion-easing-standard) !important;
+  color: var(--color-neutral-600) !important;
   font-size: 14px !important;
 }
 
 .user-dropdown .ant-dropdown-menu-item:hover {
-  background: rgba(255, 255, 255, 0.6) !important;
+  background: var(--color-brand-surface-tint) !important;
   transform: scale(1.02);
 }
 
@@ -40,6 +45,10 @@
 }
 
 .user-dropdown .ant-dropdown-menu-item-divider {
-  background: rgba(0, 0, 0, 0.06) !important;
+  background: color-mix(
+    in srgb,
+    var(--color-neutral-900) 8%,
+    transparent
+  ) !important;
   margin: 6px 0 !important;
 }
