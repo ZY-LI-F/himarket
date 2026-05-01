@@ -48,7 +48,7 @@ export const PortalDashboard: React.FC<PortalDashboardProps> = ({ portal }) => {
   if (fallback || !dashboardUrl || error) {
     return (
       <div className="p-6">
-        <div className="w-full h-[600px] flex items-center justify-center text-gray-500">
+        <div className="w-full h-[600px] flex items-center justify-center rounded-claude-lg border border-claude-neutral-200 bg-claude-neutral-50 text-claude-neutral-500">
           Dashboard 发布中，敬请期待
         </div>
         <div className="mt-4 text-right">
@@ -59,14 +59,14 @@ export const PortalDashboard: React.FC<PortalDashboardProps> = ({ portal }) => {
   }
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-6 text-claude-neutral-900">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold flex items-center gap-2">
-            <DashboardOutlined className="text-blue-500" />
+          <h2 className="text-2xl font-semibold flex items-center gap-2">
+            <DashboardOutlined className="text-claude-semantic-info" />
             Dashboard 监控面板
           </h2>
-          <p className="text-gray-500 mt-2">实时监控 {portal.name} 的访问与性能</p>
+          <p className="text-claude-neutral-600 mt-2">实时监控 {portal.name} 的访问与性能</p>
         </div>
         <Space>
           <Button icon={<ReloadOutlined />} onClick={fetchDashboardUrl} loading={loading}>刷新</Button>
@@ -74,7 +74,7 @@ export const PortalDashboard: React.FC<PortalDashboardProps> = ({ portal }) => {
       </div>
 
       <Card title="监控面板" className="w-full">
-        <div className="w-full h-[600px] border rounded-lg overflow-hidden">
+        <div className="w-full h-[600px] overflow-hidden rounded-claude-lg border border-claude-neutral-200">
           <iframe
             src={dashboardUrl}
             title={`${portal.name} Dashboard`}

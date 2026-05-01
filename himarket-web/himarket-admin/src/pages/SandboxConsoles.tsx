@@ -7,6 +7,7 @@ import {
 } from '@ant-design/icons'
 import { formatDateTime } from '@/lib/utils'
 import { sandboxApi } from '@/lib/api'
+import { semanticTagStyle } from '@/lib/semanticStyles'
 
 // ==================== 类型定义 ====================
 
@@ -228,12 +229,12 @@ export default function SandboxConsoles() {
 
   const statusTag = (status: SandboxInstance['status']) => {
     const map = {
-      RUNNING: { color: 'green', text: '运行中' },
-      STOPPED: { color: 'default', text: '已停止' },
-      ERROR: { color: 'red', text: '异常' },
-    }
+      RUNNING: { tone: 'success', text: '运行中' },
+      STOPPED: { tone: 'warning', text: '已停止' },
+      ERROR: { tone: 'error', text: '异常' },
+    } as const
     const s = map[status]
-    return <Tag color={s.color}>{s.text}</Tag>
+    return <Tag style={semanticTagStyle(s.tone)}>{s.text}</Tag>
   }
 
   const columns = [
@@ -241,8 +242,8 @@ export default function SandboxConsoles() {
       title: '实例名称/ID', key: 'nameAndId', width: 260,
       render: (_: any, record: SandboxInstance) => (
         <div>
-          <div className="text-sm font-medium text-gray-900 truncate">{record.sandboxName}</div>
-          <div className="text-xs text-gray-500 truncate">{record.sandboxId}</div>
+          <div className="text-sm font-semibold text-claude-neutral-900 truncate">{record.sandboxName}</div>
+          <div className="text-xs text-claude-neutral-500 truncate">{record.sandboxId}</div>
         </div>
       ),
     },
@@ -252,10 +253,10 @@ export default function SandboxConsoles() {
         try {
           const attr = record.clusterAttribute ? JSON.parse(record.clusterAttribute) : {}
           return attr.clusterId
-            ? <Tooltip title={attr.clusterId}><span className="text-xs font-mono text-gray-600 truncate block max-w-[200px]">{attr.clusterId}</span></Tooltip>
-            : <span className="text-xs text-gray-400">-</span>
+            ? <Tooltip title={attr.clusterId}><span className="text-xs font-mono text-claude-neutral-600 truncate block max-w-[200px]">{attr.clusterId}</span></Tooltip>
+            : <span className="text-xs text-claude-neutral-400">-</span>
         } catch {
-          return <span className="text-xs text-gray-400">-</span>
+          return <span className="text-xs text-claude-neutral-400">-</span>
         }
       },
     },
@@ -270,11 +271,11 @@ export default function SandboxConsoles() {
           {statusTag(record.status)}
           {record.statusMessage && record.status === 'ERROR' && (
             <Tooltip title={record.statusMessage}>
-              <div className="text-xs text-red-400 truncate mt-0.5 max-w-[140px] cursor-help">{record.statusMessage}</div>
+              <div className="text-xs text-claude-semantic-error truncate mt-0.5 max-w-[140px] cursor-help">{record.statusMessage}</div>
             </Tooltip>
           )}
           {record.lastCheckedAt && (
-            <div className="text-xs text-gray-400 mt-0.5">检查于 {formatDateTime(record.lastCheckedAt)}</div>
+            <div className="text-xs text-claude-neutral-400 mt-0.5">检查于 {formatDateTime(record.lastCheckedAt)}</div>
           )}
         </div>
       ),
@@ -318,10 +319,10 @@ export default function SandboxConsoles() {
     {
       key: 'AGENT_RUNTIME', label: 'AgentRuntime',
       children: (
-        <div className="bg-white rounded-lg">
-          <div className="py-4 pl-4 border-b border-gray-200">
-            <h3 className="text-lg font-medium text-gray-900">AgentRuntime 实例</h3>
-            <p className="text-sm text-gray-500 mt-1">导入 AgentRuntime 实例，用于 MCP Server 沙箱运行</p>
+        <div className="overflow-hidden rounded-claude-lg border border-claude-neutral-200 bg-claude-neutral-50 shadow-claude-sm">
+          <div className="border-b border-claude-neutral-200 px-5 py-4">
+            <h3 className="text-lg font-semibold text-claude-neutral-900">AgentRuntime 实例</h3>
+            <p className="text-sm text-claude-neutral-600 mt-1">导入 AgentRuntime 实例，用于 MCP Server 沙箱运行</p>
           </div>
           {renderTable()}
         </div>
@@ -330,10 +331,10 @@ export default function SandboxConsoles() {
     {
       key: 'SELF_HOSTED', label: '自建 Sandbox（即将支持）', disabled: true,
       children: (
-        <div className="bg-white rounded-lg">
-          <div className="py-4 pl-4 border-b border-gray-200">
-            <h3 className="text-lg font-medium text-gray-900">自建 Sandbox 实例</h3>
-            <p className="text-sm text-gray-500 mt-1">导入自建的 Sandbox 实例，用于自定义 MCP 运行环境</p>
+        <div className="overflow-hidden rounded-claude-lg border border-claude-neutral-200 bg-claude-neutral-50 shadow-claude-sm">
+          <div className="border-b border-claude-neutral-200 px-5 py-4">
+            <h3 className="text-lg font-semibold text-claude-neutral-900">自建 Sandbox 实例</h3>
+            <p className="text-sm text-claude-neutral-600 mt-1">导入自建的 Sandbox 实例，用于自定义 MCP 运行环境</p>
           </div>
           {renderTable()}
         </div>
@@ -347,11 +348,11 @@ export default function SandboxConsoles() {
   ]
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 text-claude-neutral-900">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Sandbox 实例</h1>
-          <p className="text-gray-500 mt-2">管理和配置您的沙箱运行环境</p>
+          <h1 className="text-3xl font-semibold tracking-tight">Sandbox 实例</h1>
+          <p className="text-claude-neutral-600 mt-2">管理和配置您的沙箱运行环境</p>
         </div>
         <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd}>
           导入{isAgentRuntime ? ' AgentRuntime' : ' Sandbox'} 实例
@@ -374,7 +375,7 @@ export default function SandboxConsoles() {
           {/* ── Step 0: 基本信息 ── */}
           {importStep === 0 && (
             <div style={{ minHeight: 200 }}>
-              <div className="text-sm text-gray-500 mb-4">为 Sandbox 实例设置一个名称，方便后续管理和识别。</div>
+              <div className="text-sm text-claude-neutral-600 mb-4">为 Sandbox 实例设置一个名称，方便后续管理和识别。</div>
               <Form.Item name="sandboxName" label="实例名称" rules={[{ required: true, message: '请输入实例名称' }]}>
                 <Input placeholder="例如：生产环境 AgentRuntime" size="large" />
               </Form.Item>
@@ -387,7 +388,7 @@ export default function SandboxConsoles() {
           {/* ── Step 1: 连接集群 ── */}
           {importStep === 1 && (
             <div style={{ minHeight: 200 }}>
-              <div className="text-sm text-gray-500 mb-4">
+              <div className="text-sm text-claude-neutral-600 mb-4">
                 {editingSandbox
                   ? '如需更换集群，请粘贴新的 KubeConfig 并验证连通性。留空则保持原有集群配置不变。'
                   : '粘贴 Kubernetes 集群的 KubeConfig 文件内容，然后点击下方按钮验证连接。'}
@@ -401,16 +402,16 @@ export default function SandboxConsoles() {
                 />
               </Form.Item>
               {clusterFetched ? (
-                <div className="flex items-center gap-2 text-green-600 text-sm"><CheckCircleOutlined /> 集群连接成功</div>
+                <div className="flex items-center gap-2 text-claude-semantic-success text-sm"><CheckCircleOutlined /> 集群连接成功</div>
               ) : fetchFailed ? (
-                <div className="flex items-center gap-2 text-red-500 text-sm"><CloseCircleOutlined /> 连接失败，请检查 KubeConfig</div>
+                <div className="flex items-center gap-2 text-claude-semantic-error text-sm"><CloseCircleOutlined /> 连接失败，请检查 KubeConfig</div>
               ) : null}
             </div>
           )}
         </Form>
 
         {/* 底部操作栏 */}
-        <div className="flex items-center justify-between mt-6 pt-4 border-t border-gray-100">
+        <div className="flex items-center justify-between mt-6 pt-4 border-t border-claude-neutral-200">
           <div>
             {importStep > 0 && !editingSandbox && (
               <Button onClick={() => setImportStep(importStep - 1)}>上一步</Button>

@@ -104,10 +104,10 @@ export default function Consoles() {
       width: 280,
       render: (_: any, record: Gateway) => (
         <div>
-          <div className="text-sm font-medium text-gray-900 truncate">
+          <div className="text-sm font-semibold text-claude-neutral-900 truncate">
             {record.gatewayName}
           </div>
-          <div className="text-xs text-gray-500 truncate">
+          <div className="text-xs text-claude-neutral-500 truncate">
             {record.gatewayId}
           </div>
         </div>
@@ -151,10 +151,10 @@ export default function Consoles() {
       width: 280,
       render: (_: any, record: Gateway) => (
         <div>
-          <div className="text-sm font-medium text-gray-900 truncate">
+          <div className="text-sm font-semibold text-claude-neutral-900 truncate">
             {record.gatewayName}
           </div>
-          <div className="text-xs text-gray-500 truncate">
+          <div className="text-xs text-claude-neutral-500 truncate">
             {record.gatewayId}
           </div>
         </div>
@@ -190,10 +190,10 @@ export default function Consoles() {
       width: 280,
       render: (_: any, record: Gateway) => (
         <div>
-          <div className="text-sm font-medium text-gray-900 truncate">
+          <div className="text-sm font-semibold text-claude-neutral-900 truncate">
             {record.gatewayName}
           </div>
-          <div className="text-xs text-gray-500 truncate">
+          <div className="text-xs text-claude-neutral-500 truncate">
             {record.gatewayId}
           </div>
         </div>
@@ -229,10 +229,10 @@ export default function Consoles() {
       width: 280,
       render: (_: any, record: Gateway) => (
         <div>
-          <div className="text-sm font-medium text-gray-900 truncate">
+          <div className="text-sm font-semibold text-claude-neutral-900 truncate">
             {record.gatewayName}
           </div>
-          <div className="text-xs text-gray-500 truncate">
+          <div className="text-xs text-claude-neutral-500 truncate">
             {record.gatewayId}
           </div>
         </div>
@@ -277,11 +277,11 @@ export default function Consoles() {
   ]
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 text-claude-neutral-900">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">网关实例</h1>
-          <p className="text-gray-500 mt-2">
+          <h1 className="text-3xl font-semibold tracking-tight">网关实例</h1>
+          <p className="text-claude-neutral-600 mt-2">
             管理和配置您的网关实例
           </p>
         </div>
@@ -298,10 +298,10 @@ export default function Consoles() {
             key: 'HIGRESS',
             label: 'Higress 网关',
             children: (
-              <div className="bg-white rounded-lg">
-                <div className="py-4 pl-4">
-                  <h3 className="text-lg font-medium text-gray-900">Higress 网关</h3>
-                  <p className="text-sm text-gray-500 mt-1">Higress 云原生网关</p>
+              <div className="overflow-hidden rounded-claude-lg border border-claude-neutral-200 bg-claude-neutral-50 shadow-claude-sm">
+                <div className="border-b border-claude-neutral-200 px-5 py-4">
+                  <h3 className="text-lg font-semibold text-claude-neutral-900">Higress 网关</h3>
+                  <p className="text-sm text-claude-neutral-600 mt-1">Higress 云原生网关</p>
                 </div>
                 <Table
                   columns={higressColumns}
@@ -326,10 +326,10 @@ export default function Consoles() {
             key: 'APIG_API',
             label: 'API 网关',
             children: (
-              <div className="bg-white rounded-lg">
-                <div className="py-4 pl-4">
-                  <h3 className="text-lg font-medium text-gray-900">API 网关</h3>
-                  <p className="text-sm text-gray-500 mt-1">阿里云 API 网关服务</p>
+              <div className="overflow-hidden rounded-claude-lg border border-claude-neutral-200 bg-claude-neutral-50 shadow-claude-sm">
+                <div className="border-b border-claude-neutral-200 px-5 py-4">
+                  <h3 className="text-lg font-semibold text-claude-neutral-900">API 网关</h3>
+                  <p className="text-sm text-claude-neutral-600 mt-1">阿里云 API 网关服务</p>
                 </div>
                 <Table
                   columns={apigColumns}
@@ -354,10 +354,10 @@ export default function Consoles() {
             key: 'APIG_AI',
             label: 'AI 网关',
             children: (
-              <div className="bg-white rounded-lg">
-                <div className="py-4 pl-4">
-                  <h3 className="text-lg font-medium text-gray-900">AI 网关</h3>
-                  <p className="text-sm text-gray-500 mt-1">阿里云 AI 网关服务</p>
+              <div className="overflow-hidden rounded-claude-lg border border-claude-neutral-200 bg-claude-neutral-50 shadow-claude-sm">
+                <div className="border-b border-claude-neutral-200 px-5 py-4">
+                  <h3 className="text-lg font-semibold text-claude-neutral-900">AI 网关</h3>
+                  <p className="text-sm text-claude-neutral-600 mt-1">阿里云 AI 网关服务</p>
                 </div>
                 <Table
                   columns={apigColumns}
@@ -382,10 +382,10 @@ export default function Consoles() {
             key: 'ADP_AI_GATEWAY',
             label: '专有云 AI 网关',
             children: (
-              <div className="bg-white rounded-lg">
-                <div className="py-4 pl-4">
-                  <h3 className="text-lg font-medium text-gray-900">AI 网关</h3>
-                  <p className="text-sm text-gray-500 mt-1">专有云 AI 网关服务</p>
+              <div className="overflow-hidden rounded-claude-lg border border-claude-neutral-200 bg-claude-neutral-50 shadow-claude-sm">
+                <div className="border-b border-claude-neutral-200 px-5 py-4">
+                  <h3 className="text-lg font-semibold text-claude-neutral-900">AI 网关</h3>
+                  <p className="text-sm text-claude-neutral-600 mt-1">专有云 AI 网关服务</p>
                 </div>
                 <Table
                   columns={adpAiColumns}
@@ -410,10 +410,10 @@ export default function Consoles() {
             key: 'APSARA_GATEWAY',
             label: '飞天企业版 AI 网关',
             children: (
-              <div className="bg-white rounded-lg">
-                <div className="py-4 pl-4">
-                  <h3 className="text-lg font-medium text-gray-900">飞天企业版 AI 网关</h3>
-                  <p className="text-sm text-gray-500 mt-1">阿里云飞天企业版 AI 网关服务</p>
+              <div className="overflow-hidden rounded-claude-lg border border-claude-neutral-200 bg-claude-neutral-50 shadow-claude-sm">
+                <div className="border-b border-claude-neutral-200 px-5 py-4">
+                  <h3 className="text-lg font-semibold text-claude-neutral-900">飞天企业版 AI 网关</h3>
+                  <p className="text-sm text-claude-neutral-600 mt-1">阿里云飞天企业版 AI 网关服务</p>
                 </div>
                 <Table
                   columns={apsaraGatewayColumns}

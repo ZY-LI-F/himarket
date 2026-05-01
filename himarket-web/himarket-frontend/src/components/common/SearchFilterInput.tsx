@@ -1,6 +1,6 @@
 import type React from 'react';
-import { Input } from 'antd';
 import { Search } from 'lucide-react';
+import { FormField } from './FormField';
 
 /**
  * 搜索过滤输入框 Props
@@ -26,7 +26,7 @@ export const SearchFilterInput: React.FC<SearchFilterInputProps> = ({
   placeholder = '搜索...',
 }) => {
   return (
-    <Input
+    <FormField.Input
       value={value}
       onChange={(e) => onChange(e.target.value)}
       placeholder={placeholder}

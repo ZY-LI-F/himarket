@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../lib/api";
 import { authApi } from '@/lib/api'
-import { Form, Input, Button, Alert } from "antd";
+import { Alert, Form } from "antd";
+import { Button, Card, FormField } from "@/components/common";
 
 const Login: React.FC = () => {
   const [loading, setLoading] = useState(false);
@@ -69,41 +70,68 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="flex min-h-screen">
-      {/* 左侧品牌区域 - 移动端隐藏 */}
-      <div
-        className="hidden md:flex w-1/2 items-center justify-center relative overflow-hidden"
-        style={{ background: 'linear-gradient(135deg, #6366F1 0%, #4F46E5 50%, #818CF8 100%)' }}
-      >
-        {/* 装饰性背景元素 */}
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-20 left-10 w-32 h-32 rounded-full bg-white" />
-          <div className="absolute bottom-32 right-16 w-48 h-48 rounded-full bg-white" />
-          <div className="absolute top-1/2 left-1/3 w-24 h-24 rounded-full bg-white" />
-        </div>
-        <div className="text-center text-white relative z-10">
-          <img src="/logo.png" alt="Logo" className="w-20 h-20 mx-auto mb-6 drop-shadow-lg" />
-          <h1 className="text-3xl font-bold mb-3">HiMarket</h1>
-          <p className="text-lg opacity-80">企业级 AI 开放平台管理后台</p>
+    <div className="relative flex min-h-screen overflow-hidden bg-[var(--color-neutral-50)] text-[var(--color-neutral-900)]">
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[var(--color-brand-surface-tint)] via-[var(--color-neutral-50)] to-[var(--color-neutral-100)]" />
+
+      <div className="relative hidden w-1/2 overflow-hidden bg-[var(--color-neutral-900)] text-white md:flex">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_22%_18%,var(--color-brand)_0,transparent_30%),radial-gradient(circle_at_82%_72%,var(--color-neutral-700)_0,transparent_34%)] opacity-40" />
+        <div className="relative z-10 flex w-full flex-col justify-between p-12">
+          <div className="flex items-center gap-4">
+            <span className="flex h-12 w-12 items-center justify-center rounded-[var(--radius-md)] bg-white/10 ring-1 ring-white/15">
+              <img src="/logo.png" alt="Logo" className="h-8 w-8" />
+            </span>
+            <div>
+              <p className="text-sm font-semibold uppercase tracking-wide text-white/60">HiMarket</p>
+              <h1 className="text-2xl font-bold">Admin Console</h1>
+            </div>
+          </div>
+
+          <div className="max-w-lg">
+            <p className="mb-5 text-sm font-semibold uppercase tracking-wide text-[var(--color-brand-surface-tint)]">
+              AI Open Platform
+            </p>
+            <p className="text-4xl font-bold leading-tight">
+              统一管理企业级 AI 服务、门户与开放能力。
+            </p>
+            <p className="mt-6 max-w-md text-base leading-7 text-white/70">
+              为管理员保留清晰的操作入口，以一致的后台视觉承接产品工作台。
+            </p>
+          </div>
+
+          <div className="grid grid-cols-3 gap-3 text-sm text-white/65">
+            <div className="rounded-[var(--radius-md)] border border-white/10 bg-white/5 p-4">
+              <p className="text-lg font-semibold text-white">API</p>
+              <p className="mt-1">服务编排</p>
+            </div>
+            <div className="rounded-[var(--radius-md)] border border-white/10 bg-white/5 p-4">
+              <p className="text-lg font-semibold text-white">Portal</p>
+              <p className="mt-1">门户运营</p>
+            </div>
+            <div className="rounded-[var(--radius-md)] border border-white/10 bg-white/5 p-4">
+              <p className="text-lg font-semibold text-white">IAM</p>
+              <p className="mt-1">权限入口</p>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* 右侧表单区域 */}
-      <div className="w-full md:w-1/2 flex items-center justify-center bg-gradient-to-br from-indigo-50 to-white md:bg-white">
-        <div className="w-full max-w-md px-8">
-          {/* 移动端 Logo */}
-          <div className="md:hidden mb-6 text-center">
-            <img src="/logo.png" alt="Logo" className="w-16 h-16 mx-auto mb-4" />
+      <div className="relative z-10 flex w-full items-center justify-center px-4 py-10 md:w-1/2 md:px-10">
+        <Card className="w-full max-w-md border-[var(--color-neutral-200)] shadow-claude-lg">
+          <div className="mb-8 text-center">
+            <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-[var(--radius-lg)] bg-[var(--color-brand-surface-tint)] md:hidden">
+              <img src="/logo.png" alt="Logo" className="h-10 w-10" />
+            </div>
+            <p className="mb-2 text-sm font-semibold text-[var(--color-brand)]">
+              HiMarket Admin
+            </p>
+            <h2 className="text-2xl font-bold text-[var(--color-neutral-900)]">
+              {isRegister ? "注册Admin账号" : "登录HiMarket-后台"}
+            </h2>
           </div>
 
-          <h2 className="text-2xl font-bold mb-6 text-gray-900 text-center">
-            {isRegister ? "注册Admin账号" : "登录HiMarket-后台"}
-          </h2>
-
-          {/* 登录表单 */}
           {!isRegister && (
             <Form
-              className="w-full flex flex-col gap-4"
+              className="w-full"
               layout="vertical"
               onFinish={handleLogin}
             >
@@ -111,18 +139,18 @@ const Login: React.FC = () => {
                 name="username"
                 rules={[{ required: true, message: "请输入账号" }]}
               >
-                <Input placeholder="账号" size="large" />
+                <FormField.Input placeholder="账号" size="large" />
               </Form.Item>
               <Form.Item
                 name="password"
                 rules={[{ required: true, message: "请输入密码" }]}
               >
-                <Input.Password placeholder="密码" size="large" />
+                <FormField.Password placeholder="密码" size="large" />
               </Form.Item>
               {error && <Alert message={error} type="error" showIcon className="mb-2" />}
-              <Form.Item>
+              <Form.Item className="mb-0">
                 <Button
-                  type="primary"
+                  variant="primary"
                   htmlType="submit"
                   className="w-full"
                   loading={loading}
@@ -134,10 +162,9 @@ const Login: React.FC = () => {
             </Form>
           )}
 
-          {/* 注册表单 */}
           {isRegister && (
             <Form
-              className="w-full flex flex-col gap-4"
+              className="w-full"
               layout="vertical"
               onFinish={handleRegister}
             >
@@ -145,24 +172,24 @@ const Login: React.FC = () => {
                 name="username"
                 rules={[{ required: true, message: "请输入账号" }]}
               >
-                <Input placeholder="账号" size="large" />
+                <FormField.Input placeholder="账号" size="large" />
               </Form.Item>
               <Form.Item
                 name="password"
                 rules={[{ required: true, message: "请输入密码" }]}
               >
-                <Input.Password placeholder="密码" size="large" />
+                <FormField.Password placeholder="密码" size="large" />
               </Form.Item>
               <Form.Item
                 name="confirmPassword"
                 rules={[{ required: true, message: "请确认密码" }]}
               >
-                <Input.Password placeholder="确认密码" size="large" />
+                <FormField.Password placeholder="确认密码" size="large" />
               </Form.Item>
               {error && <Alert message={error} type="error" showIcon className="mb-2" />}
-              <Form.Item>
+              <Form.Item className="mb-0">
                 <Button
-                  type="primary"
+                  variant="primary"
                   htmlType="submit"
                   className="w-full"
                   loading={loading}
@@ -173,7 +200,7 @@ const Login: React.FC = () => {
               </Form.Item>
             </Form>
           )}
-        </div>
+        </Card>
       </div>
     </div>
   );

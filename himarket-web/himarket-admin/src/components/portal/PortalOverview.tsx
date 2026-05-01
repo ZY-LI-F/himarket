@@ -44,10 +44,10 @@ export function PortalOverview({portal, onEdit}: PortalOverviewProps) {
     }, [portal.portalId]) // 只依赖portalId，而不是整个portal对象
 
     return (
-        <div className="p-6 space-y-6">
+        <div className="p-6 space-y-6 text-claude-neutral-900">
             <div>
-                <h1 className="text-2xl font-bold mb-2">概览</h1>
-                <p className="text-gray-600">Portal概览</p>
+                <h1 className="text-2xl font-semibold mb-2">概览</h1>
+                <p className="text-claude-neutral-600">Portal概览</p>
             </div>
 
             {/* 基本信息 */}
@@ -67,13 +67,13 @@ export function PortalOverview({portal, onEdit}: PortalOverviewProps) {
             >
                 <div>
                     <div className="grid grid-cols-6 gap-8 items-center pt-2 pb-2">
-                        <span className="text-xs text-gray-600">Portal名称:</span>
-                        <span className="col-span-2 text-xs text-gray-900">{portal.name}</span>
-                        <span className="text-xs text-gray-600">Portal ID:</span>
+                        <span className="text-xs text-claude-neutral-600">Portal名称:</span>
+                        <span className="col-span-2 text-xs text-claude-neutral-900">{portal.name}</span>
+                        <span className="text-xs text-claude-neutral-600">Portal ID:</span>
                         <div className="col-span-2 flex items-center gap-2">
-                            <span className="text-xs text-gray-700">{portal.portalId}</span>
+                            <span className="text-xs text-claude-neutral-700">{portal.portalId}</span>
                             <CopyOutlined
-                                className="text-gray-400 hover:text-colorPrimary cursor-pointer transition-colors ml-1"
+                                className="text-claude-neutral-400 hover:text-colorPrimary cursor-pointer transition-colors ml-1"
                                 style={{ fontSize: '12px' }}
                                 onClick={async () => {
                                     try {
@@ -88,7 +88,7 @@ export function PortalOverview({portal, onEdit}: PortalOverviewProps) {
                     </div>
 
                     <div className="grid grid-cols-6 gap-8 items-center pt-2 pb-2">
-                        <span className="text-xs text-gray-600">域名:</span>
+                        <span className="text-xs text-claude-neutral-600">域名:</span>
                         <div className="col-span-2 flex items-center gap-2">
                             <LinkOutlined className="text-colorPrimary" />
                             <a
@@ -100,47 +100,47 @@ export function PortalOverview({portal, onEdit}: PortalOverviewProps) {
                                 {portal.portalDomainConfig?.[portal.portalDomainConfig.length - 1]?.domain}
                             </a>
                         </div>
-                        <span className="text-xs text-gray-600">账号密码登录:</span>
+                        <span className="text-xs text-claude-neutral-600">账号密码登录:</span>
                         <div className="col-span-2 flex items-center">
                             {portal.portalSettingConfig?.builtinAuthEnabled ? (
-                                <CheckCircleFilled className="text-green-500 mr-2" style={{fontSize: '10px'}} />
+                                <CheckCircleFilled className="text-claude-semantic-success mr-2" style={{fontSize: '10px'}} />
                             ) : (
-                                <MinusCircleFilled className="text-gray-400 mr-2" style={{fontSize: '10px'}} />
+                                <MinusCircleFilled className="text-claude-neutral-400 mr-2" style={{fontSize: '10px'}} />
                             )}
-                            <span className="text-xs text-gray-900">
+                            <span className="text-xs text-claude-neutral-900">
                                 {portal.portalSettingConfig?.builtinAuthEnabled ? '已启用' : '已停用'}
                             </span>
                         </div>
                     </div>
 
                     <div className="grid grid-cols-6 gap-8 items-center pt-2 pb-2">
-                        <span className="text-xs text-gray-600">开发者自动审批:</span>
+                        <span className="text-xs text-claude-neutral-600">开发者自动审批:</span>
                         <div className="col-span-2 flex items-center">
                             {portal.portalSettingConfig?.autoApproveDevelopers ? (
-                                <CheckCircleFilled className="text-green-500 mr-2" style={{fontSize: '10px'}} />
+                                <CheckCircleFilled className="text-claude-semantic-success mr-2" style={{fontSize: '10px'}} />
                             ) : (
-                                <MinusCircleFilled className="text-gray-400 mr-2" style={{fontSize: '10px'}} />
+                                <MinusCircleFilled className="text-claude-neutral-400 mr-2" style={{fontSize: '10px'}} />
                             )}
-                            <span className="text-xs text-gray-900">
+                            <span className="text-xs text-claude-neutral-900">
                                 {portal.portalSettingConfig?.autoApproveDevelopers ? '已启用' : '已停用'}
                             </span>
                         </div>
-                        <span className="text-xs text-gray-600">订阅自动审批:</span>
+                        <span className="text-xs text-claude-neutral-600">订阅自动审批:</span>
                         <div className="col-span-2 flex items-center">
                             {portal.portalSettingConfig?.autoApproveSubscriptions ? (
-                                <CheckCircleFilled className="text-green-500 mr-2" style={{fontSize: '10px'}} />
+                                <CheckCircleFilled className="text-claude-semantic-success mr-2" style={{fontSize: '10px'}} />
                             ) : (
-                                <MinusCircleFilled className="text-gray-400 mr-2" style={{fontSize: '10px'}} />
+                                <MinusCircleFilled className="text-claude-neutral-400 mr-2" style={{fontSize: '10px'}} />
                             )}
-                            <span className="text-xs text-gray-900">
+                            <span className="text-xs text-claude-neutral-900">
                                 {portal.portalSettingConfig?.autoApproveSubscriptions ? '已启用' : '已停用'}
                             </span>
                         </div>
                     </div>
 
                     <div className="grid grid-cols-6 gap-8 items-start pt-2 pb-2">
-                        <span className="text-xs text-gray-600">描述:</span>
-                        <span className="col-span-5 text-xs text-gray-900 leading-relaxed">
+                        <span className="text-xs text-claude-neutral-600">描述:</span>
+                        <span className="col-span-5 text-xs text-claude-neutral-900 leading-relaxed">
                             {portal.description || '-'}
                         </span>
                     </div>
@@ -151,32 +151,32 @@ export function PortalOverview({portal, onEdit}: PortalOverviewProps) {
             <Row gutter={[16, 16]}>
                 <Col xs={24} sm={12} lg={12}>
                     <Card
-                        className="cursor-pointer hover:shadow-md transition-shadow"
+                        className="cursor-pointer border-claude-neutral-200 transition-shadow hover:shadow-claude-md"
                         onClick={() => {
                             navigate(`/portals/${portal.portalId}?tab=developers`)
                         }}
                     >
-                      <div className='flex flex-col gap-2 text-subTitle'>
+                      <div className='flex flex-col gap-2 text-claude-neutral-700'>
                         <div>注册开发者</div>
                         <div className='flex items-center gap-2'>
                           <UserOutlined className="text-xl text-colorPrimary" />
-                          <div className='text-colorPrimary text-2xl'>{developerCount}</div>
+                          <div className='text-colorPrimary text-2xl font-semibold'>{developerCount}</div>
                         </div>
                       </div>
                     </Card>
                 </Col>
                 <Col xs={24} sm={12} lg={12}>
                     <Card
-                        className="cursor-pointer hover:shadow-md transition-shadow"
+                        className="cursor-pointer border-claude-neutral-200 transition-shadow hover:shadow-claude-md"
                         onClick={() => {
                             navigate(`/portals/${portal.portalId}?tab=published-apis`)
                         }}
                     >
-                      <div className='flex flex-col gap-2 text-subTitle'>
+                      <div className='flex flex-col gap-2 text-claude-neutral-700'>
                         <div>已发布的API</div>
                         <div className='flex items-center gap-2'>
                           <ApiOutlined className="text-xl text-colorPrimary" />
-                          <div className='text-colorPrimary text-2xl'>{apiCount}</div>
+                          <div className='text-colorPrimary text-2xl font-semibold'>{apiCount}</div>
                         </div>
                       </div>
                     </Card>

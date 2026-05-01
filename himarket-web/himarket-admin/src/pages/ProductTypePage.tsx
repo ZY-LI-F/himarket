@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
-import { Button, Modal, message } from 'antd';
+import { Modal, message } from 'antd';
 import { PlusOutlined, ImportOutlined } from '@ant-design/icons';
+import { Button } from '@/components/common';
 import { nacosApi, workerApi, skillApi } from '@/lib/api';
 import ProductTable from '@/components/api-product/ProductTable';
 import type { ProductTableRef } from '@/components/api-product/ProductTable';
@@ -121,15 +122,15 @@ const ProductTypePage: React.FC<ProductTypePageProps> = ({ productType }) => {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">{TYPE_TITLES[productType]}</h1>
-          <p className="text-gray-500 mt-2">{TYPE_SUBTITLES[productType]}</p>
+          <h1 className="text-claude-h3 font-bold tracking-normal text-claude-neutral-900">{TYPE_TITLES[productType]}</h1>
+          <p className="text-claude-body-sm text-claude-neutral-600 mt-2">{TYPE_SUBTITLES[productType]}</p>
         </div>
         <div className="flex items-center gap-3">
           {/* MCP_SERVER: single unified "创建 MCP" button */}
           {isMcpServer && (
             <Button
               onClick={() => setSelectorVisible(true)}
-              type="primary"
+              variant="primary"
               icon={<PlusOutlined />}
             >
               创建 MCP
@@ -157,7 +158,7 @@ const ProductTypePage: React.FC<ProductTypePageProps> = ({ productType }) => {
           {!isMcpServer && (
             <Button
               onClick={() => tableRef.current?.handleCreate()}
-              type="primary"
+              variant="primary"
               icon={<PlusOutlined />}
             >
               创建 API Product

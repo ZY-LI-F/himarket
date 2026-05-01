@@ -2,6 +2,7 @@ import { colors } from "./src/aliyunThemeToken";
 
 /** @type {import('tailwindcss').Config} */
 export default {
+  presets: [require("../shared/design-tokens/tailwindPreset.cjs")],
   darkMode: ["class"],
   content: [
     "./index.html",

@@ -1,9 +1,10 @@
 import { useNavigate } from 'react-router-dom'
-import { Button, Table, Space, Modal, message } from 'antd'
+import { Button, Space, Modal, message } from 'antd'
 import { PlusOutlined, EyeOutlined, DeleteOutlined, ExclamationCircleOutlined, GlobalOutlined, CheckCircleFilled, MinusCircleFilled } from '@ant-design/icons'
 import { useState, useEffect } from 'react'
 import type { ApiProduct, Publication } from '@/types/api-product';
 import { apiProductApi, portalApi } from '@/lib/api';
+import { Empty, Table, emptyImages } from '@/components/common'
 
 interface ApiProductPortalProps {
   apiProduct: ApiProduct
@@ -247,7 +248,7 @@ export function ApiProductPortal({ apiProduct }: ApiProductPortalProps) {
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-2xl font-bold mb-2">发布门户</h1>
-          <p className="text-gray-600">管理API产品发布的门户</p>
+          <p className="text-claude-neutral-600">管理API产品发布的门户</p>
         </div>
         <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd}>
           发布到门户
@@ -255,9 +256,10 @@ export function ApiProductPortal({ apiProduct }: ApiProductPortalProps) {
       </div>
 
       {publishedPortals.length === 0 && !loading ? (
-          <div className="text-center py-8 text-gray-500">
-            <p>暂未发布到任何门户</p>
-          </div>
+          <Empty
+            image={emptyImages.simple}
+            description="暂未发布到任何门户"
+          />
         ) : (
           <Table 
             columns={columns} 
@@ -288,7 +290,7 @@ export function ApiProductPortal({ apiProduct }: ApiProductPortalProps) {
         confirmLoading={modalLoading}
         destroyOnClose
       >
-        <div className="border border-gray-200 rounded-lg overflow-hidden">
+        <div className="border border-claude-neutral-200 rounded-claude-lg overflow-hidden">
           <Table
             columns={modalColumns}
             dataSource={allPortals.filter(portal => 
@@ -310,17 +312,16 @@ export function ApiProductPortal({ apiProduct }: ApiProductPortalProps) {
             }}
             rowClassName={(record) => 
               selectedPortalIds.includes(record.portalId) 
-                ? 'bg-blue-50 hover:bg-blue-100' 
-                : 'hover:bg-gray-50'
+                ? 'bg-colorPrimaryBg hover:bg-colorPrimaryBg'
+                : 'hover:bg-claude-neutral-50'
             }
             locale={{
               emptyText: (
-                <div className="py-8">
-                  <div className="text-gray-400 mb-2">
-                    <GlobalOutlined style={{ fontSize: '24px' }} />
-                  </div>
-                  <div className="text-gray-500 text-sm">暂无可发布的门户</div>
-                </div>
+                <Empty
+                  image={<GlobalOutlined className="text-2xl text-claude-neutral-400" />}
+                  description="暂无可发布的门户"
+                  compact
+                />
               )
             }}
           />
@@ -328,4 +329,4 @@ export function ApiProductPortal({ apiProduct }: ApiProductPortalProps) {
       </Modal>
     </div>
   )
-} 
+}

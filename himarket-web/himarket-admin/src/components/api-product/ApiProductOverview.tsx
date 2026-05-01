@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Card, Row, Col, Statistic, Button, Tag, message } from 'antd'
+import { Row, Col, Statistic, Button, Tag, message } from 'antd'
 import { 
   ApiOutlined, 
   GlobalOutlined,
@@ -17,6 +17,8 @@ import { getServiceName, formatDateTime, copyToClipboard } from '@/lib/utils'
 import { apiProductApi, mcpServerApi } from '@/lib/api'
 import { getProductCategories } from '@/lib/productCategoryApi'
 import type { ProductCategory } from '@/types/product-category'
+import { Card } from '@/components/common'
+import { colors } from '../../../../shared/design-tokens/colors'
 
 
 interface ApiProductOverviewProps {
@@ -111,7 +113,7 @@ export function ApiProductOverview({ apiProduct, linkedService, onEdit }: ApiPro
     <div className="p-6 space-y-6">
       <div>
         <h1 className="text-2xl font-bold mb-2">概览</h1>
-        <p className="text-gray-600">API产品概览</p>
+        <p className="text-claude-neutral-600">API产品概览</p>
       </div>
 
       {/* 基本信息 */}
@@ -135,7 +137,7 @@ export function ApiProductOverview({ apiProduct, linkedService, onEdit }: ApiPro
               <div className="col-span-2 flex items-center gap-2">
                 <span className="text-xs text-gray-700">{apiProduct.productId}</span>
                 <CopyOutlined 
-                  className="text-gray-400 hover:text-blue-600 cursor-pointer transition-colors ml-1" 
+                  className="text-claude-neutral-400 hover:text-colorPrimary cursor-pointer transition-colors ml-1"
                   style={{ fontSize: '12px' }}
                   onClick={async () => {
                     try {
@@ -204,7 +206,7 @@ export function ApiProductOverview({ apiProduct, linkedService, onEdit }: ApiPro
                     {productCategories.map((category, index) => (
                       <span key={category.categoryId}>
                         <span 
-                          className="text-gray-900 hover:text-blue-600 cursor-pointer hover:underline transition-colors"
+                          className="text-claude-neutral-900 hover:text-colorPrimary cursor-pointer hover:underline transition-colors"
                           onClick={() => navigate(`/product-categories/${category.categoryId}`)}
                         >
                           {category.name}
@@ -287,7 +289,7 @@ export function ApiProductOverview({ apiProduct, linkedService, onEdit }: ApiPro
               {meta.repoUrl && (
                 <div className="grid grid-cols-6 gap-8 items-center pt-2 pb-2">
                   <span className="text-xs text-gray-600">仓库地址:</span>
-                  <a href={meta.repoUrl} target="_blank" rel="noopener noreferrer" className="col-span-5 text-xs text-blue-500 hover:underline truncate">
+                  <a href={meta.repoUrl} target="_blank" rel="noopener noreferrer" className="col-span-5 text-xs text-colorPrimary hover:underline truncate">
                     {meta.repoUrl}
                   </a>
                 </div>
@@ -337,7 +339,7 @@ export function ApiProductOverview({ apiProduct, linkedService, onEdit }: ApiPro
                     </Tag>
                     <span className="text-xs text-gray-700 font-mono break-all">{meta.endpointUrl}</span>
                     <CopyOutlined
-                      className="text-gray-400 hover:text-blue-600 cursor-pointer transition-colors flex-shrink-0"
+                      className="text-claude-neutral-400 hover:text-colorPrimary cursor-pointer transition-colors flex-shrink-0"
                       style={{ fontSize: '12px' }}
                       onClick={async () => {
                         try {
@@ -362,7 +364,8 @@ export function ApiProductOverview({ apiProduct, linkedService, onEdit }: ApiPro
         <Row gutter={[16, 16]}>
           <Col xs={24} sm={12} lg={8}>
             <Card 
-              className="cursor-pointer hover:shadow-md transition-shadow"
+              variant="interactive"
+              className="cursor-pointer"
               onClick={() => {
                 navigate(`/api-products/${apiProduct.productId}?tab=portal`)
               }}
@@ -370,14 +373,15 @@ export function ApiProductOverview({ apiProduct, linkedService, onEdit }: ApiPro
               <Statistic
                 title="发布的门户"
                 value={portalCount}
-                prefix={<GlobalOutlined className="text-blue-500" />}
-                valueStyle={{ color: '#1677ff', fontSize: '24px' }}
+                prefix={<GlobalOutlined className="text-colorPrimary" />}
+                valueStyle={{ color: colors.brand.primary, fontSize: '24px' }}
               />
             </Card>
           </Col>
           <Col xs={24} sm={12} lg={8}>
             <Card 
-              className="cursor-pointer hover:shadow-md transition-shadow"
+              variant="interactive"
+              className="cursor-pointer"
               onClick={() => {
                 navigate(`/api-products/${apiProduct.productId}?tab=link-api`)
               }}
@@ -387,18 +391,18 @@ export function ApiProductOverview({ apiProduct, linkedService, onEdit }: ApiPro
                 value={apiProduct.type === 'MCP_SERVER' 
                   ? (mcpMetaList.length > 0 ? `${mcpMetaList.length} 个 MCP` : '未配置')
                   : (getServiceName(linkedService) || '未关联')}
-                prefix={<ApiOutlined className="text-blue-500" />}
-                valueStyle={{ color: '#1677ff', fontSize: '24px' }}
+                prefix={<ApiOutlined className="text-colorPrimary" />}
+                valueStyle={{ color: colors.brand.primary, fontSize: '24px' }}
               />
             </Card>
           </Col>
           <Col xs={24} sm={12} lg={8}>
-            <Card className="hover:shadow-md transition-shadow">
+            <Card variant="interactive">
               <Statistic
                 title="订阅用户"
                 value={subscriberCount}
-                prefix={<TeamOutlined className="text-blue-500" />}
-                valueStyle={{ color: '#1677ff', fontSize: '24px' }}
+                prefix={<TeamOutlined className="text-colorPrimary" />}
+                valueStyle={{ color: colors.brand.primary, fontSize: '24px' }}
               />
             </Card>
           </Col>
@@ -407,4 +411,4 @@ export function ApiProductOverview({ apiProduct, linkedService, onEdit }: ApiPro
 
     </div>
   )
-} 
+}

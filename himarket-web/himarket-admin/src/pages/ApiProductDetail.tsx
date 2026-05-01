@@ -138,7 +138,7 @@ export default function ApiProductDetail() {
 
   const renderContent = () => {
     if (!apiProduct) {
-      return <div className="p-6">Loading...</div>
+      return <div className="p-6 text-claude-neutral-600">Loading...</div>
     }
     
     switch (activeTab) {
@@ -210,9 +210,9 @@ export default function ApiProductDetail() {
   return (
     <div className="flex h-full w-full overflow-hidden">
       {/* API Product 详情侧边栏 */}
-      <div className="w-64 border-r bg-white flex flex-col flex-shrink-0">
+      <div className="w-64 border-r border-claude-neutral-200 bg-claude-neutral-50 flex flex-col flex-shrink-0">
         {/* 返回按钮 */}
-        <div className="pb-4 border-b">
+        <div className="pb-4 border-b border-claude-neutral-200">
           <Button
             type="text"
             // className="w-full justify-start"
@@ -224,12 +224,12 @@ export default function ApiProductDetail() {
         </div>
 
         {/* API Product 信息 */}
-        <div className="p-4 border-b">
+        <div className="p-4 border-b border-claude-neutral-200">
           <div className="flex items-center justify-between mb-2">
             {apiProduct ? (
-              <h2 className="text-lg font-semibold">{apiProduct.name}</h2>
+              <h2 className="text-claude-body-lg font-semibold text-claude-neutral-900">{apiProduct.name}</h2>
             ) : (
-              <div className="h-6 bg-gray-200 rounded animate-pulse w-32" />
+              <div className="h-6 bg-claude-neutral-200 rounded-claude-md animate-pulse w-32" />
             )}
             <Dropdown menu={{ items: dropdownItems }} trigger={['click']}>
               <Button type="text" icon={<MoreOutlined />} />
@@ -247,8 +247,8 @@ export default function ApiProductDetail() {
                 onClick={() => handleTabChange(item.key)}
                 className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-left transition-colors ${
                   activeTab === item.key
-                    ? "bg-blue-500 text-white"
-                    : "hover:bg-gray-100"
+                    ? "bg-colorPrimary text-claude-neutral-50"
+                    : "text-claude-neutral-700 hover:bg-colorPrimaryBg hover:text-colorPrimary"
                 }`}
               >
                 <Icon className="h-4 w-4 flex-shrink-0" />
@@ -262,10 +262,10 @@ export default function ApiProductDetail() {
             <div className="space-y-2">
               {[1, 2, 3, 4].map((i) => (
                 <div key={i} className="flex items-center gap-3 px-3 py-2">
-                  <div className="w-4 h-4 rounded bg-gray-200 animate-pulse flex-shrink-0" />
+                  <div className="w-4 h-4 rounded bg-claude-neutral-200 animate-pulse flex-shrink-0" />
                   <div className="flex-1 space-y-1">
-                    <div className="h-4 bg-gray-200 rounded animate-pulse w-20" />
-                    <div className="h-3 bg-gray-100 rounded animate-pulse w-14" />
+                    <div className="h-4 bg-claude-neutral-200 rounded animate-pulse w-20" />
+                    <div className="h-3 bg-claude-neutral-100 rounded animate-pulse w-14" />
                   </div>
                 </div>
               ))}

@@ -1,9 +1,10 @@
 import { Form, Input, InputNumber, Switch, Row, Col, Divider } from "antd";
+import { colors } from "../../../../shared/design-tokens/colors";
 
 const tooltipStyle = {
   overlayInnerStyle: {
-    backgroundColor: '#000',
-    color: '#fff',
+    backgroundColor: colors.neutral[900],
+    color: colors.neutral[50],
   }
 };
 

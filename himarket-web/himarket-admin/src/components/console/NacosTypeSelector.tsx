@@ -9,6 +9,9 @@ interface NacosTypeSelectorProps {
   onSelect: (type: NacosImportType) => void
 }
 
+const optionClassName =
+  'w-full rounded-claude-md border border-claude-neutral-200 bg-claude-neutral-50 p-3 transition-colors hover:border-claude-brand-primary/40 hover:bg-claude-brand-surfaceTint/50'
+
 export default function NacosTypeSelector({ visible, onCancel, onSelect }: NacosTypeSelectorProps) {
   const [selectedType, setSelectedType] = useState<NacosImportType>('MSE')
 
@@ -17,7 +20,7 @@ export default function NacosTypeSelector({ visible, onCancel, onSelect }: Nacos
   }
 
   const handleCancel = () => {
-  setSelectedType('OPEN_SOURCE')
+    setSelectedType('OPEN_SOURCE')
     onCancel()
   }
 
@@ -36,23 +39,23 @@ export default function NacosTypeSelector({ visible, onCancel, onSelect }: Nacos
       ]}
       width={500}
     >
-      <div className="py-4">
+      <div className="py-4 text-claude-neutral-900">
         <Radio.Group 
           value={selectedType} 
           onChange={(e) => setSelectedType(e.target.value)}
           className="w-full"
         >
           <Space direction="vertical" className="w-full">
-            <Radio value="MSE" className="w-full p-3 border rounded-lg hover:bg-gray-50">
+            <Radio value="MSE" className={optionClassName}>
               <div className="ml-2">
                 <div className="font-medium">MSE Nacos</div>
-                <div className="text-sm text-gray-500">通过阿里云 MSE 账号授权后选择实例导入</div>
+                <div className="text-sm text-claude-neutral-600">通过阿里云 MSE 账号授权后选择实例导入</div>
               </div>
             </Radio>
-            <Radio value="OPEN_SOURCE" className="w-full p-3 border rounded-lg hover:bg-gray-50">
+            <Radio value="OPEN_SOURCE" className={optionClassName}>
               <div className="ml-2">
                 <div className="font-medium">开源 Nacos</div>
-                <div className="text-sm text-gray-500">使用已有自建/开源 Nacos 地址登录创建</div>
+                <div className="text-sm text-claude-neutral-600">使用已有自建/开源 Nacos 地址登录创建</div>
               </div>
             </Radio>
           </Space>

@@ -1,16 +1,18 @@
 import { useState, useEffect } from 'react';
+import type { CSSProperties } from 'react';
 import {
-  Modal,
   Form,
-  Input,
-  message,
   Radio,
   Space,
 } from 'antd';
 import { CameraOutlined } from '@ant-design/icons';
 import type { UploadFile } from 'antd/es/upload/interface';
+import { FormField, Modal, toast } from '@/components/common';
 import type { ProductCategory, CreateProductCategoryParam, UpdateProductCategoryParam, ProductIcon } from '@/types/product-category';
 import { createProductCategory, updateProductCategory } from '@/lib/productCategoryApi';
+import { colors } from '../../../../shared/design-tokens/colors';
+import { motion } from '../../../../shared/design-tokens/motion';
+import { radiiPx } from '../../../../shared/design-tokens/radii';
 
 interface CategoryFormModalProps {
   visible: boolean;
@@ -19,6 +21,27 @@ interface CategoryFormModalProps {
   category?: ProductCategory | null;
   isEdit?: boolean;
 }
+
+const uploadBoxStyle: CSSProperties = {
+  width: '80px',
+  height: '80px',
+  border: `1px dashed ${colors.neutral[300]}`,
+  borderRadius: radiiPx.md,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  cursor: 'pointer',
+  transition: `border-color ${motion.durationMs.base}`,
+  position: 'relative',
+};
+
+const uploadPlaceholderStyle: CSSProperties = {
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+  color: colors.neutral[500],
+};
 
 const CategoryFormModal: React.FC<CategoryFormModalProps> = ({
   visible,
@@ -96,18 +119,18 @@ const CategoryFormModal: React.FC<CategoryFormModalProps> = ({
       if (isEdit && category) {
         // 调用更新API
         await updateProductCategory(category.categoryId, categoryData as UpdateProductCategoryParam);
-        message.success('更新成功');
+        toast.success('更新成功');
       } else {
         // 调用创建API
         await createProductCategory(categoryData as CreateProductCategoryParam);
-        message.success('创建成功');
+        toast.success('创建成功');
       }
 
       onSuccess();
       handleCancel();
     } catch (error) {
       console.error('操作失败:', error);
-      message.error(isEdit ? '更新失败' : '创建失败');
+      toast.error(isEdit ? '更新失败' : '创建失败');
     } finally {
       setLoading(false);
     }
@@ -133,7 +156,7 @@ const CategoryFormModal: React.FC<CategoryFormModalProps> = ({
             { max: 50, message: '名称不能超过50个字符' }
           ]}
         >
-          <Input placeholder="如：数据分析、API网关、支付服务等" />
+          <FormField.Input placeholder="如：数据分析、API网关、支付服务等" />
         </Form.Item>
 
         <Form.Item
@@ -141,7 +164,7 @@ const CategoryFormModal: React.FC<CategoryFormModalProps> = ({
           name="description"
           rules={[{ max: 256, message: '描述不能超过256个字符' }]}
         >
-          <Input.TextArea 
+          <FormField.TextArea
             placeholder="描述用途和特点，帮助用户更好地理解..."
             rows={3}
             showCount
@@ -174,23 +197,12 @@ const CategoryFormModal: React.FC<CategoryFormModalProps> = ({
                   }
                 ]}
               >
-                <Input placeholder="请输入图片链接地址" />
+                <FormField.Input placeholder="请输入图片链接地址" />
               </Form.Item>
             ) : (
               <Form.Item name="icon" style={{ marginBottom: 0 }}>
                 <div 
-                  style={{ 
-                    width: '80px', 
-                    height: '80px',
-                    border: '1px dashed #d9d9d9',
-                    borderRadius: '8px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    cursor: 'pointer',
-                    transition: 'border-color 0.3s',
-                    position: 'relative'
-                  }}
+                  style={uploadBoxStyle}
                   onClick={() => {
                     const input = document.createElement('input');
                     input.type = 'file';
@@ -200,7 +212,7 @@ const CategoryFormModal: React.FC<CategoryFormModalProps> = ({
                       if (file) {
                         const maxSize = 16 * 1024; // 16KB
                         if (file.size > maxSize) {
-                          message.error(`图片大小不能超过 16KB，当前图片大小为 ${Math.round(file.size / 1024)}KB`);
+                          toast.error(`图片大小不能超过 16KB，当前图片大小为 ${Math.round(file.size / 1024)}KB`);
                           return;
                         }
                         
@@ -219,10 +231,10 @@ const CategoryFormModal: React.FC<CategoryFormModalProps> = ({
                     input.click();
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.borderColor = '#1890ff';
+                    e.currentTarget.style.borderColor = colors.brand.primary;
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.borderColor = '#d9d9d9';
+                    e.currentTarget.style.borderColor = colors.neutral[300];
                   }}
                 >
                   {fileList.length >= 1 ? (
@@ -232,15 +244,9 @@ const CategoryFormModal: React.FC<CategoryFormModalProps> = ({
                       style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '6px' }}
                     />
                   ) : (
-                    <div style={{ 
-                      display: 'flex', 
-                      flexDirection: 'column', 
-                      alignItems: 'center', 
-                      justifyContent: 'center',
-                      color: '#999'
-                    }}>
+                    <div style={uploadPlaceholderStyle}>
                       <CameraOutlined style={{ fontSize: '16px', marginBottom: '6px' }} />
-                      <span style={{ fontSize: '12px', color: '#999' }}>上传图片</span>
+                      <span style={{ fontSize: '12px', color: colors.neutral[500] }}>上传图片</span>
                     </div>
                   )}
                 </div>

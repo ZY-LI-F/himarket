@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
-import { Modal, Form, Select, Table, message, Space, Input, Button } from 'antd';
+import { Modal, Form, Select, message, Space, Input, Button } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import { apiProductApi, gatewayApi, nacosApi } from '@/lib/api';
 import type { TableColumnsType } from 'antd';
+import { Table } from '@/components/common';
 import type { Gateway } from '@/types/gateway';
 
 interface ImportProductsModalProps {

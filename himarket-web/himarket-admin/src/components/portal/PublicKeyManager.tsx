@@ -2,6 +2,7 @@ import {useState} from 'react'
 import {Button, Form, Input, Select, Table, Modal, Space, Tag, message, Card, Row, Col} from 'antd'
 import {PlusOutlined, EditOutlined, DeleteOutlined, ExclamationCircleOutlined} from '@ant-design/icons'
 import {PublicKeyConfig, PublicKeyFormat} from '@/types'
+import { semanticTagStyle } from '@/lib/semanticStyles'
 
 interface PublicKeyManagerProps {
   provider?: string | null
@@ -132,7 +133,7 @@ export function PublicKeyManager({provider, publicKeys, onSave}: PublicKeyManage
       dataIndex: 'kid',
       key: 'kid',
       render: (kid: string) => (
-        <Tag color="blue">{kid}</Tag>
+        <Tag style={semanticTagStyle('info')}>{kid}</Tag>
       )
     },
     {
@@ -140,7 +141,7 @@ export function PublicKeyManager({provider, publicKeys, onSave}: PublicKeyManage
       dataIndex: 'format',
       key: 'format',
       render: (format: PublicKeyFormat) => (
-        <Tag color={format === PublicKeyFormat.PEM ? 'green' : 'orange'}>
+        <Tag style={semanticTagStyle(format === PublicKeyFormat.PEM ? 'success' : 'warning')}>
           {format}
         </Tag>
       )
@@ -150,14 +151,14 @@ export function PublicKeyManager({provider, publicKeys, onSave}: PublicKeyManage
       dataIndex: 'algorithm',
       key: 'algorithm',
       render: (algorithm: string) => (
-        <Tag color="purple">{algorithm}</Tag>
+        <Tag style={semanticTagStyle('info')}>{algorithm}</Tag>
       )
     },
     {
       title: '公钥内容',
       key: 'value',
       render: (record: PublicKeyConfig) => (
-        <span className="font-mono text-xs text-gray-600">
+        <span className="font-mono text-xs text-claude-neutral-600">
           {record.format === PublicKeyFormat.PEM 
             ? record.value.substring(0, 50) + '...'
             : JSON.stringify(JSON.parse(record.value || '{}')).substring(0, 50) + '...'
@@ -196,10 +197,10 @@ export function PublicKeyManager({provider, publicKeys, onSave}: PublicKeyManage
     <div>
       <div className="flex justify-between items-center mb-4">
         <div>
-          <h4 className="text-lg font-medium">
+          <h4 className="text-lg font-semibold text-claude-neutral-900">
             {provider && `${provider} - `}JWT签名公钥管理
           </h4>
-          <p className="text-sm text-gray-500">
+          <p className="text-sm text-claude-neutral-600">
             管理用于验证JWT签名的公钥，支持PEM和JWK格式
           </p>
         </div>
@@ -224,12 +225,12 @@ export function PublicKeyManager({provider, publicKeys, onSave}: PublicKeyManage
       />
 
       {/* 公钥配置说明 */}
-      <Card size="small" className="mt-4 bg-blue-50">
+      <Card size="small" className="mt-4 border-claude-semantic-info/20 bg-claude-semantic-info/10">
         <Row gutter={16}>
           <Col span={12}>
             <div className="text-sm">
-              <h5 className="font-medium mb-2 text-blue-800">PEM格式示例：</h5>
-              <div className="bg-white p-2 rounded font-mono text-xs border">
+              <h5 className="font-semibold mb-2 text-claude-semantic-info">PEM格式示例：</h5>
+              <div className="rounded border border-claude-neutral-200 bg-claude-neutral-50 p-2 font-mono text-xs">
                 -----BEGIN PUBLIC KEY-----<br/>
                 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8A...<br/>
                 -----END PUBLIC KEY-----
@@ -238,8 +239,8 @@ export function PublicKeyManager({provider, publicKeys, onSave}: PublicKeyManage
           </Col>
           <Col span={12}>
             <div className="text-sm">
-              <h5 className="font-medium mb-2 text-blue-800">JWK格式示例：</h5>
-              <div className="bg-white p-2 rounded font-mono text-xs border">
+              <h5 className="font-semibold mb-2 text-claude-semantic-info">JWK格式示例：</h5>
+              <div className="rounded border border-claude-neutral-200 bg-claude-neutral-50 p-2 font-mono text-xs">
                 {`{
   "kty": "RSA",
   "kid": "key1",

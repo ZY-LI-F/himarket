@@ -196,15 +196,14 @@ export default function PortalDetail() {
   }
 
   return (
-    <div className="flex h-full">
+    <div className="flex h-full bg-claude-neutral-100/60 text-claude-neutral-900">
       <Spin fullscreen spinning={loading} />
       {/* Portal详情侧边栏 */}
-      <div className="w-64 border-r bg-white flex flex-col">
+      <div className="w-72 border-r border-claude-neutral-200 bg-claude-neutral-50/95 flex flex-col shadow-claude-sm">
         {/* 返回按钮 */}
-        <div className="pb-4 border-b">
+        <div className="border-b border-claude-neutral-200 p-4">
           <Button
             type="text"
-            // className="w-full justify-start text-gray-600 hover:text-gray-900"
             onClick={handleBackToPortals}
             icon={<LeftOutlined />}
           >
@@ -213,9 +212,9 @@ export default function PortalDetail() {
         </div>
 
         {/* Portal 信息 */}
-        <div className="p-4 border-b">
+        <div className="border-b border-claude-neutral-200 p-4">
           <div className="flex items-center justify-between">
-            <p className='font-medium text-sm mb-0'>{portal.name}</p>
+            <p className='font-semibold text-sm mb-0 text-claude-neutral-900'>{portal.name}</p>
             <Dropdown menu={{ items: dropdownItems }} trigger={['click']}>
               <Button type="text" icon={<MoreOutlined />} size="small" />
             </Dropdown>
@@ -232,14 +231,14 @@ export default function PortalDetail() {
                 onClick={() => handleTabChange(item.key)}
                 className={`w-full flex items-center gap-3 px-3 py-3 rounded-lg text-left transition-colors ${
                   currentTab === item.key
-                    ? "bg-blue-50 text-blue-600 border border-blue-200"
-                    : "hover:bg-gray-50 text-gray-700"
+                    ? "border border-claude-brand-primary/25 bg-claude-brand-surfaceTint text-claude-brand-active shadow-claude-sm"
+                    : "text-claude-neutral-700 hover:bg-claude-neutral-100"
                 }`}
               >
                 <Icon className="h-4 w-4 flex-shrink-0" />
                 <div className="flex-1">
                   <div className="font-medium">{item.label}</div>
-                  <div className="text-xs text-gray-500 mt-1">{item.description}</div>
+                  <div className="text-xs text-claude-neutral-500 mt-1">{item.description}</div>
                 </div>
               </button>
             )

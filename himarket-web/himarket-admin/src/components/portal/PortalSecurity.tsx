@@ -108,10 +108,10 @@ export function PortalSecurity({portal, onRefresh}: PortalSecurityProps) {
 
 
     return (
-        <div className="p-6 space-y-6">
+        <div className="p-6 space-y-6 text-claude-neutral-900">
             <div>
-                <h1 className="text-2xl font-bold mb-2">Portal安全配置</h1>
-                <p className="text-gray-600">配置Portal的认证与审批方式</p>
+                <h1 className="text-2xl font-semibold mb-2">Portal安全配置</h1>
+                <p className="text-claude-neutral-600">配置Portal的认证与审批方式</p>
             </div>
 
             <Form
@@ -128,7 +128,7 @@ export function PortalSecurity({portal, onRefresh}: PortalSecurityProps) {
                 <Card>
                     <div className="space-y-6">
                         {/* 基本安全配置标题 */}
-                        <h3 className="text-lg font-medium">基本安全配置</h3>
+                        <h3 className="text-lg font-semibold text-claude-neutral-900">基本安全配置</h3>
                         
                         {/* 基本安全设置内容 */}
                         <div className="grid grid-cols-2 gap-6">

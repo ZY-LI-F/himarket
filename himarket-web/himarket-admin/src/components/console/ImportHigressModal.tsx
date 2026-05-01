@@ -1,12 +1,40 @@
 import { useState } from 'react'
 import { Button, Modal, Form, Input, message } from 'antd'
 import { gatewayApi } from '@/lib/api'
+import { colors } from '../../../../shared/design-tokens/colors'
+import { radii } from '../../../../shared/design-tokens/radii'
+import { shadows } from '../../../../shared/design-tokens/shadow'
 
 interface ImportHigressModalProps {
   visible: boolean
   onCancel: () => void
   onSuccess: () => void
 }
+
+const tooltipTitleStyle = {
+  color: colors.neutral[900],
+  backgroundColor: colors.neutral[50],
+  fontSize: '13px',
+  lineHeight: '1.4',
+  padding: '4px 0',
+}
+
+const tooltipOverlayInnerStyle = {
+  backgroundColor: colors.neutral[50],
+  color: colors.neutral[900],
+  border: `1px solid ${colors.neutral[300]}`,
+  borderRadius: radii.md,
+  boxShadow: shadows.md,
+}
+
+const getTooltip = (title: string) => ({
+  title: <div style={tooltipTitleStyle}>{title}</div>,
+  placement: 'topLeft' as const,
+  overlayInnerStyle: tooltipOverlayInnerStyle,
+  overlayStyle: {
+    maxWidth: '300px',
+  },
+})
 
 export default function ImportHigressModal({ visible, onCancel, onSuccess }: ImportHigressModalProps) {
   const [form] = Form.useForm()
@@ -69,30 +97,7 @@ export default function ImportHigressModal({ visible, onCancel, onSuccess }: Imp
           label="Console地址" 
           name="address" 
           rules={[{ required: true, message: '请输入Console地址' }]}
-          tooltip={{
-            title: (
-              <div style={{ 
-                color: '#000000', 
-                backgroundColor: '#ffffff',
-                fontSize: '13px',
-                lineHeight: '1.4',
-                padding: '4px 0'
-              }}>
-                higress-console服务的地址
-              </div>
-            ),
-            placement: "topLeft",
-            overlayInnerStyle: {
-              backgroundColor: '#ffffff',
-              color: '#000000',
-              border: '1px solid #d9d9d9',
-              borderRadius: '6px',
-              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-            },
-            overlayStyle: {
-              maxWidth: '300px'
-            }
-          }}
+          tooltip={getTooltip('higress-console服务的地址')}
         >
           <Input placeholder="例如：higress.example.com" />
         </Form.Item>
@@ -116,30 +121,7 @@ export default function ImportHigressModal({ visible, onCancel, onSuccess }: Imp
         <Form.Item 
           label="Gateway地址" 
           name="gatewayAddress"
-          tooltip={{
-            title: (
-              <div style={{ 
-                color: '#000000', 
-                backgroundColor: '#ffffff',
-                fontSize: '13px',
-                lineHeight: '1.4',
-                padding: '4px 0'
-              }}>
-                higress-gateway服务的地址
-              </div>
-            ),
-            placement: "topLeft",
-            overlayInnerStyle: {
-              backgroundColor: '#ffffff',
-              color: '#000000',
-              border: '1px solid #d9d9d9',
-              borderRadius: '6px',
-              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
-            },
-            overlayStyle: {
-              maxWidth: '300px'
-            }
-          }}
+          tooltip={getTooltip('higress-gateway服务的地址')}
         >
           <Input placeholder="例如：gateway.example.com（可选）" />
         </Form.Item>

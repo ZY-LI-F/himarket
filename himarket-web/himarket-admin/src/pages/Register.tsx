@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import { Link, useNavigate, useLocation } from 'react-router-dom'
 import api from '../lib/api'
-import { Form, Input, Button, Alert } from 'antd'
+import { Alert, Form } from 'antd'
+import { Button, Card, FormField } from '@/components/common'
 
 const Register: React.FC = () => {
   const [loading, setLoading] = useState(false)
@@ -32,15 +33,22 @@ const Register: React.FC = () => {
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-white">
-      <div className="bg-white p-8 rounded-xl shadow-2xl w-full max-w-md flex flex-col items-center border border-gray-100">
-        {/* Logo */}
-        <div className="mb-4">
-          <img src="/logo.png" alt="Logo" className="w-16 h-16 mx-auto mb-4" />
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[var(--color-neutral-50)] px-4 py-10 text-[var(--color-neutral-900)]">
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[var(--color-brand-surface-tint)] via-[var(--color-neutral-50)] to-[var(--color-neutral-100)]" />
+      <div className="pointer-events-none absolute left-1/2 top-0 h-56 w-56 -translate-x-1/2 rounded-[var(--radius-full)] bg-[var(--color-brand-surface-tint)] blur-3xl" />
+
+      <Card className="relative z-10 w-full max-w-md border-[var(--color-neutral-200)] shadow-claude-lg">
+        <div className="mb-8 text-center">
+          <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-[var(--radius-lg)] bg-[var(--color-brand-surface-tint)]">
+            <img src="/logo.png" alt="Logo" className="h-10 w-10" />
+          </div>
+          <p className="mb-2 text-sm font-semibold text-[var(--color-brand)]">
+            HiMarket Admin
+          </p>
+          <h2 className="text-2xl font-bold text-[var(--color-neutral-900)]">注册 AI Portal</h2>
         </div>
-        <h2 className="text-2xl font-bold mb-6 text-gray-900 text-center">注册 AI Portal</h2>
         <Form
-          className="w-full flex flex-col gap-4"
+          className="w-full"
           layout="vertical"
           onFinish={handleRegister}
         >
@@ -48,24 +56,24 @@ const Register: React.FC = () => {
             name="username"
             rules={[{ required: true, message: '请输入账号' }]}
           >
-            <Input placeholder="账号" autoComplete="username" size="large" />
+            <FormField.Input placeholder="账号" autoComplete="username" size="large" />
           </Form.Item>
           <Form.Item
             name="password"
             rules={[{ required: true, message: '请输入密码' }]}
           >
-            <Input.Password placeholder="密码" autoComplete="new-password" size="large" />
+            <FormField.Password placeholder="密码" autoComplete="new-password" size="large" />
           </Form.Item>
           <Form.Item
             name="confirmPassword"
             rules={[{ required: true, message: '请确认密码' }]}
           >
-            <Input.Password placeholder="确认密码" autoComplete="new-password" size="large" />
+            <FormField.Password placeholder="确认密码" autoComplete="new-password" size="large" />
           </Form.Item>
           {error && <Alert message={error} type="error" showIcon className="mb-2" />}
-          <Form.Item>
+          <Form.Item className="mb-0">
             <Button
-              type="primary"
+              variant="primary"
               htmlType="submit"
               className="w-full"
               loading={loading}
@@ -75,12 +83,12 @@ const Register: React.FC = () => {
             </Button>
           </Form.Item>
         </Form>
-        <div className="mt-6 text-gray-400 text-sm text-center w-full">
-          已有账号？<Link to="/login" className="text-indigo-500 hover:underline ml-1">登录</Link>
+        <div className="mt-6 w-full text-center text-sm text-[var(--color-neutral-500)]">
+          已有账号？<Link to="/login" className="ml-1 text-[var(--color-brand)] hover:text-[var(--color-brand-hover)] hover:underline">登录</Link>
         </div>
-      </div>
+      </Card>
     </div>
   )
 }
 
-export default Register 
+export default Register

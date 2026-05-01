@@ -84,8 +84,8 @@ export default function ImportMseNacosModal({ visible, onCancel, onPrefill }: Im
     <Modal title="导入 MSE Nacos 实例" open={visible} onCancel={handleCancel} footer={null} width={800}>
       <Form form={importForm} layout="vertical" preserve={false}>
         {list.length === 0 && (
-          <div className="mb-4">
-            <h3 className="text-lg font-medium mb-3">认证信息</h3>
+          <div className="mb-4 rounded-claude-md border border-claude-neutral-200 bg-claude-neutral-50 p-4">
+            <h3 className="text-base font-semibold text-claude-neutral-900 mb-3">认证信息</h3>
             <Form.Item label="Region" name="regionId" rules={[{ required: true, message: '请输入region' }]}>
               <Input />
             </Form.Item>
@@ -111,8 +111,8 @@ export default function ImportMseNacosModal({ visible, onCancel, onPrefill }: Im
         )}
 
         {list.length > 0 && (
-          <div className="mb-4">
-            <h3 className="text-lg font-medium mb-3">选择 Nacos 实例</h3>
+          <div className="mb-4 rounded-claude-md border border-claude-neutral-200 bg-claude-neutral-50 p-4">
+            <h3 className="text-base font-semibold text-claude-neutral-900 mb-3">选择 Nacos 实例</h3>
             <Table
               rowKey="instanceId"
               columns={[

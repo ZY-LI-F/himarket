@@ -5,6 +5,7 @@ import { PlusOutlined, StarOutlined } from '@ant-design/icons'
 import { nacosApi } from '@/lib/api'
 import NacosTypeSelector, { NacosImportType } from '@/components/console/NacosTypeSelector'
 import ImportMseNacosModal from '@/components/console/ImportMseNacosModal'
+import { semanticTagStyle } from '@/lib/semanticStyles'
 import type { NacosInstance } from '@/types/gateway'
 
 // 开源创建表单数据由 antd 表单直接管理，无需额外类型声明
@@ -187,7 +188,7 @@ export default function NacosConsoles() {
       render: (name: string, record: NacosInstance) => (
         <span>
           {name}
-          {record.isDefault && <Tag color="blue" className="ml-2"><StarOutlined /> 默认</Tag>}
+          {record.isDefault && <Tag className="ml-2" style={semanticTagStyle('info')}><StarOutlined /> 默认</Tag>}
         </span>
       ),
     },
@@ -200,7 +201,7 @@ export default function NacosConsoles() {
       title: '展示地址',
       dataIndex: 'displayServerUrl',
       key: 'displayServerUrl',
-      render: (url: string) => url || <span style={{ color: '#999' }}>-</span>,
+      render: (url: string) => url || <span className="text-claude-neutral-400">-</span>,
     },
     {
       title: '默认命名空间',
@@ -257,11 +258,11 @@ export default function NacosConsoles() {
   ]
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 text-claude-neutral-900">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Nacos实例管理</h1>
-          <p className="text-gray-500 mt-2">
+          <h1 className="text-3xl font-semibold tracking-tight">Nacos实例管理</h1>
+          <p className="text-claude-neutral-600 mt-2">
           管理Nacos配置中心实例
           </p>
         </div>
@@ -272,7 +273,7 @@ export default function NacosConsoles() {
 
      
 
-      <div className="bg-white rounded-lg">
+      <div className="overflow-hidden rounded-claude-lg border border-claude-neutral-200 bg-claude-neutral-50 shadow-claude-sm">
         <Table
           columns={columns}
           dataSource={nacosInstances}
@@ -418,7 +419,7 @@ export default function NacosConsoles() {
         confirmLoading={nsSaving}
         width={480}
       >
-        <div style={{ marginBottom: 12, color: '#666' }}>
+        <div className="mb-3 text-claude-neutral-600">
           选择该 Nacos 实例的默认命名空间，新建的 Skill 将自动使用此命名空间。
         </div>
         <Select

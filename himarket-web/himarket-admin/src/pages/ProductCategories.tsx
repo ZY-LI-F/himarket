@@ -1,6 +1,6 @@
 import { useRef } from 'react';
-import { Button } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
+import { Button } from '@/components/common';
 import CategoryTable from '@/components/product-category/CategoryTable';
 import type { CategoryTableRef } from '@/components/product-category/CategoryTable';
 
@@ -12,13 +12,13 @@ export default function ProductCategories() {
       {/* 页面头部 */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Categories</h1>
-          <p className="text-gray-500 mt-2">
+          <h1 className="text-claude-h3 font-bold tracking-normal text-claude-neutral-900">Categories</h1>
+          <p className="text-claude-body-sm text-claude-neutral-600 mt-2">
             管理产品分类，帮助用户更好地发现和组织API产品
           </p>
         </div>
         <Button
-          type="primary"
+          variant="primary"
           icon={<PlusOutlined />}
           onClick={() => tableRef.current?.handleCreate()}
         >

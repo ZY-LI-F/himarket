@@ -1,8 +1,9 @@
-import { Card, Table, Badge, Button, Space, Avatar, Tag, Input } from 'antd'
+import { Card, Table, Button, Space, Avatar, Tag, Input } from 'antd'
 import { SearchOutlined, UserAddOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons'
 import { useState } from 'react'
 import { Portal, DeveloperStats } from '@/types'
 import { formatDateTime } from '@/lib/utils'
+import { semanticTagStyle, type SemanticTone } from '@/lib/semanticStyles'
 
 interface PortalConsumersProps {
   portal: Portal
@@ -53,16 +54,16 @@ export function PortalConsumers({ portal }: PortalConsumersProps) {
     consumer.email.toLowerCase().includes(searchText.toLowerCase())
   )
 
-  const getPlanColor = (plan: string) => {
+  const getPlanTone = (plan: string): SemanticTone => {
     switch (plan) {
       case 'premium':
-        return 'gold'
+        return 'warning'
       case 'standard':
-        return 'blue'
+        return 'info'
       case 'basic':
-        return 'green'
+        return 'success'
       default:
-        return 'default'
+        return 'info'
     }
   }
 
@@ -86,12 +87,12 @@ export function PortalConsumers({ portal }: PortalConsumersProps) {
       key: 'name',
       render: (name: string, record: DeveloperStats) => (
         <div className="flex items-center space-x-3">
-          <Avatar className="bg-green-500">
+          <Avatar className="bg-claude-semantic-success">
             {name.charAt(0).toUpperCase()}
           </Avatar>
           <div>
-            <div className="font-medium">{name}</div>
-            <div className="text-sm text-gray-500">{record.email}</div>
+            <div className="font-semibold text-claude-neutral-900">{name}</div>
+            <div className="text-sm text-claude-neutral-500">{record.email}</div>
           </div>
         </div>
       ),
@@ -101,7 +102,9 @@ export function PortalConsumers({ portal }: PortalConsumersProps) {
       dataIndex: 'status',
       key: 'status',
       render: (status: string) => (
-        <Badge status={status === 'active' ? 'success' : 'default'} text={status === 'active' ? '活跃' : '非活跃'} />
+        <Tag style={semanticTagStyle(status === 'active' ? 'success' : 'warning')}>
+          {status === 'active' ? '活跃' : '非活跃'}
+        </Tag>
       )
     },
     {
@@ -109,7 +112,7 @@ export function PortalConsumers({ portal }: PortalConsumersProps) {
       dataIndex: 'plan',
       key: 'plan',
       render: (plan: string) => (
-        <Tag color={getPlanColor(plan)}>
+        <Tag style={semanticTagStyle(getPlanTone(plan))}>
           {getPlanText(plan)}
         </Tag>
       )
@@ -155,11 +158,11 @@ export function PortalConsumers({ portal }: PortalConsumersProps) {
   ]
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-6 text-claude-neutral-900">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold mb-2">消费者</h1>
-          <p className="text-gray-600">管理Portal的消费者用户</p>
+          <h1 className="text-2xl font-semibold mb-2">消费者</h1>
+          <p className="text-claude-neutral-600">管理Portal的消费者用户</p>
         </div>
         <Button type="primary" icon={<UserAddOutlined />}>
           添加消费者
@@ -184,32 +187,6 @@ export function PortalConsumers({ portal }: PortalConsumersProps) {
         />
       </Card>
 
-      {/* <Card title="消费者统计">
-        <div className="grid grid-cols-4 gap-4">
-          <div className="text-center">
-            <div className="text-2xl font-bold text-blue-600">{consumers.length}</div>
-            <div className="text-sm text-gray-500">总消费者</div>
-          </div>
-          <div className="text-center">
-            <div className="text-2xl font-bold text-green-600">
-              {consumers.filter(c => c.status === 'active').length}
-            </div>
-            <div className="text-sm text-gray-500">活跃消费者</div>
-          </div>
-          <div className="text-center">
-            <div className="text-2xl font-bold text-purple-600">
-              {consumers.reduce((sum, c) => sum + c.apiCalls, 0).toLocaleString()}
-            </div>
-            <div className="text-sm text-gray-500">总API调用</div>
-          </div>
-          <div className="text-center">
-            <div className="text-2xl font-bold text-orange-600">
-              {consumers.reduce((sum, c) => sum + c.subscriptions, 0)}
-            </div>
-            <div className="text-sm text-gray-500">总订阅数</div>
-          </div>
-        </div>
-      </Card> */}
     </div>
   )
-} 
+}
