@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import type { CSSProperties } from "react";
 import {
   Modal,
   Form,
@@ -19,6 +20,10 @@ import type { ProductCategory } from "@/types/product-category";
 import ModelFeatureForm from "./ModelFeatureForm";
 import SkillConfigForm from "./SkillConfigForm";
 import WorkerConfigForm from "./WorkerConfigForm";
+import { colors } from "../../../../shared/design-tokens/colors";
+import { motion } from "../../../../shared/design-tokens/motion";
+import { radiiPx } from "../../../../shared/design-tokens/radii";
+import { shadows } from "../../../../shared/design-tokens/shadow";
 
 interface ApiProductFormModalProps {
   visible: boolean;
@@ -27,6 +32,27 @@ interface ApiProductFormModalProps {
   productId?: string;
   initialData?: Partial<ApiProduct>;
 }
+
+const uploadBoxStyle: CSSProperties = {
+  width: '80px',
+  height: '80px',
+  border: `1px dashed ${colors.neutral[300]}`,
+  borderRadius: radiiPx.md,
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  cursor: 'pointer',
+  transition: `border-color ${motion.durationMs.base}`,
+  position: 'relative',
+};
+
+const uploadButtonStyle: CSSProperties = {
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+  color: colors.neutral[500],
+};
 
 export default function ApiProductFormModal({
   visible,
@@ -156,15 +182,9 @@ export default function ApiProductFormModal({
 
 
   const uploadButton = (
-    <div style={{ 
-      display: 'flex', 
-      flexDirection: 'column', 
-      alignItems: 'center', 
-      justifyContent: 'center',
-      color: '#999'
-    }}>
+    <div style={uploadButtonStyle}>
       <CameraOutlined style={{ fontSize: '16px', marginBottom: '6px' }} />
-      <span style={{ fontSize: '12px', color: '#999' }}>上传图片</span>
+      <span style={{ fontSize: '12px', color: colors.neutral[500] }}>上传图片</span>
     </div>
   );
 
@@ -383,8 +403,8 @@ export default function ApiProductFormModal({
           tooltip={{
             title: (
               <div style={{ 
-                color: '#000000', 
-                backgroundColor: '#ffffff',
+                color: colors.neutral[900],
+                backgroundColor: colors.neutral[50],
                 fontSize: '13px',
                 lineHeight: '1.4',
                 padding: '4px 0'
@@ -394,11 +414,11 @@ export default function ApiProductFormModal({
             ),
             placement: "topLeft",
             overlayInnerStyle: {
-              backgroundColor: '#ffffff',
-              color: '#000000',
-              border: '1px solid #d9d9d9',
+              backgroundColor: colors.neutral[50],
+              color: colors.neutral[900],
+              border: `1px solid ${colors.neutral[300]}`,
               borderRadius: '6px',
-              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+              boxShadow: shadows.md,
             },
             overlayStyle: {
               maxWidth: '300px'
@@ -435,18 +455,7 @@ export default function ApiProductFormModal({
             ) : (
               <Form.Item name="icon" style={{ marginBottom: 0 }}>
                 <div 
-                  style={{ 
-                    width: '80px', 
-                    height: '80px',
-                    border: '1px dashed #d9d9d9',
-                    borderRadius: '8px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    cursor: 'pointer',
-                    transition: 'border-color 0.3s',
-                    position: 'relative'
-                  }}
+                  style={uploadBoxStyle}
                   onClick={() => {
                     // 触发文件选择
                     const input = document.createElement('input');
@@ -477,10 +486,10 @@ export default function ApiProductFormModal({
                     input.click();
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.borderColor = '#1890ff';
+                    e.currentTarget.style.borderColor = colors.brand.primary;
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.borderColor = '#d9d9d9';
+                    e.currentTarget.style.borderColor = colors.neutral[300];
                   }}
                 >
                   {fileList.length >= 1 ? (
@@ -512,7 +521,7 @@ export default function ApiProductFormModal({
                         alignItems: 'center', 
                         justifyContent: 'center',
                         cursor: 'pointer',
-                        color: 'white',
+                        color: colors.neutral[50],
                         fontSize: '10px'
                       }}
                       onClick={(e) => {

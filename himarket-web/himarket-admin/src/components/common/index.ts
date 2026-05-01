@@ -29,5 +29,8 @@ export type {
 export { Modal } from './Modal';
 export type { ModalProps, ModalTone } from './Modal';
 
+export { Table } from './Table';
+export type { TableProps } from './Table';
+
 export { toast } from './Toast';
 export type { ToastInput, ToastOptions, ToastType } from './Toast';

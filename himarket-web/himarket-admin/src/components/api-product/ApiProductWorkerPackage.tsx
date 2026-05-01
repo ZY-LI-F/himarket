@@ -14,6 +14,8 @@ import remarkGfm from 'remark-gfm'
 import rehypeHighlight from 'rehype-highlight'
 import hljs from 'highlight.js'
 import { workerApi } from '@/lib/api'
+import { Card } from '@/components/common'
+import { colors } from '../../../../shared/design-tokens/colors'
 import 'github-markdown-css/github-markdown-light.css'
 import 'highlight.js/styles/github.css'
 
@@ -99,61 +101,74 @@ interface ApiProductWorkerPackageProps {
 // ── File icon by extension (using Ant Design icons) ───────────────
 const iconClass = "flex-shrink-0"
 const iconStyle = { fontSize: 14 }
+const fileIconColors = {
+  docker: colors.semantic.info,
+  muted: colors.neutral[500],
+  markdown: colors.semantic.info,
+  config: colors.brand.active,
+  warning: colors.semantic.warning,
+  code: colors.brand.hover,
+  html: colors.semantic.error,
+  script: colors.semantic.success,
+  archive: colors.semantic.warning,
+  image: colors.brand.active,
+  default: colors.semantic.info,
+} as const
 
 function FileIcon({ name }: { name: string }) {
   const ext = name.split('.').pop()?.toLowerCase() ?? ''
   const lowerName = name.toLowerCase()
 
   // Special file names
-  if (lowerName === 'dockerfile') return <DockerOutlined className={iconClass} style={{ ...iconStyle, color: '#1a9ad0' }} />
-  if (lowerName === '.gitignore') return <FileTextFilled className={iconClass} style={{ ...iconStyle, color: '#999' }} />
-  if (lowerName === 'license' || lowerName === 'notice') return <FileTextFilled className={iconClass} style={{ ...iconStyle, color: '#999' }} />
+  if (lowerName === 'dockerfile') return <DockerOutlined className={iconClass} style={{ ...iconStyle, color: fileIconColors.docker }} />
+  if (lowerName === '.gitignore') return <FileTextFilled className={iconClass} style={{ ...iconStyle, color: fileIconColors.muted }} />
+  if (lowerName === 'license' || lowerName === 'notice') return <FileTextFilled className={iconClass} style={{ ...iconStyle, color: fileIconColors.muted }} />
 
   switch (ext) {
     case 'md':
-      return <FileMarkdownFilled className={iconClass} style={{ ...iconStyle, color: '#1a72bd' }} />
+      return <FileMarkdownFilled className={iconClass} style={{ ...iconStyle, color: fileIconColors.markdown }} />
     case 'json':
-      return <SettingFilled className={iconClass} style={{ ...iconStyle, color: '#7568b8' }} />
+      return <SettingFilled className={iconClass} style={{ ...iconStyle, color: fileIconColors.config }} />
     case 'yaml':
     case 'yml':
-      return <SettingFilled className={iconClass} style={{ ...iconStyle, color: '#c88a0a' }} />
+      return <SettingFilled className={iconClass} style={{ ...iconStyle, color: fileIconColors.warning }} />
     case 'toml':
-      return <SettingFilled className={iconClass} style={{ ...iconStyle, color: '#c88a0a' }} />
+      return <SettingFilled className={iconClass} style={{ ...iconStyle, color: fileIconColors.warning }} />
     case 'xml':
-      return <CodeFilled className={iconClass} style={{ ...iconStyle, color: '#cc5e1e' }} />
+      return <CodeFilled className={iconClass} style={{ ...iconStyle, color: fileIconColors.code }} />
     case 'html':
-      return <Html5Filled className={iconClass} style={{ ...iconStyle, color: '#d94020' }} />
+      return <Html5Filled className={iconClass} style={{ ...iconStyle, color: fileIconColors.html }} />
     case 'css':
-      return <CodeFilled className={iconClass} style={{ ...iconStyle, color: '#2060b0' }} />
+      return <CodeFilled className={iconClass} style={{ ...iconStyle, color: fileIconColors.markdown }} />
     case 'js':
     case 'jsx':
-      return <JavaScriptOutlined className={iconClass} style={{ ...iconStyle, color: '#c89008' }} />
+      return <JavaScriptOutlined className={iconClass} style={{ ...iconStyle, color: fileIconColors.warning }} />
     case 'ts':
     case 'tsx':
-      return <CodeFilled className={iconClass} style={{ ...iconStyle, color: '#1e68b0' }} />
+      return <CodeFilled className={iconClass} style={{ ...iconStyle, color: fileIconColors.markdown }} />
     case 'py':
-      return <PythonOutlined className={iconClass} style={{ ...iconStyle, color: '#2060a0' }} />
+      return <PythonOutlined className={iconClass} style={{ ...iconStyle, color: fileIconColors.markdown }} />
     case 'java':
-      return <JavaOutlined className={iconClass} style={{ ...iconStyle, color: '#cc5818' }} />
+      return <JavaOutlined className={iconClass} style={{ ...iconStyle, color: fileIconColors.code }} />
     case 'sh':
     case 'bash':
-      return <CodeFilled className={iconClass} style={{ ...iconStyle, color: '#208848' }} />
+      return <CodeFilled className={iconClass} style={{ ...iconStyle, color: fileIconColors.script }} />
     case 'zip':
     case 'tar':
     case 'gz':
-      return <FileZipFilled className={iconClass} style={{ ...iconStyle, color: '#b88520' }} />
+      return <FileZipFilled className={iconClass} style={{ ...iconStyle, color: fileIconColors.archive }} />
     case 'png':
     case 'jpg':
     case 'jpeg':
     case 'gif':
     case 'svg':
-      return <FileImageFilled className={iconClass} style={{ ...iconStyle, color: '#5848b0' }} />
+      return <FileImageFilled className={iconClass} style={{ ...iconStyle, color: fileIconColors.image }} />
     case 'txt':
     case 'log':
     case 'csv':
-      return <FileTextFilled className={iconClass} style={{ ...iconStyle, color: '#999' }} />
+      return <FileTextFilled className={iconClass} style={{ ...iconStyle, color: fileIconColors.muted }} />
     default:
-      return <FileFilled className={iconClass} style={{ ...iconStyle, color: '#3880c0' }} />
+      return <FileFilled className={iconClass} style={{ ...iconStyle, color: fileIconColors.default }} />
   }
 }
 
@@ -580,7 +595,7 @@ export function ApiProductWorkerPackage({ apiProduct, onUploadSuccess, handleRef
       return (
         <div className="flex-1 overflow-auto bg-white h-full">
           <div className="flex min-h-full">
-            <div className="select-none text-right pr-3 pt-4 pb-4 pl-3 text-xs text-gray-400 bg-[#f6f8fa] border-r border-[#d0d7de] flex-shrink-0" style={{ fontFamily: codeFont, lineHeight: '1.6', minWidth: 48 }}>
+            <div className="select-none text-right pr-3 pt-4 pb-4 pl-3 text-xs text-gray-400 bg-claude-neutral-100 border-r border-claude-neutral-300 flex-shrink-0" style={{ fontFamily: codeFont, lineHeight: '1.6', minWidth: 48 }}>
               {Array.from({ length: lineCount }, (_, i) => <div key={i + 1}>{i + 1}</div>)}
             </div>
             <pre className="flex-1 m-0 pt-4 pb-4 pl-4 pr-4 text-xs overflow-x-auto" style={{ fontFamily: codeFont, lineHeight: '1.6', background: 'transparent' }}>
@@ -647,11 +662,12 @@ export function ApiProductWorkerPackage({ apiProduct, onUploadSuccess, handleRef
       </div>
 
       {/* Card 1: Version Management */}
-      <div className="border rounded-lg bg-white p-4 space-y-3">
+      <Card>
+        <div className="space-y-3">
         {/* Nacos status row */}
         <div className="flex items-center justify-between gap-4 pb-3 border-b border-gray-100">
           <div className="flex items-center gap-2">
-            <Tag style={{ margin: 0, background: '#f5f5f5', borderColor: '#d9d9d9', fontSize: 14, padding: '4px 12px' }}>
+            <Tag style={{ margin: 0, background: colors.neutral[100], borderColor: colors.neutral[300], fontSize: 14, padding: '4px 12px' }}>
               {currentNacosName} / {apiProduct.workerConfig?.namespace || 'public'}
             </Tag>
           </div>
@@ -659,7 +675,7 @@ export function ApiProductWorkerPackage({ apiProduct, onUploadSuccess, handleRef
             type="primary"
             icon={<LinkOutlined />}
             onClick={openNacosModal}
-            style={{ background: '#6B5CE7', borderColor: '#6B5CE7' }}
+            style={{ background: colors.brand.primary, borderColor: colors.brand.primary }}
           >
             {apiProduct.workerConfig?.nacosId ? '切换Nacos' : '关联Nacos'}
           </Button>
@@ -738,7 +754,7 @@ export function ApiProductWorkerPackage({ apiProduct, onUploadSuccess, handleRef
                 loading={uploading}
                 disabled={!hasNacos}
                 className="!h-auto !px-4 !py-2.5"
-                style={!hasNacos ? { background: '#f5f5f5', borderColor: '#d9d9d9', color: '#bfbfbf' } : {}}
+                style={!hasNacos ? { background: colors.neutral[100], borderColor: colors.neutral[300], color: colors.neutral[400] } : {}}
               >
                 <div className="leading-snug text-left">
                   <div className="text-sm">上传 Worker 包</div>
@@ -844,10 +860,11 @@ export function ApiProductWorkerPackage({ apiProduct, onUploadSuccess, handleRef
                 return null
               })()}
           </div>
-      </div>
+        </div>
+      </Card>
 
       {/* Card 2: Overview / File Preview */}
-      <div className="border rounded-lg overflow-hidden bg-white flex-1 flex flex-col" style={{ minHeight: 600 }}>
+      <Card className="flex-1 flex flex-col" bodyStyle={{ padding: 0, display: 'flex', flexDirection: 'column', minHeight: 600 }}>
         {/* Tab header */}
         <div className="flex gap-6 px-4 pt-3 border-b">
           <button
@@ -886,16 +903,16 @@ export function ApiProductWorkerPackage({ apiProduct, onUploadSuccess, handleRef
                     {fmEntries.length > 0 && (
                       <table className="mb-6 w-full text-[13px] border-collapse">
                         <thead>
-                          <tr className="bg-[#f6f8fa]">
+                          <tr className="bg-claude-neutral-100">
                             {fmEntries.map(([k]) => (
-                              <th key={k} className="border border-[#d0d7de] px-3 py-1.5 text-left font-semibold text-[#1f2328]">{k}</th>
+                              <th key={k} className="border border-claude-neutral-300 px-3 py-1.5 text-left font-semibold text-claude-neutral-800">{k}</th>
                             ))}
                           </tr>
                         </thead>
                         <tbody>
                           <tr>
                             {fmEntries.map(([k, v]) => (
-                              <td key={k} className="border border-[#d0d7de] px-3 py-1.5 text-[#1f2328] align-top">{v}</td>
+                              <td key={k} className="border border-claude-neutral-300 px-3 py-1.5 text-claude-neutral-800 align-top">{v}</td>
                             ))}
                           </tr>
                         </tbody>
@@ -929,7 +946,7 @@ export function ApiProductWorkerPackage({ apiProduct, onUploadSuccess, handleRef
             <div className="flex-1 overflow-auto flex flex-col" style={{ height: 560 }}>{renderPreview()}</div>
           </div>
         )}
-      </div>
+      </Card>
 
       {/* Nacos Modal */}
       <Modal

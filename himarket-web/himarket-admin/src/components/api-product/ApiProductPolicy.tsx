@@ -1,8 +1,9 @@
-import { Card, Button, Table, Tag, Space, Modal, Form, Input, Select, Switch, message } from 'antd'
+import { Button, Tag, Space, Modal, Form, Input, Select, Switch, message } from 'antd'
 import { PlusOutlined, EditOutlined, DeleteOutlined, SettingOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
 import { useState } from 'react'
 import type { ApiProduct } from '@/types/api-product';
 import { formatDateTime } from '@/lib/utils'
+import { Card, Table } from '@/components/common'
 
 interface ApiProductPolicyProps {
   apiProduct: ApiProduct
@@ -281,4 +282,4 @@ export function ApiProductPolicy({ }: ApiProductPolicyProps) {
       </Modal>
     </div>
   )
-} 
+}

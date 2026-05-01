@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import {
   Modal,
-  Table,
   message
 } from 'antd';
+import { Table } from '@/components/common';
 import { bindProductsToCategory } from '@/lib/productCategoryApi';
 import { apiProductApi } from '@/lib/api';
 import { ProductTypeMap } from '@/lib/utils';
@@ -86,10 +86,10 @@ const AddProductModal: React.FC<AddProductModalProps> = ({
       width: 280,
       render: (_: any, record: ApiProduct) => (
         <div>
-          <div className="text-sm font-medium text-gray-900 truncate">
+          <div className="text-sm font-medium text-claude-neutral-900 truncate">
             {record.name}
           </div>
-          <div className="text-xs text-gray-500 truncate">
+          <div className="text-xs text-claude-neutral-500 truncate">
             {record.productId}
           </div>
         </div>

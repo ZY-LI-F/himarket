@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react'
-import { Card, Button, Modal, Form, Select, message, Descriptions, Empty } from 'antd'
+import { Button, Modal, Form, Select, message, Descriptions } from 'antd'
 import { LinkOutlined } from '@ant-design/icons'
 import type { ApiProduct } from '@/types/api-product'
 import type { NacosInstance } from '@/types/gateway'
 import { nacosApi, apiProductApi } from '@/lib/api'
+import { Card, Empty, emptyImages } from '@/components/common'
 
 interface ApiProductLinkNacosProps {
   apiProduct: ApiProduct
@@ -99,7 +100,7 @@ export function ApiProductLinkNacos({ apiProduct, handleRefresh }: ApiProductLin
   return (
     <div className="p-6">
       <h1 className="text-2xl font-bold mb-1">Link Nacos</h1>
-      <p className="text-gray-600 mb-6">管理该{isWorker ? ' Worker ' : ' Skill '}关联的 Nacos 实例和命名空间</p>
+      <p className="text-claude-neutral-600 mb-6">管理该{isWorker ? ' Worker ' : ' Skill '}关联的 Nacos 实例和命名空间</p>
 
       {currentNacosId ? (
         <Card>
@@ -116,11 +117,15 @@ export function ApiProductLinkNacos({ apiProduct, handleRefresh }: ApiProductLin
         </Card>
       ) : (
         <Card>
-          <Empty description="尚未关联 Nacos 实例" image={Empty.PRESENTED_IMAGE_SIMPLE}>
-            <Button type="primary" icon={<LinkOutlined />} onClick={openModal}>
-              关联 Nacos
-            </Button>
-          </Empty>
+          <Empty
+            description="尚未关联 Nacos 实例"
+            image={emptyImages.simple}
+            action={(
+              <Button type="primary" icon={<LinkOutlined />} onClick={openModal}>
+                关联 Nacos
+              </Button>
+            )}
+          />
         </Card>
       )}
 

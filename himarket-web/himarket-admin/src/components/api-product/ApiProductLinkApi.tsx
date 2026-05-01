@@ -1,4 +1,4 @@
-import { Card, Button, Modal, Form, Select, message, Collapse, Tabs, Row, Col, Tag, Input, Spin, Space, Radio } from 'antd'
+import { Button, Modal, Form, Select, message, Collapse, Tabs, Row, Col, Tag, Input, Spin, Space, Radio } from 'antd'
 import 'highlight.js/styles/github.css'
 import 'github-markdown-css/github-markdown-light.css'
 import { PlusOutlined, DeleteOutlined, ExclamationCircleOutlined, CopyOutlined, CloudUploadOutlined, SettingOutlined, SyncOutlined, EditOutlined } from '@ant-design/icons'
@@ -12,6 +12,8 @@ import * as yaml from 'js-yaml'
 import { SwaggerUIWrapper } from './SwaggerUIWrapper'
 import { McpCustomConfigModal } from './McpCustomConfigModal'
 import ToolsConfigEditorModal from '../mcp/ToolsConfigEditorModal'
+import { Card } from '@/components/common'
+import { colors } from '../../../../shared/design-tokens/colors'
 
 interface ApiProductLinkApiProps {
   apiProduct: ApiProduct
@@ -1503,7 +1505,7 @@ export function ApiProductLinkApi({ apiProduct, linkedService, onLinkedServiceUp
                           size="small"
                           icon={<EditOutlined />}
                           onClick={() => setToolsEditorOpen(true)}
-                          style={{ fontSize: 12, color: '#1677ff' }}
+                          style={{ fontSize: 12, color: colors.brand.primary }}
                         >
                           编辑工具
                         </Button>
@@ -1514,7 +1516,7 @@ export function ApiProductLinkApi({ apiProduct, linkedService, onLinkedServiceUp
                             icon={<SyncOutlined spin={fetchingTools} />}
                             loading={fetchingTools}
                             onClick={handleRefreshTools}
-                            style={{ fontSize: 12, color: '#1677ff' }}
+                            style={{ fontSize: 12, color: colors.brand.primary }}
                           >
                             {parsedTools.length === 0 ? '获取工具列表' : '刷新工具'}
                           </Button>
@@ -2168,7 +2170,7 @@ export function ApiProductLinkApi({ apiProduct, linkedService, onLinkedServiceUp
                           </div>
                         }
                         style={{
-                          borderBottom: index < routes.length - 1 ? '1px solid #e5e7eb' : 'none'
+                          borderBottom: index < routes.length - 1 ? `1px solid ${colors.neutral[200]}` : 'none'
                         }}
                       >
                         <div className="pl-4 space-y-3">
@@ -2472,7 +2474,7 @@ export function ApiProductLinkApi({ apiProduct, linkedService, onLinkedServiceUp
                           </div>
                         }
                         style={{
-                          borderBottom: index < routes.length - 1 ? '1px solid #e5e7eb' : 'none'
+                          borderBottom: index < routes.length - 1 ? `1px solid ${colors.neutral[200]}` : 'none'
                         }}
                       >
                         <div className="pl-4 space-y-3">
@@ -3045,4 +3047,4 @@ export function ApiProductLinkApi({ apiProduct, linkedService, onLinkedServiceUp
 
     </div>
   )
-} 
+}

@@ -10,6 +10,7 @@
     "preview": "vite preview",
     "start": "node server.js",
     "serve": "npm run build && npm start",
+    "check:admin-product-reskin": "node bin/check-admin-product-reskin.mjs",
     "serve-live": "npx live-server dist --port=3000 --entry-file=index.html"
   },
   "dependencies": {

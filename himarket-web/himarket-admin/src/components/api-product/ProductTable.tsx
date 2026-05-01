@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState, useImperativeHandle, forwardRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Table, Input, Button, Select, Modal, Tooltip, message } from 'antd';
+import { Input, Button, Select, Modal, Tooltip, message } from 'antd';
 import type { TableProps } from 'antd';
 import {
   SearchOutlined,
@@ -15,7 +15,9 @@ import McpServerIcon from '@/components/icons/McpServerIcon';
 import { apiProductApi } from '@/lib/api';
 import BatchActionBar from '@/components/api-product/BatchActionBar';
 import ApiProductFormModal from '@/components/api-product/ApiProductFormModal';
+import { Empty, Table } from '@/components/common';
 import type { ApiProduct } from '@/types/api-product';
+import { colors } from '../../../../shared/design-tokens/colors';
 
 // 产品类型标签映射
 const TYPE_LABELS: Record<string, string> = {
@@ -29,9 +31,9 @@ const TYPE_LABELS: Record<string, string> = {
 
 // 状态配置
 const STATUS_CONFIG: Record<string, { color: string; text: string }> = {
-  PENDING: { color: '#faad14', text: '待配置' },
-  READY: { color: '#1677ff', text: '待发布' },
-  PUBLISHED: { color: '#52c41a', text: '已发布' },
+  PENDING: { color: colors.semantic.warning, text: '待配置' },
+  READY: { color: colors.semantic.info, text: '待发布' },
+  PUBLISHED: { color: colors.semantic.success, text: '已发布' },
 };
 
 export interface ProductTableProps {
@@ -44,7 +46,7 @@ export interface ProductTableRef {
 }
 
 function getTypeIcon(type: string, fontSize = '14px') {
-  const style = { fontSize, color: '#6366f1' };
+  const style = { fontSize, color: colors.brand.active };
   switch (type) {
     case 'REST_API': return <ApiOutlined style={style} />;
     case 'MCP_SERVER': return <McpServerIcon style={style} />;
@@ -57,7 +59,7 @@ function getTypeIcon(type: string, fontSize = '14px') {
 }
 
 function getEmptyIcon(type: string) {
-  const style = { fontSize: '48px', color: '#d9d9d9' };
+  const style = { fontSize: '48px', color: colors.neutral[300] };
   switch (type) {
     case 'REST_API': return <ApiOutlined style={style} />;
     case 'MCP_SERVER': return <McpServerIcon style={style} />;
@@ -202,7 +204,7 @@ const ProductTable = forwardRef<ProductTableRef, ProductTableProps>(({ productTy
       dataIndex: 'status',
       width: 120,
       render: (status: string) => {
-        const config = STATUS_CONFIG[status] || { color: '#d9d9d9', text: status };
+        const config = STATUS_CONFIG[status] || { color: colors.neutral[300], text: status };
         return (
           <div className="flex items-center gap-2">
             <span
@@ -259,7 +261,7 @@ const ProductTable = forwardRef<ProductTableRef, ProductTableProps>(({ productTy
             />
           )}
           <div
-            className="flex items-center border border-gray-300 rounded-md overflow-hidden hover:border-colorPrimary focus-within:border-colorPrimary"
+            className="flex items-center border border-claude-neutral-300 rounded-claude-md overflow-hidden hover:border-colorPrimary focus-within:border-colorPrimary"
             style={{ minWidth: 260 }}
           >
             <Input
@@ -316,10 +318,11 @@ const ProductTable = forwardRef<ProductTableRef, ProductTableProps>(({ productTy
         }}
         locale={{
           emptyText: (
-            <div className="flex flex-col items-center justify-center py-12 text-gray-400">
-              {getEmptyIcon(productType)}
-              <p className="text-base mt-3">暂无 {TYPE_LABELS[productType] || productType} 产品</p>
-            </div>
+            <Empty
+              image={getEmptyIcon(productType)}
+              description={`暂无 ${TYPE_LABELS[productType] || productType} 产品`}
+              compact
+            />
           ),
         }}
       />
