@@ -386,7 +386,7 @@ export default function EditGatewayModal({ visible, gateway, onCancel, onSuccess
       <Form form={form} layout="vertical">
         {/* 基本信息 */}
         <div className="mb-6">
-          <h3 className="text-lg font-medium mb-4">基本信息</h3>
+          <h3 className="text-base font-semibold text-claude-neutral-900 mb-4">基本信息</h3>
           <Form.Item label="网关类型">
             <Input value={getGatewayTypeLabel(gateway?.gatewayType as any)} disabled />
           </Form.Item>
@@ -404,7 +404,7 @@ export default function EditGatewayModal({ visible, gateway, onCancel, onSuccess
 
         {/* 认证配置 */}
         <div>
-          <h3 className="text-lg font-medium mb-4">认证信息</h3>
+          <h3 className="text-base font-semibold text-claude-neutral-900 mb-4">认证信息</h3>
           <div className="flex items-center mb-4">
             <Switch 
               checked={updateAuth} 
@@ -424,10 +424,10 @@ export default function EditGatewayModal({ visible, gateway, onCancel, onSuccess
                 }
               }}
             />
-            <span className="text-sm ml-2">更新认证信息</span>
+            <span className="text-sm text-claude-neutral-700 ml-2">更新认证信息</span>
           </div>
           {updateAuth && (
-            <div className="border rounded-lg p-4 bg-gray-50">
+            <div className="rounded-claude-md border border-claude-neutral-200 bg-claude-neutral-50 p-4">
               {renderConfigFields()}
             </div>
           )}

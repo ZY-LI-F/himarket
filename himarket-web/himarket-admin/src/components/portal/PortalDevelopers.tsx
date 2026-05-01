@@ -1,12 +1,10 @@
-import {Table, Badge, Button, Space, message, Modal} from 'antd'
+import {Table, Button, Space, message, Modal} from 'antd'
 import {
     EditOutlined,
     DeleteOutlined,
     ExclamationCircleOutlined,
     EyeOutlined,
     UnorderedListOutlined,
-    CheckCircleFilled,
-    ClockCircleOutlined
 } from '@ant-design/icons'
 import {useEffect, useState} from 'react'
 import {Portal, Developer, Consumer} from '@/types'
@@ -17,6 +15,11 @@ import {SubscriptionListModal} from '@/components/subscription/SubscriptionListM
 interface PortalDevelopersProps {
     portal: Portal
 }
+
+const STATUS_PILL_BASE =
+    'inline-flex items-center rounded-full border px-2 py-0.5 text-xs font-semibold'
+const APPROVED_PILL_CLASS = `${STATUS_PILL_BASE} border-claude-semantic-success/30 bg-claude-semantic-success/10 text-claude-semantic-success`
+const PENDING_PILL_CLASS = `${STATUS_PILL_BASE} border-claude-semantic-warning/30 bg-claude-semantic-warning/10 text-claude-semantic-warning`
 
 export function PortalDevelopers({portal}: PortalDevelopersProps) {
     const [developers, setDevelopers] = useState<Developer[]>([])
@@ -167,8 +170,8 @@ export function PortalDevelopers({portal}: PortalDevelopersProps) {
             width: 280,
             render: (username: string, record: Developer) => (
                 <div className="ml-2">
-                    <div className="font-medium">{username}</div>
-                    <div className="text-sm text-gray-500">{record.developerId}</div>
+                    <div className="font-semibold text-claude-neutral-900">{username}</div>
+                    <div className="text-sm text-claude-neutral-500">{record.developerId}</div>
                 </div>
             ),
         },
@@ -178,19 +181,9 @@ export function PortalDevelopers({portal}: PortalDevelopersProps) {
             key: 'status',
             width: 120,
             render: (status: string) => (
-                <div className="flex items-center">
-                    {status === 'APPROVED' ? (
-                        <>
-                            <CheckCircleFilled className="text-green-500 mr-2" style={{fontSize: '10px'}} />
-                            <span className="text-xs text-gray-900">可用</span>
-                        </>
-                    ) : (
-                        <>
-                            <ClockCircleOutlined className="text-orange-500 mr-2" style={{fontSize: '10px'}} />
-                            <span className="text-xs text-gray-900">待审核</span>
-                        </>
-                    )}
-                </div>
+                <span className={status === 'APPROVED' ? APPROVED_PILL_CLASS : PENDING_PILL_CLASS}>
+                    {status === 'APPROVED' ? '可用' : '待审核'}
+                </span>
             )
         },
 
@@ -257,15 +250,6 @@ export function PortalDevelopers({portal}: PortalDevelopersProps) {
             ellipsis: true,
             width: 200,
         },
-        // {
-        //   title: '状态',
-        //   dataIndex: 'status',
-        //   key: 'status',
-        //   width: 120,
-        //   render: (status: string) => (
-        //     <Badge status={status === 'APPROVED' ? 'success' : 'default'} text={status === 'APPROVED' ? '可用' : '待审核'} />
-        //   )
-        // },
         {
             title: '创建时间',
             dataIndex: 'createAt',
@@ -279,7 +263,7 @@ export function PortalDevelopers({portal}: PortalDevelopersProps) {
             width: 120,
             render: (_: any, record: Consumer) => (
                 <div
-                  className='text-colorPrimary/80 text-colorPrimary flex items-center gap-2'
+                  className='text-colorPrimary flex items-center gap-2 font-medium cursor-pointer'
                     onClick={() => handleViewSubscriptions(record)}
                 >
                   <UnorderedListOutlined/>
@@ -290,11 +274,11 @@ export function PortalDevelopers({portal}: PortalDevelopersProps) {
     ]
 
     return (
-        <div className="p-6 space-y-6">
+        <div className="p-6 space-y-6 text-claude-neutral-900">
             <div className="flex justify-between items-center">
                 <div>
-                    <h1 className="text-2xl font-bold mb-2">开发者</h1>
-                    <p className="text-gray-600">管理Portal的开发者用户</p>
+                    <h1 className="text-2xl font-semibold mb-2">开发者</h1>
+                    <p className="text-claude-neutral-600">管理Portal的开发者用户</p>
                 </div>
             </div>
 

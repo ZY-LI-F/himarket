@@ -75,8 +75,8 @@ export function PortalPublishedApis({ portal }: PortalApiProductsProps) {
       width: 280,
       render: (_: any, record: Publication) => (
         <div>
-          <div className="text-sm font-medium text-gray-900 truncate">{record.productName}</div>
-          <div className="text-xs text-gray-500 truncate">{record.productId}</div>
+          <div className="text-sm font-semibold text-claude-neutral-900 truncate">{record.productName}</div>
+          <div className="text-xs text-claude-neutral-500 truncate">{record.productId}</div>
         </div>
       ),
     },
@@ -128,10 +128,10 @@ export function PortalPublishedApis({ portal }: PortalApiProductsProps) {
       width: 280,
       render: (_: any, record: ApiProduct) => (
         <div>
-          <div className="text-sm font-medium text-gray-900 truncate">
+          <div className="text-sm font-semibold text-claude-neutral-900 truncate">
             {record.name}
           </div>
-          <div className="text-xs text-gray-500 truncate">
+          <div className="text-xs text-claude-neutral-500 truncate">
             {record.productId}
           </div>
         </div>
@@ -201,11 +201,11 @@ export function PortalPublishedApis({ portal }: PortalApiProductsProps) {
   }
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-6 text-claude-neutral-900">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold mb-2">API Product</h1>
-          <p className="text-gray-600">管理在此Portal中发布的API产品</p>
+          <h1 className="text-2xl font-semibold mb-2">API Product</h1>
+          <p className="text-claude-neutral-600">管理在此Portal中发布的API产品</p>
         </div>
         <Button type="primary" onClick={() => setIsModalVisible(true)}>
           发布API产品

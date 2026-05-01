@@ -153,8 +153,8 @@ export default function ImportGatewayModal({ visible, gatewayType, onCancel, onS
     >
       <Form form={importForm} layout="vertical" preserve={false}>
         {gatewayList.length === 0 && ['APIG_API', 'APIG_AI'].includes(gatewayType) && (
-          <div className="mb-4">
-            <h3 className="text-lg font-medium mb-3">认证信息</h3>
+          <div className="mb-4 rounded-claude-md border border-claude-neutral-200 bg-claude-neutral-50 p-4">
+            <h3 className="text-base font-semibold text-claude-neutral-900 mb-3">认证信息</h3>
             <Form.Item label="Region" name="region" rules={[{ required: true, message: '请输入region' }]}>
               <Input />
             </Form.Item>
@@ -181,8 +181,8 @@ export default function ImportGatewayModal({ visible, gatewayType, onCancel, onS
         )}
 
         {['ADP_AI_GATEWAY'].includes(gatewayType) && gatewayList.length === 0 && (
-          <div className="mb-4">
-            <h3 className="text-lg font-medium mb-3">认证信息</h3>
+          <div className="mb-4 rounded-claude-md border border-claude-neutral-200 bg-claude-neutral-50 p-4">
+            <h3 className="text-base font-semibold text-claude-neutral-900 mb-3">认证信息</h3>
             <Form.Item label="服务地址" name="baseUrl" rules={[{ required: true, message: '请输入服务地址' }, { pattern: /^https?:\/\//i, message: '必须以 http:// 或 https:// 开头' }]}> 
               <Input placeholder="如：http://apigateway.example.com 或者 http://10.236.6.144" />
             </Form.Item>
@@ -298,8 +298,8 @@ export default function ImportGatewayModal({ visible, gatewayType, onCancel, onS
         )}
 
         {gatewayList.length === 0 && gatewayType === 'APSARA_GATEWAY' && (
-          <div className="mb-4">
-            <h3 className="text-lg font-medium mb-3">认证信息</h3>
+          <div className="mb-4 rounded-claude-md border border-claude-neutral-200 bg-claude-neutral-50 p-4">
+            <h3 className="text-base font-semibold text-claude-neutral-900 mb-3">认证信息</h3>
             <Form.Item label="RegionId" name="regionId" rules={[{ required: true, message: '请输入RegionId' }]}>
               <Input />
             </Form.Item>
@@ -371,8 +371,8 @@ export default function ImportGatewayModal({ visible, gatewayType, onCancel, onS
         )}
 
         {gatewayList.length > 0 && (
-          <div className="mb-4">
-            <h3 className="text-lg font-medium mb-3">选择网关实例</h3>
+          <div className="mb-4 rounded-claude-md border border-claude-neutral-200 bg-claude-neutral-50 p-4">
+            <h3 className="text-base font-semibold text-claude-neutral-900 mb-3">选择网关实例</h3>
             <Table
               rowKey="gatewayId"
               columns={[
@@ -416,4 +416,4 @@ export default function ImportGatewayModal({ visible, gatewayType, onCancel, onS
       </Form>
     </Modal>
   )
-} 
+}

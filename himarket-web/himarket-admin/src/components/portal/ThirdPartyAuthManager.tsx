@@ -1,12 +1,17 @@
 import {useState} from 'react'
 import {Button, Form, Input, Select, Switch, Table, Modal, Space, message, Divider, Steps, Card, Tabs, Collapse, Radio} from 'antd'
-import {PlusOutlined, EditOutlined, DeleteOutlined, ExclamationCircleOutlined, MinusCircleOutlined, KeyOutlined, CheckCircleFilled, MinusCircleFilled} from '@ant-design/icons'
+import {PlusOutlined, EditOutlined, DeleteOutlined, ExclamationCircleOutlined, MinusCircleOutlined, KeyOutlined} from '@ant-design/icons'
 import {ThirdPartyAuthConfig, AuthenticationType, GrantType, AuthCodeConfig, OAuth2Config, OidcConfig, PublicKeyFormat} from '@/types'
 
 interface ThirdPartyAuthManagerProps {
   configs: ThirdPartyAuthConfig[]
   onSave: (configs: ThirdPartyAuthConfig[]) => Promise<void>
 }
+
+const STATUS_PILL_BASE =
+  'inline-flex items-center rounded-full border px-2 py-0.5 text-xs font-semibold'
+const ENABLED_PILL_CLASS = `${STATUS_PILL_BASE} border-claude-semantic-success/30 bg-claude-semantic-success/10 text-claude-semantic-success`
+const DISABLED_PILL_CLASS = `${STATUS_PILL_BASE} border-claude-semantic-warning/30 bg-claude-semantic-warning/10 text-claude-semantic-warning`
 
 export function ThirdPartyAuthManager({configs, onSave}: ThirdPartyAuthManagerProps) {
   const [form] = Form.useForm()
@@ -248,7 +253,7 @@ export function ThirdPartyAuthManager({configs, onSave}: ThirdPartyAuthManagerPr
       key: 'provider',
       width: 120,
       render: (provider: string) => (
-        <span className="font-medium text-gray-700">{provider}</span>
+        <span className="font-semibold text-claude-neutral-700">{provider}</span>
       )
     },
     {
@@ -261,7 +266,7 @@ export function ThirdPartyAuthManager({configs, onSave}: ThirdPartyAuthManagerPr
       title: '授权模式',
       key: 'grantType',
       width: 120,
-      render: () => <span className="text-gray-600">授权码模式</span>
+      render: () => <span className="text-claude-neutral-600">授权码模式</span>
     },
     {
       title: '状态',
@@ -269,16 +274,9 @@ export function ThirdPartyAuthManager({configs, onSave}: ThirdPartyAuthManagerPr
       key: 'enabled',
       width: 80,
       render: (enabled: boolean) => (
-        <div className="flex items-center">
-          {enabled ? (
-            <CheckCircleFilled className="text-green-500 mr-2" style={{fontSize: '12px'}} />
-          ) : (
-            <MinusCircleFilled className="text-gray-500 mr-2" style={{fontSize: '12px'}} />
-          )}
-          <span className="text-gray-700">
-            {enabled ? '已启用' : '已停用'}
-          </span>
-        </div>
+        <span className={enabled ? ENABLED_PILL_CLASS : DISABLED_PILL_CLASS}>
+          {enabled ? '已启用' : '已停用'}
+        </span>
       )
     },
     {
@@ -315,7 +313,7 @@ export function ThirdPartyAuthManager({configs, onSave}: ThirdPartyAuthManagerPr
       key: 'provider',
       width: 120,
       render: (provider: string) => (
-        <span className="font-medium text-gray-700">{provider}</span>
+        <span className="font-semibold text-claude-neutral-700">{provider}</span>
       )
     },
     {
@@ -332,12 +330,12 @@ export function ThirdPartyAuthManager({configs, onSave}: ThirdPartyAuthManagerPr
         if (record.type === AuthenticationType.OAUTH2) {
           const oauth2Config = record as (OAuth2Config & { type: AuthenticationType.OAUTH2 })
           return (
-            <span className="text-gray-600">
+            <span className="text-claude-neutral-600">
               {oauth2Config.grantType === GrantType.JWT_BEARER ? 'JWT断言' : '授权码模式'}
             </span>
           )
         }
-        return <span className="text-gray-600">授权码模式</span>
+        return <span className="text-claude-neutral-600">授权码模式</span>
       }
     },
     {
@@ -346,16 +344,9 @@ export function ThirdPartyAuthManager({configs, onSave}: ThirdPartyAuthManagerPr
       key: 'enabled',
       width: 80,
       render: (enabled: boolean) => (
-        <div className="flex items-center">
-          {enabled ? (
-            <CheckCircleFilled className="text-green-500 mr-2" style={{fontSize: '12px'}} />
-          ) : (
-            <MinusCircleFilled className="text-gray-500 mr-2" style={{fontSize: '12px'}} />
-          )}
-          <span className="text-gray-700">
-            {enabled ? '已启用' : '已停用'}
-          </span>
-        </div>
+        <span className={enabled ? ENABLED_PILL_CLASS : DISABLED_PILL_CLASS}>
+          {enabled ? '已启用' : '已停用'}
+        </span>
       )
     },
     {
@@ -526,13 +517,13 @@ export function ThirdPartyAuthManager({configs, onSave}: ThirdPartyAuthManagerPr
               key: 'advanced',
               forceRender: true,  // 确保折叠时表单字段仍然渲染，值能被收集
               label: (
-                <div className="flex items-center text-gray-600">
+                <div className="flex items-center text-claude-neutral-600">
                   <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947z" clipRule="evenodd" />
                     <path fillRule="evenodd" d="M10 13a3 3 0 100-6 3 3 0 000 6z" clipRule="evenodd" />
                   </svg>
                   <span className="ml-2">高级配置</span>
-                  <span className="text-xs text-gray-400 ml-2">身份映射</span>
+                  <span className="text-xs text-claude-neutral-400 ml-2">身份映射</span>
                 </div>
               ),
               children: (
@@ -558,16 +549,16 @@ export function ThirdPartyAuthManager({configs, onSave}: ThirdPartyAuthManagerPr
                     </Form.Item>
                   </div>
 
-                <div className="bg-blue-50 p-3 rounded-lg">
+                <div className="rounded-claude-md border border-claude-semantic-info/20 bg-claude-semantic-info/10 p-3">
                   <div className="flex items-start space-x-2">
-                    <div className="text-blue-600 mt-0.5">
+                    <div className="text-claude-semantic-info mt-0.5">
                       <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
                       </svg>
                     </div>
                     <div>
-                      <h4 className="text-blue-800 font-medium text-sm">配置说明</h4>
-                      <p className="text-blue-700 text-xs mt-1">
+                      <h4 className="text-claude-semantic-info font-semibold text-sm">配置说明</h4>
+                      <p className="text-claude-neutral-700 text-xs mt-1">
                         身份映射用于从OIDC令牌中提取用户信息。如果不填写，系统将使用OIDC标准字段。
                       </p>
                     </div>
@@ -723,13 +714,13 @@ export function ThirdPartyAuthManager({configs, onSave}: ThirdPartyAuthManagerPr
               key: 'advanced',
               forceRender: true,  // 确保折叠时表单字段仍然渲染，值能被收集
               label: (
-                <div className="flex items-center text-gray-600">
+                <div className="flex items-center text-claude-neutral-600">
                   <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947z" clipRule="evenodd" />
                     <path fillRule="evenodd" d="M10 13a3 3 0 100-6 3 3 0 000 6z" clipRule="evenodd" />
                   </svg>
                   <span className="ml-2">高级配置</span>
-                  <span className="text-xs text-gray-400 ml-2">身份映射</span>
+                  <span className="text-xs text-claude-neutral-400 ml-2">身份映射</span>
                 </div>
               ),
               children: (
@@ -755,16 +746,16 @@ export function ThirdPartyAuthManager({configs, onSave}: ThirdPartyAuthManagerPr
                     </Form.Item>
                   </div>
 
-                <div className="bg-blue-50 p-3 rounded-lg">
+                <div className="rounded-claude-md border border-claude-semantic-info/20 bg-claude-semantic-info/10 p-3">
                   <div className="flex items-start space-x-2">
-                    <div className="text-blue-600 mt-0.5">
+                    <div className="text-claude-semantic-info mt-0.5">
                       <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
                       </svg>
                     </div>
                     <div>
-                      <h4 className="text-blue-800 font-medium text-sm">配置说明</h4>
-                      <p className="text-blue-700 text-xs mt-1">
+                      <h4 className="text-claude-semantic-info font-semibold text-sm">配置说明</h4>
+                      <p className="text-claude-neutral-700 text-xs mt-1">
                         身份映射用于从JWT载荷中提取用户信息。如果不填写，系统将使用默认字段名。
                       </p>
                     </div>
@@ -787,8 +778,8 @@ export function ThirdPartyAuthManager({configs, onSave}: ThirdPartyAuthManagerPr
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h3 className="text-lg font-medium">第三方认证</h3>
-          <p className="text-sm text-gray-500">管理外部身份认证配置</p>
+          <h3 className="text-lg font-semibold text-claude-neutral-900">第三方认证</h3>
+          <p className="text-sm text-claude-neutral-600">管理外部身份认证配置</p>
         </div>
         <Button
           type="primary"
@@ -806,10 +797,10 @@ export function ThirdPartyAuthManager({configs, onSave}: ThirdPartyAuthManagerPr
             key: 'oidc',
             label: 'OIDC配置',
             children: (
-              <div className="bg-white rounded-lg">
-                <div className="py-4">
-                  <h4 className="text-lg font-medium text-gray-900">OIDC配置</h4>
-                  <p className="text-sm text-gray-500 mt-1">支持OpenID Connect标准协议的身份提供商</p>
+              <div className="rounded-claude-lg border border-claude-neutral-200 bg-claude-neutral-50 p-4">
+                <div className="pb-4">
+                  <h4 className="text-lg font-semibold text-claude-neutral-900">OIDC配置</h4>
+                  <p className="text-sm text-claude-neutral-600 mt-1">支持OpenID Connect标准协议的身份提供商</p>
                 </div>
                 <Table
                   columns={oidcColumns}
@@ -828,10 +819,10 @@ export function ThirdPartyAuthManager({configs, onSave}: ThirdPartyAuthManagerPr
             key: 'oauth2',
             label: 'OAuth2配置',
             children: (
-              <div className="bg-white rounded-lg">
-                <div className="py-4">
-                  <h4 className="text-lg font-medium text-gray-900">OAuth2配置</h4>
-                  <p className="text-sm text-gray-500 mt-1">支持OAuth 2.0标准协议的身份提供商</p>
+              <div className="rounded-claude-lg border border-claude-neutral-200 bg-claude-neutral-50 p-4">
+                <div className="pb-4">
+                  <h4 className="text-lg font-semibold text-claude-neutral-900">OAuth2配置</h4>
+                  <p className="text-sm text-claude-neutral-600 mt-1">支持OAuth 2.0标准协议的身份提供商</p>
                 </div>
                 <Table
                   columns={oauth2Columns}

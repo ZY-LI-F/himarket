@@ -92,18 +92,18 @@ export function PortalDomain({portal, onRefresh}: PortalDomainProps) {
                         onClick={() => handleDeleteDomain(record.domain)}
                     />
                 ) : (
-                    <span className="text-gray-400">-</span>
+                    <span className="text-claude-neutral-400">-</span>
                 )
             )
         }
     ]
 
     return (
-        <div className="p-6 space-y-6">
+        <div className="p-6 space-y-6 text-claude-neutral-900">
             <div className="flex justify-between items-center">
                 <div>
-                    <h1 className="text-2xl font-bold mb-2">域名列表</h1>
-                    <p className="text-gray-600">管理Portal的域名配置</p>
+                    <h1 className="text-2xl font-semibold mb-2">域名列表</h1>
+                    <p className="text-claude-neutral-600">管理Portal的域名配置</p>
                 </div>
                 <Space>
                     <Button type="primary" icon={<PlusOutlined/>} onClick={handleAddDomain}>
