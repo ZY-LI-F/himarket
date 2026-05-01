@@ -46,9 +46,9 @@ function FileRefChips({ refs }: { refs: string[] }) {
 function StreamingDots() {
   return (
     <span aria-label="streaming" className="inline-flex items-center gap-1 pl-1">
-      <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-blue-500" />
-      <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-blue-500 [animation-delay:120ms]" />
-      <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-blue-500 [animation-delay:240ms]" />
+      <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-colorPrimary" />
+      <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-colorPrimary [animation-delay:120ms]" />
+      <span className="h-1.5 w-1.5 animate-bounce rounded-full bg-colorPrimary [animation-delay:240ms]" />
     </span>
   );
 }
@@ -57,12 +57,12 @@ function MessageBubble({ message }: { message: AgentChatMessage }) {
   const isUser = message.role === "user";
   const alignClass = isUser ? "items-end" : "items-start";
   const bubbleClass = isUser
-    ? "bg-blue-50 text-gray-900"
-    : "border border-gray-100 bg-white text-gray-800";
+    ? "border border-claude-neutral-200 bg-claude-neutral-100 text-claude-neutral-900"
+    : "border border-colorPrimary/20 bg-claude-neutral-50 text-claude-neutral-800";
   return (
     <article className={`flex flex-col ${alignClass}`} data-testid="agent-message">
-      <div className="mb-1 flex items-center gap-2 text-xs text-gray-500">
-        <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-gray-100">
+      <div className="mb-1 flex items-center gap-2 text-xs text-claude-neutral-500">
+        <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-colorPrimaryBgHover text-colorPrimary">
           {roleIcon(message.role)}
         </span>
         <span>{roleLabel(message.role)}</span>
@@ -73,7 +73,7 @@ function MessageBubble({ message }: { message: AgentChatMessage }) {
         <div className="whitespace-pre-wrap">{message.content}</div>
         {message.status === "streaming" && <StreamingDots />}
         {message.status === "error" && (
-          <div className="mt-2 text-xs text-red-500">消息生成失败</div>
+          <div className="mt-2 text-xs text-claude-semantic-error">消息生成失败</div>
         )}
       </div>
       <FileRefChips refs={message.fileRefs ?? []} />

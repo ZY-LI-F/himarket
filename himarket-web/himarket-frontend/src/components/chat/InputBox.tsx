@@ -200,7 +200,7 @@ export function InputBox(props: InputBoxProps) {
       style={{
         background: isDragging
           ? undefined
-          : "linear-gradient(256deg, rgba(234, 228, 248, 1) 36%, rgba(215, 229, 243, 1) 100%)",
+          : "linear-gradient(256deg, var(--color-brand-surface-tint) 36%, var(--color-neutral-100) 100%)",
       }}
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
@@ -270,16 +270,16 @@ export function InputBox(props: InputBoxProps) {
         <SendButton
           className={`w-9 h-9 ${
             input.trim() && !isLoading
-              ? "bg-colorPrimary text-white hover:opacity-90"
+          ? "bg-colorPrimary text-claude-neutral-50 hover:opacity-90"
               : isLoading
-              ? "bg-colorPrimary text-white hover:opacity-90"
+              ? "bg-colorPrimary text-claude-neutral-50 hover:opacity-90"
               : "bg-colorPrimarySecondary text-colorPrimary cursor-not-allowed"
           }`}
           isLoading={isLoading}
           onClick={handleSend}
           onStop={onStop}
         >
-          <SendOutlined className={"text-sm text-white"} />
+          <SendOutlined className={"text-sm text-claude-neutral-50"} />
         </SendButton>
       </div>
     </div>

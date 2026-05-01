@@ -115,8 +115,8 @@ function Message({
           {question.attachments && question.attachments.length > 0 && (
              <AttachmentPreview attachments={question.attachments as PreviewAttachment[]} className="mb-1 justify-end" />
           )}
-          <div className="bg-colorPrimaryBgHover px-4 py-3 rounded-lg">
-            <div className="whitespace-pre-wrap leading-relaxed text-[15px] tracking-[-0.01em]">
+          <div className="rounded-claude-lg border border-claude-neutral-200 bg-claude-neutral-100 px-4 py-3 text-claude-neutral-900">
+            <div className="whitespace-pre-wrap leading-relaxed text-[15px]">
               {question.content}
             </div>
           </div>
@@ -125,35 +125,35 @@ function Message({
       <div className="flex flex-col gap-2">
         <div className="flex items-center gap-2">
           {/* 模型头像 */}
-          <div className="w-8 h-8 rounded-full bg-gradient-to-br from-colorPrimary/20 to-colorPrimary/10 flex items-center justify-center flex-shrink-0">
+          <div className="w-8 h-8 rounded-full bg-colorPrimaryBgHover text-colorPrimary flex items-center justify-center flex-shrink-0">
             <ProductIconRenderer iconType={modelIcon} className="w-5 h-5" />
           </div>
           {/* 模型名称 */}
-          <div className="text-sm text-gray-500 mb-1.5">{modelName}</div>
+          <div className="text-sm text-claude-neutral-500 mb-1.5">{modelName}</div>
         </div>
 
         {/* 消息内容区域 */}
         <div className="flex-1">
           <div
             ref={contentRef}
-            className={`${!isNewChat && expandedContent ? "max-h-40 overflow-hidden" : "overflow-auto"} relative  bg-white/80 backdrop-blur-sm px-4 py-3 rounded-lg border border-gray-100`}>
+            className={`${!isNewChat && expandedContent ? "max-h-40 overflow-hidden" : "overflow-auto"} relative bg-claude-neutral-50/90 backdrop-blur-sm px-4 py-3 rounded-claude-lg border border-colorPrimary/20`}>
             {
               !isNewChat && expandedContent && (
                 <div
                   onClick={() => setExpandedContent(false)}
-                  className="bottom-mask flex justify-center items-end cursor-pointer absolute -bottom-px h-14 w-full " style={{ background: "linear-gradient(rgba(255, 255, 255, .4) 9%, rgb(255, 255, 255) 100%)" }}>
-                  <DownCircleOutlined className="text-gray-500 mb-2" />
+                  className="bottom-mask flex justify-center items-end cursor-pointer absolute -bottom-px h-14 w-full " style={{ background: "linear-gradient(color-mix(in srgb, var(--color-neutral-50) 40%, transparent) 9%, var(--color-neutral-50) 100%)" }}>
+                  <DownCircleOutlined className="text-claude-neutral-500 mb-2" />
                 </div>
               )
             }
             {/* 如果是错误状态，显示错误提示 */}
             {activeAnswer?.errorMsg ? (
-              <div className="flex items-center gap-2 text-red-500">
+              <div className="flex items-center gap-2 text-claude-semantic-error">
                 <span>{activeAnswer?.errorMsg || '网络异常，请重试'}</span>
               </div>
             ) : conversation.loading ? (
               /* 如果内容为空且正在加载，显示 loading */
-              <div className="flex items-center gap-2 text-gray-500">
+              <div className="flex items-center gap-2 text-claude-neutral-500">
                 <div className="flex items-center gap-1">
                   <span className="w-1.5 h-1.5 bg-colorPrimary rounded-full" style={{ animation: 'bounceStrong 1s infinite', animationDelay: '0ms' }}></span>
                   <span className="w-1.5 h-1.5 bg-colorPrimary rounded-full" style={{ animation: 'bounceStrong 1s infinite', animationDelay: '150ms' }}></span>
@@ -211,7 +211,7 @@ function Message({
           {(
             <div className="flex items-center justify-between mt-2 px-1">
               {/* 左侧：统计信息 */}
-              <div className="flex items-center gap-3 text-xs text-gray-400 tabular-nums">
+              <div className="flex items-center gap-3 text-xs text-claude-neutral-400 tabular-nums">
                 <span>首字： {formatTime(activeAnswer?.firstTokenTime)}</span>
                 <span>耗时： {formatTime(activeAnswer?.totalTime)}</span>
                 <span>输入 Token： {activeAnswer?.inputTokens ?? "-"}</span>
@@ -224,7 +224,7 @@ function Message({
                   onClick={() => handleCopy(activeAnswer?.content || "", question.id)}
                   className={`
                             p-1.5 rounded-md transition-colors duration-200
-                            ${copiedId === question.id ? "text-colorPrimary" : "text-gray-400 hover:text-gray-600 hover:bg-gray-100"}
+                            ${copiedId === question.id ? "text-colorPrimary" : "text-claude-neutral-400 hover:text-claude-neutral-600 hover:bg-claude-neutral-100"}
                           `}
                   title="复制"
                 >
@@ -234,7 +234,7 @@ function Message({
                   onClick={() => {
                     onRefresh?.(conversation, question, isLast);
                   }}
-                  className="p-1.5 rounded-md text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors duration-200"
+                  className="p-1.5 rounded-md text-claude-neutral-400 hover:text-claude-neutral-600 hover:bg-claude-neutral-100 transition-colors duration-200"
                   title={"重新生成"}
                 >
                   <ReloadOutlined className="text-sm" />
@@ -248,15 +248,15 @@ function Message({
                       className={`
                                 p-1 rounded transition-colors duration-200
                                 ${question.activeAnswerIndex === 0
-                          ? "text-gray-300 cursor-not-allowed"
-                          : "text-gray-500 hover:text-gray-700 hover:bg-gray-200"
+                          ? "text-claude-neutral-300 cursor-not-allowed"
+                          : "text-claude-neutral-500 hover:text-claude-neutral-700 hover:bg-claude-neutral-200"
                         }
                               `}
                       title="上一个版本"
                     >
                       <LeftOutlined className="text-xs" />
                     </button>
-                    <span className="text-xs text-gray-600 font-medium min-w-[40px] text-center">
+                    <span className="text-xs text-claude-neutral-600 font-medium min-w-[40px] text-center">
                       {(question.activeAnswerIndex ?? 0) + 1} / {question.answers.length}
                     </span>
                     <button
@@ -265,8 +265,8 @@ function Message({
                       className={`
                                 p-1 rounded transition-colors duration-200
                                 ${question.activeAnswerIndex === question.answers.length - 1
-                          ? "text-gray-300 cursor-not-allowed"
-                          : "text-gray-500 hover:text-gray-700 hover:bg-gray-200"
+                          ? "text-claude-neutral-300 cursor-not-allowed"
+                          : "text-claude-neutral-500 hover:text-claude-neutral-700 hover:bg-claude-neutral-200"
                         }
                               `}
                       title="下一个版本"

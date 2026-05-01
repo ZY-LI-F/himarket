@@ -42,10 +42,10 @@ export function SuggestedQuestions({ onSelectQuestion }: SuggestedQuestionsProps
     <div>
       {/* 标题和刷新按钮 */}
       <div className="flex items-center gap-2 mb-4">
-        <h3 className="text-sm font-medium text-[#737373]">推荐问题</h3>
+        <h3 className="text-sm font-medium text-claude-neutral-600">推荐问题</h3>
         <button
           onClick={handleRefresh}
-          className="p-1.5 text-[#737373] hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-all duration-200"
+          className="p-1.5 text-claude-neutral-600 hover:text-claude-neutral-700 hover:bg-claude-neutral-100 rounded-lg transition-all duration-200"
           title="刷新推荐"
         >
           <ReloadOutlined className={`text-xs transition-transform duration-300 ${isRefreshing ? 'animate-spin' : ''}`} />
@@ -60,15 +60,15 @@ export function SuggestedQuestions({ onSelectQuestion }: SuggestedQuestionsProps
             onClick={() => onSelectQuestion(question)}
             className={`
               px-4 py-2.5 rounded-2xl cursor-pointer
-              border border-[#E0E7FF]
+              border border-colorPrimary/20
               transition-all duration-300 ease-in-out
-              hover:bg-white hover:shadow-md hover:scale-[1.02] hover:border-[#C7D2FE]
+              hover:bg-claude-neutral-50 hover:shadow-claude-md hover:scale-[1.02] hover:border-colorPrimary/30
               active:scale-[0.98]
               group
               ${isRefreshing ? 'opacity-0 translate-y-2' : 'opacity-100 translate-y-0'}
             `}
             style={{
-              backgroundColor: 'rgba(255, 255, 255, 0.6)',
+              backgroundColor: 'color-mix(in srgb, var(--color-neutral-50) 82%, transparent)',
               animationDelay: `${index * 100}ms`,
             }}
           >

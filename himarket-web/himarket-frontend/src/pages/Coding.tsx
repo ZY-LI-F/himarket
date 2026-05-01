@@ -83,7 +83,7 @@ function ResizeHandle({
     return (
       <div
         className={`w-1 flex-shrink-0 cursor-col-resize group relative
-          ${isDragging ? "bg-blue-500/40" : "hover:bg-blue-500/30"}`}
+          ${isDragging ? "bg-colorPrimary/40" : "hover:bg-colorPrimary/30"}`}
         onMouseDown={onMouseDown}
       >
         <div className="absolute inset-y-0 -left-1 -right-1 z-10" />
@@ -93,7 +93,7 @@ function ResizeHandle({
   return (
     <div
       className={`h-1 flex-shrink-0 cursor-row-resize group relative
-        ${isDragging ? "bg-blue-500/40" : "hover:bg-blue-500/30"}`}
+        ${isDragging ? "bg-colorPrimary/40" : "hover:bg-colorPrimary/30"}`}
       onMouseDown={onMouseDown}
     >
       <div className="absolute inset-x-0 -top-1 -bottom-1 z-10" />
@@ -649,16 +649,16 @@ function CodingContent() {
                 {/* 欢迎标题 */}
                 <div className="text-center mb-8">
                   <div
-                    className="mx-auto mb-4 w-20 h-20 rounded-2xl flex items-center justify-center shadow-lg"
+                    className="mx-auto mb-4 w-20 h-20 rounded-claude-xl flex items-center justify-center shadow-claude-lg"
                     style={{
-                      background: "linear-gradient(135deg, rgba(99,102,241,1) 0%, rgba(139,92,246,1) 100%)"
+                      background: "linear-gradient(135deg, var(--color-brand) 0%, var(--color-brand-active) 100%)"
                     }}
                   >
-                    <Code2 size={40} className="text-white" />
+                    <Code2 size={40} className="text-claude-neutral-50" />
                   </div>
-                  <h1 className="text-2xl font-medium text-gray-900 mb-2">
+                  <h1 className="text-2xl font-medium text-claude-neutral-900 mb-2">
                     欢迎使用{" "}
-                    <span className="text-blue-500">
+                    <span className="text-colorPrimary">
                       <TextType
                         text={["HiCoding"]}
                         loop={false}
@@ -668,7 +668,7 @@ function CodingContent() {
                       />
                     </span>
                   </h1>
-                  <p className="text-sm text-gray-400">
+                  <p className="text-sm text-claude-neutral-500">
                     AI 驱动的编程助手，输入你的需求开始编程
                   </p>
                 </div>
@@ -678,10 +678,10 @@ function CodingContent() {
                   <div
                     className="p-[2px] rounded-2xl shadow-md"
                     style={{
-                      background: "linear-gradient(256deg, rgba(234, 228, 248, 1) 36%, rgba(215, 229, 243, 1) 100%)"
+                      background: "linear-gradient(256deg, var(--color-brand-surface-tint) 36%, var(--color-neutral-100) 100%)"
                     }}
                   >
-                    <div className="rounded-2xl overflow-hidden bg-white/95">
+                    <div className="rounded-2xl overflow-hidden bg-claude-neutral-50/95">
                       {/* 模型选择器 - 对话框左上角 */}
                       <div className="px-4 pt-3 pb-0">
                         <ModelSelector config={config} onConfigChange={setConfig} />
@@ -728,7 +728,7 @@ function CodingContent() {
         <>
           {/* Conversation_Panel */}
           <div
-            className="flex flex-col border-r border-gray-200/60 bg-white/50 overflow-hidden flex-shrink-0"
+            className="flex flex-col border-r border-claude-neutral-200/60 bg-claude-neutral-50/60 overflow-hidden flex-shrink-0"
             style={{ width: conversationPanel.size }}
           >
             <ConversationTopBar
@@ -768,15 +768,15 @@ function CodingContent() {
                 {showFileTree && (
                   <>
                     <div
-                      className="border-r border-gray-200/60 bg-white/50 overflow-hidden flex-shrink-0 flex flex-col"
+                      className="border-r border-claude-neutral-200/60 bg-claude-neutral-50/60 overflow-hidden flex-shrink-0 flex flex-col"
                       style={{ width: fileTreePanel.size }}
                     >
-                      <div className="flex items-center px-3 py-2 border-b border-gray-200/60 bg-white/30">
-                        <span className="text-xs font-medium text-gray-600">文件</span>
+                      <div className="flex items-center px-3 py-2 border-b border-claude-neutral-200/60 bg-claude-neutral-50/40">
+                        <span className="text-xs font-medium text-claude-neutral-600">文件</span>
                       </div>
                       <div className="flex-1 overflow-hidden">
                         {treeLoading ? (
-                          <div className="flex items-center justify-center h-full text-xs text-gray-400">加载中...</div>
+                          <div className="flex items-center justify-center h-full text-xs text-claude-neutral-400">加载中...</div>
                         ) : (
                           <FileTree tree={tree} onFileSelect={handleFileSelect} selectedPath={activeSession?.activeFilePath} />
                         )}
@@ -787,17 +787,17 @@ function CodingContent() {
                 )}
 
                 <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
-                  <div className="flex items-center border-b border-gray-200/60 bg-white/30 flex-shrink-0">
+                  <div className="flex items-center border-b border-claude-neutral-200/60 bg-claude-neutral-50/40 flex-shrink-0">
                     <button
                       className={`px-4 py-2 text-sm font-medium transition-colors border-b-2 flex items-center gap-1.5
-                        ${activeTab === "code" ? "text-blue-600 border-blue-500 bg-white/50" : "text-gray-500 border-transparent hover:text-gray-700 hover:bg-gray-50/50"}`}
+                        ${activeTab === "code" ? "text-colorPrimary border-colorPrimary bg-colorPrimaryBgHover" : "text-claude-neutral-500 border-transparent hover:text-claude-neutral-700 hover:bg-claude-neutral-100/60"}`}
                       onClick={() => setActiveTab("code")}
                     >
                       <Code2 size={14} /> 代码
                     </button>
                     <button
                       className={`px-4 py-2 text-sm font-medium transition-colors border-b-2 flex items-center gap-1.5
-                        ${activeTab === "preview" ? "text-blue-600 border-blue-500 bg-white/50" : "text-gray-500 border-transparent hover:text-gray-700 hover:bg-gray-50/50"}`}
+                        ${activeTab === "preview" ? "text-colorPrimary border-colorPrimary bg-colorPrimaryBgHover" : "text-claude-neutral-500 border-transparent hover:text-claude-neutral-700 hover:bg-claude-neutral-100/60"}`}
                       onClick={() => setActiveTab("preview")}
                     >
                       <Eye size={14} /> 预览
@@ -806,7 +806,7 @@ function CodingContent() {
                     {!isPreviewMode && (
                       <button
                         className={`w-7 h-7 flex items-center justify-center rounded transition-colors mr-2
-                          ${fileTreeVisible ? "text-blue-600 bg-blue-50" : "text-gray-400 hover:text-gray-600 hover:bg-gray-100"}`}
+                          ${fileTreeVisible ? "text-colorPrimary bg-colorPrimaryBgHover" : "text-claude-neutral-400 hover:text-claude-neutral-600 hover:bg-claude-neutral-100"}`}
                         onClick={toggleFileTree}
                         title={fileTreeVisible ? "隐藏文件" : "显示文件"}
                       >

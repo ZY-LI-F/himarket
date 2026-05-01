@@ -378,7 +378,7 @@ function AgentDetail() {
                               </div>
                             }
                             style={{
-                              borderBottom: index < (agentConfig.agentAPIConfig.routes?.length || 0) - 1 ? '1px solid #e5e7eb' : 'none'
+                              borderBottom: index < (agentConfig.agentAPIConfig.routes?.length || 0) - 1 ? '1px solid var(--color-neutral-200)' : 'none'
                             }}
                           >
                             <div className="px-4 pb-4 space-y-4">

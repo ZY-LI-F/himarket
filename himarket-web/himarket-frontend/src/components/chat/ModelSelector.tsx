@@ -51,7 +51,7 @@ export function ModelSelector({
 
   // 浮层内容
   const dropdownContent = (
-    <div className="bg-white rounded-lg shadow-xl border border-gray-200 w-[420px] max-h-[500px] flex flex-col">
+    <div className="bg-claude-neutral-50 rounded-claude-lg shadow-claude-lg border border-claude-neutral-200 w-[420px] max-h-[500px] flex flex-col">
       {/* 搜索框 */}
       <div className="p-4 pb-3">
         <Input
@@ -116,10 +116,10 @@ export function ModelSelector({
             {!loading && filteredModels.length === 0 && (
               <div className="text-center flex gap-4 flex-col items-center justify-center py-14 text-gray-400">
                 <img src={EmptyData} />
-                <div className="text-[#333] text-[16px] font-medium">
+                <div className="text-claude-neutral-800 text-[16px] font-medium">
                   暂无模型
                 </div>
-                <div className="text-[#333]">您需要首先在 Admin 中配置模型，才能在 HiChat 中体验</div>
+                <div className="text-claude-neutral-800">您需要首先在 Admin 中配置模型，才能在 HiChat 中体验</div>
               </div>
             )}
           </div>

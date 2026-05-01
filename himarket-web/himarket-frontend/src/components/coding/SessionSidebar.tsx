@@ -503,7 +503,7 @@ export function SessionSidebar({
       </div>
 
       {/* 分隔线 */}
-      <div className="h-[1px] bg-[#e5e5e5] mx-3 mb-1"></div>
+      <div className="h-[1px] bg-claude-neutral-200 mx-3 mb-1"></div>
 
       {/* 历史会话列表 */}
       <div className="flex-1 overflow-y-auto px-3 pb-3 sidebar-content">

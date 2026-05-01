@@ -16,14 +16,14 @@ export default function WorkspaceShell() {
 
   return (
     <Layout
-      className="agent-workspace-shell h-screen overflow-hidden bg-gray-100"
+      className="agent-workspace-shell h-screen overflow-hidden bg-claude-neutral-100"
       data-testid="agent-workspace-shell"
       style={{ borderTop: "4px solid var(--aliyun-blue)" }}
     >
-      <Header className="h-14 border-b border-gray-200 bg-white p-0 leading-none">
+      <Header className="h-14 border-b border-claude-neutral-200 bg-claude-neutral-50 p-0 leading-none">
         <TopBar />
       </Header>
-      <Layout className="min-h-0 flex-1 gap-4 bg-gray-100 p-4">
+      <Layout className="min-h-0 flex-1 gap-4 bg-claude-neutral-100 p-4">
         <Sider
           theme="light"
           width={LEFT_PANE_WIDTH}

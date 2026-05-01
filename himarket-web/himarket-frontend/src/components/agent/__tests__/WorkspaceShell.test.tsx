@@ -49,13 +49,13 @@ describe("WorkspaceShell", () => {
 
     expect(shellStyle).toContain("var(--aliyun-blue)");
     expect(accentStyle).toContain("var(--agent-accent)");
-    expect(AGENT_TOKEN_CSS).toContain("--aliyun-blue: #0064D2;");
-    expect(AGENT_TOKEN_CSS).toContain("--agent-accent: #FA8C16;");
+    expect(AGENT_TOKEN_CSS).toContain("--aliyun-blue: var(--color-semantic-info);");
+    expect(AGENT_TOKEN_CSS).toContain("--agent-accent: var(--color-brand);");
 
     expect({
       cssTokens: [
-        "--aliyun-blue: #0064D2;",
-        "--agent-accent: #FA8C16;",
+        "--aliyun-blue: var(--color-semantic-info);",
+        "--agent-accent: var(--color-brand);",
         "--agent-radius-r10: 10px;",
       ],
       panes: paneIds,
@@ -75,8 +75,8 @@ describe("WorkspaceShell", () => {
     }).toMatchInlineSnapshot(`
       {
         "cssTokens": [
-          "--aliyun-blue: #0064D2;",
-          "--agent-accent: #FA8C16;",
+          "--aliyun-blue: var(--color-semantic-info);",
+          "--agent-accent: var(--color-brand);",
           "--agent-radius-r10: 10px;",
         ],
         "panes": [

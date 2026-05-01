@@ -20,6 +20,14 @@ function buildTerminalWsUrl(runtime?: string): string {
   return qs ? `${base}?${qs}` : base;
 }
 
+function readDesignToken(name: string): string {
+  const value = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  if (!value) {
+    throw new Error(`Missing design token: ${name}`);
+  }
+  return value;
+}
+
 interface TerminalPanelProps {
   height: number;
   collapsed: boolean;
@@ -71,10 +79,10 @@ export const TerminalPanel = forwardRef<TerminalPanelHandle, TerminalPanelProps>
       fontFamily:
         "'JetBrains Mono', 'Fira Code', 'Cascadia Code', Menlo, monospace",
       theme: {
-        background: "#1e1e1e",
-        foreground: "#d4d4d4",
-        cursor: "#d4d4d4",
-        selectionBackground: "#264f78",
+        background: readDesignToken("--color-neutral-900"),
+        foreground: readDesignToken("--color-neutral-200"),
+        cursor: readDesignToken("--color-brand"),
+        selectionBackground: readDesignToken("--color-brand"),
       },
       cursorBlink: true,
       disableStdin: false,
@@ -173,13 +181,13 @@ export const TerminalPanel = forwardRef<TerminalPanelHandle, TerminalPanelProps>
 
   return (
     <div
-      className="flex flex-col border-t border-gray-200/60 bg-[#1e1e1e] flex-shrink-0 overflow-hidden"
+      className="flex flex-col border-t border-claude-neutral-200/60 bg-claude-neutral-900 flex-shrink-0 overflow-hidden"
       style={{ height: collapsed ? 32 : height }}
     >
       {/* Header */}
       <button
-        className="flex items-center gap-1.5 px-3 py-1.5 text-xs text-gray-300 bg-[#252526]
-          hover:bg-[#2d2d2d] transition-colors border-b border-gray-700/50 flex-shrink-0"
+        className="flex items-center gap-1.5 px-3 py-1.5 text-xs text-claude-neutral-300 bg-claude-neutral-800
+          hover:bg-claude-neutral-700 transition-colors border-b border-claude-neutral-700/50 flex-shrink-0"
         onClick={toggleCollapse}
       >
         <TerminalIcon size={12} />
@@ -202,9 +210,9 @@ export const TerminalPanel = forwardRef<TerminalPanelHandle, TerminalPanelProps>
 function StatusDot({ status }: { status: TerminalWsStatus }) {
   const color =
     status === "connected"
-      ? "bg-green-400"
+      ? "bg-claude-semantic-success"
       : status === "connecting" || status === "reconnecting"
-        ? "bg-yellow-400"
-        : "bg-red-400";
+        ? "bg-claude-semantic-warning"
+        : "bg-claude-semantic-error";
   return <span className={`w-1.5 h-1.5 rounded-full ${color} ml-1.5`} />;
 }
