@@ -3,6 +3,8 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { message, Spin } from "antd";
 import request from "../lib/request";
 
+import "./authIntake.css";
+
 const Callback: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -20,13 +22,13 @@ const Callback: React.FC = () => {
     // 调用后端获取token
     request
       .post<{ access_token: string }>("/developers/token", { code, state })
-      .then((res) => {
+      .then(res => {
         if (res && res.data && res.data.access_token) {
           message.success("登录成功！");
           // 存储access_token
-          localStorage.setItem('access_token', res.data.access_token);
+          localStorage.setItem("access_token", res.data.access_token);
           // 跳转首页
-          navigate('/');
+          navigate("/");
         } else {
           message.error("登录失败，未获取到 access_token");
         }
@@ -37,8 +39,11 @@ const Callback: React.FC = () => {
   }, [location.search, navigate]);
 
   return (
-    <div className="flex items-center justify-center min-h-screen">
-      <Spin tip="登录中，请稍候..." />
+    <div className="hm-callback-shell">
+      <div className="hm-callback-card">
+        <Spin />
+        <p className="hm-callback-copy">登录中，请稍候...</p>
+      </div>
     </div>
   );
 };

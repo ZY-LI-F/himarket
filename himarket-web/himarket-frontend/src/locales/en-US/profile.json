@@ -1,5 +1,8 @@
 {
   "title": "Profile",
+  "displayName": "Display name",
+  "email": "Email",
+  "identity": "Identity",
   "fromProvider": "From {{provider}} account",
   "noThirdParty": "No third-party providers available",
   "bound": "Bound",
