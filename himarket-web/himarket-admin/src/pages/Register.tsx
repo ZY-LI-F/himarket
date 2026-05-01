@@ -33,15 +33,22 @@ const Register: React.FC = () => {
   }
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-white px-4">
-      <Card className="w-full max-w-md">
-        {/* Logo */}
-        <div className="mb-4">
-          <img src="/logo.png" alt="Logo" className="w-16 h-16 mx-auto mb-4" />
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[var(--color-neutral-50)] px-4 py-10 text-[var(--color-neutral-900)]">
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-[var(--color-brand-surface-tint)] via-[var(--color-neutral-50)] to-[var(--color-neutral-100)]" />
+      <div className="pointer-events-none absolute left-1/2 top-0 h-56 w-56 -translate-x-1/2 rounded-[var(--radius-full)] bg-[var(--color-brand-surface-tint)] blur-3xl" />
+
+      <Card className="relative z-10 w-full max-w-md border-[var(--color-neutral-200)] shadow-claude-lg">
+        <div className="mb-8 text-center">
+          <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-[var(--radius-lg)] bg-[var(--color-brand-surface-tint)]">
+            <img src="/logo.png" alt="Logo" className="h-10 w-10" />
+          </div>
+          <p className="mb-2 text-sm font-semibold text-[var(--color-brand)]">
+            HiMarket Admin
+          </p>
+          <h2 className="text-2xl font-bold text-[var(--color-neutral-900)]">注册 AI Portal</h2>
         </div>
-        <h2 className="text-2xl font-bold mb-6 text-gray-900 text-center">注册 AI Portal</h2>
         <Form
-          className="w-full flex flex-col gap-4"
+          className="w-full"
           layout="vertical"
           onFinish={handleRegister}
         >
@@ -64,7 +71,7 @@ const Register: React.FC = () => {
             <FormField.Password placeholder="确认密码" autoComplete="new-password" size="large" />
           </Form.Item>
           {error && <Alert message={error} type="error" showIcon className="mb-2" />}
-          <Form.Item>
+          <Form.Item className="mb-0">
             <Button
               variant="primary"
               htmlType="submit"
@@ -76,8 +83,8 @@ const Register: React.FC = () => {
             </Button>
           </Form.Item>
         </Form>
-        <div className="mt-6 text-gray-400 text-sm text-center w-full">
-          已有账号？<Link to="/login" className="text-indigo-500 hover:underline ml-1">登录</Link>
+        <div className="mt-6 w-full text-center text-sm text-[var(--color-neutral-500)]">
+          已有账号？<Link to="/login" className="ml-1 text-[var(--color-brand)] hover:text-[var(--color-brand-hover)] hover:underline">登录</Link>
         </div>
       </Card>
     </div>
