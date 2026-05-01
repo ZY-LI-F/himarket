@@ -1,4 +1,10 @@
-import { Routes, Route, Navigate, useLocation, useNavigate } from "react-router-dom";
+import {
+  Routes,
+  Route,
+  Navigate,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 import { useEffect } from "react";
 import ApiDetail from "./pages/ApiDetail";
 import Consumers from "./pages/Consumers";
@@ -23,6 +29,8 @@ import WorkspaceListPage from "./pages/agent/WorkspaceListPage";
 import RoomListPage from "./pages/agent/RoomListPage";
 import SkillDetail from "./pages/SkillDetail";
 import WorkerDetail from "./pages/WorkerDetail";
+import WorkerTeamBrowse from "./pages/teams/Browse";
+import WorkerTeamDetail from "./pages/teams/Detail";
 import { RequireAuth } from "./components/RequireAuth";
 import { usePortalConfig } from "./context/PortalConfigContext";
 
@@ -48,6 +56,7 @@ function MenuRedirectGuard() {
       "/apis": "apis",
       "/skills": "skills",
       "/workers": "workers",
+      "/teams": "workerTeams",
     };
 
     const currentPath = location.pathname;
@@ -69,31 +78,74 @@ export function Router() {
         <Route path="/" element={<DynamicHome />} />
         <Route path="/models" element={<Square activeType="MODEL_API" />} />
         <Route path="/mcp" element={<McpSquare />} />
-        <Route path="/mcp/my" element={<RequireAuth><MyMcp /></RequireAuth>} />
-        <Route path="/mcp/create" element={<RequireAuth><McpCreatePage /></RequireAuth>} />
+        <Route
+          path="/mcp/my"
+          element={
+            <RequireAuth>
+              <MyMcp />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/mcp/create"
+          element={
+            <RequireAuth>
+              <McpCreatePage />
+            </RequireAuth>
+          }
+        />
         <Route path="/agents" element={<Square activeType="AGENT_API" />} />
         <Route path="/apis" element={<Square activeType="REST_API" />} />
         <Route path="/skills" element={<Square activeType="AGENT_SKILL" />} />
         <Route path="/skills/:skillProductId" element={<SkillDetail />} />
         <Route path="/workers" element={<Square activeType="WORKER" />} />
         <Route path="/workers/:workerProductId" element={<WorkerDetail />} />
+        <Route path="/teams" element={<WorkerTeamBrowse />} />
+        <Route path="/teams/:teamProductId" element={<WorkerTeamDetail />} />
         <Route path="/chat" element={<Chat />} />
         <Route path="/quest" element={<Navigate to="/coding" />} />
         <Route path="/coding" element={<Coding />} />
         <Route path="/agent" element={<WorkspaceShell />} />
         <Route path="/agent/workspaces" element={<WorkspaceListPage />} />
-        <Route path="/agent/workspaces/:wsId/rooms" element={<RoomListPage />} />
-        <Route path="/agent/workspaces/:wsId/rooms/:rid" element={<WorkspaceShell />} />
+        <Route
+          path="/agent/workspaces/:wsId/rooms"
+          element={<RoomListPage />}
+        />
+        <Route
+          path="/agent/workspaces/:wsId/rooms/:rid"
+          element={<WorkspaceShell />}
+        />
         <Route path="/getting-started" element={<GettingStarted />} />
         <Route path="/apis/:apiProductId" element={<ApiDetail />} />
-        <Route path="/consumers/:consumerId" element={<RequireAuth><ConsumerDetail /></RequireAuth>} />
-        <Route path="/consumers" element={<RequireAuth><Consumers /></RequireAuth>} />
+        <Route
+          path="/consumers/:consumerId"
+          element={
+            <RequireAuth>
+              <ConsumerDetail />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/consumers"
+          element={
+            <RequireAuth>
+              <Consumers />
+            </RequireAuth>
+          }
+        />
         <Route path="/mcp/:mcpProductId" element={<McpDetail />} />
         <Route path="/agents/:agentProductId" element={<AgentDetail />} />
         <Route path="/models/:modelProductId" element={<ModelDetail />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/profile" element={<RequireAuth><Profile /></RequireAuth>} />
+        <Route
+          path="/profile"
+          element={
+            <RequireAuth>
+              <Profile />
+            </RequireAuth>
+          }
+        />
         <Route path="/callback" element={<Callback />} />
         <Route path="/oidc/callback" element={<OidcCallback />} />
 

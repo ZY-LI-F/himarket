@@ -23,6 +23,7 @@ const PUBLIC_PATHS = [
   "/apis",
   "/skills",
   "/workers",
+  "/teams",
   "/chat",
   "/coding",
   "/quest",
