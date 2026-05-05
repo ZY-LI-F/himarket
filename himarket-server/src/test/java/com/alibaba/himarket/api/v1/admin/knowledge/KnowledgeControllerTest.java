@@ -32,6 +32,7 @@ import com.alibaba.himarket.core.security.ContextHolder;
 import com.alibaba.himarket.entity.KnowledgeAsset;
 import com.alibaba.himarket.repository.KnowledgeAssetRepository;
 import com.alibaba.himarket.service.KnowledgeService;
+import com.alibaba.himarket.service.KnowledgeSyncService;
 import com.alibaba.himarket.validator.KnowledgePayloadValidator;
 import java.util.List;
 import java.util.Map;
@@ -111,8 +112,7 @@ class KnowledgeControllerTest {
         KnowledgeAssetRepository repository = repository();
         KnowledgeAsset existing = existingGlobalAsset("asset-001", "current-etag");
         when(repository.findByIdForUpdate("asset-001")).thenReturn(Optional.of(existing));
-        KnowledgeController controller =
-                controller(new KnowledgeService(repository, new KnowledgePayloadValidator()));
+        KnowledgeController controller = controller(service(repository));
 
         BusinessException error =
                 assertThrows(
@@ -134,8 +134,7 @@ class KnowledgeControllerTest {
         when(repository.findByScopeAndTeamIdAndUserIdAndNameAndCategory(
                         "user", null, "user-a", "title-required", "doc_review"))
                 .thenReturn(Optional.empty());
-        KnowledgeController controller =
-                controller(new KnowledgeService(repository, new KnowledgePayloadValidator()));
+        KnowledgeController controller = controller(service(repository));
 
         BusinessException forbidden =
                 assertThrows(
@@ -160,8 +159,7 @@ class KnowledgeControllerTest {
         when(repository.findByScopeAndTeamIdAndUserIdAndNameAndCategory(
                         "global", null, null, "title-required", "doc_review"))
                 .thenReturn(Optional.empty());
-        KnowledgeController controller =
-                controller(new KnowledgeService(repository, new KnowledgePayloadValidator()));
+        KnowledgeController controller = controller(service(repository));
 
         KnowledgeAsset created = controller.create(globalRequest("title-required", "required"));
 
@@ -175,6 +173,11 @@ class KnowledgeControllerTest {
     private static KnowledgeController controller(KnowledgeService service) {
         return new KnowledgeController(
                 service, new KnowledgePayloadValidator(), new ContextHolder());
+    }
+
+    private static KnowledgeService service(KnowledgeAssetRepository repository) {
+        return new KnowledgeService(
+                repository, new KnowledgePayloadValidator(), mock(KnowledgeSyncService.class));
     }
 
     private static KnowledgeAssetRepository repository() {

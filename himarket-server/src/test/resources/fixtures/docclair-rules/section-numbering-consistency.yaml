@@ -1,0 +1,17 @@
+apiVersion: hiclaw.io/v1beta1
+kind: DocReviewRule
+metadata:
+  name: section-numbering-consistency
+  team: docclair
+  scope: team
+  severity: high
+  enabled: true
+spec:
+  description: Keep section numbering consistent.
+  domain: consistency
+  detectors:
+    - type: keyword
+      keywords:
+        - numbering
+      case_sensitive: false
+  fix_suggestion: Use one numbering hierarchy.

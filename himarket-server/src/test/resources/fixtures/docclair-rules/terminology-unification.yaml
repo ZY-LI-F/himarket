@@ -1,0 +1,17 @@
+apiVersion: hiclaw.io/v1beta1
+kind: DocReviewRule
+metadata:
+  name: terminology-unification
+  team: docclair
+  scope: team
+  severity: medium
+  enabled: true
+spec:
+  description: Unify core terminology.
+  domain: terminology
+  detectors:
+    - type: keyword
+      keywords:
+        - term
+      case_sensitive: false
+  fix_suggestion: Create and follow a glossary.

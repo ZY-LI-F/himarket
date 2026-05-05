@@ -1,0 +1,17 @@
+apiVersion: hiclaw.io/v1beta1
+kind: DocReviewRule
+metadata:
+  name: deidentification-actionability
+  team: docclair
+  scope: team
+  severity: blocker
+  enabled: true
+spec:
+  description: Make deidentification actionable.
+  domain: compliance
+  detectors:
+    - type: keyword
+      keywords:
+        - privacy
+      case_sensitive: false
+  fix_suggestion: List fields, methods, owners, and checks.

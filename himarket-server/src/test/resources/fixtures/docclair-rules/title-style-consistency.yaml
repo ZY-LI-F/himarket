@@ -1,0 +1,17 @@
+apiVersion: hiclaw.io/v1beta1
+kind: DocReviewRule
+metadata:
+  name: title-style-consistency
+  team: docclair
+  scope: team
+  severity: medium
+  enabled: true
+spec:
+  description: Keep title style consistent.
+  domain: structure
+  detectors:
+    - type: keyword
+      keywords:
+        - title
+      case_sensitive: false
+  fix_suggestion: Use one heading style.

@@ -1,0 +1,17 @@
+apiVersion: hiclaw.io/v1beta1
+kind: DocReviewRule
+metadata:
+  name: inclusion-exclusion-criteria-completeness
+  team: docclair
+  scope: team
+  severity: high
+  enabled: true
+spec:
+  description: Require both inclusion and exclusion criteria.
+  domain: methodology
+  detectors:
+    - type: keyword
+      keywords:
+        - criteria
+      case_sensitive: false
+  fix_suggestion: Add missing criteria with source and boundary.
