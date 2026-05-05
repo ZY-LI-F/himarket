@@ -1,6 +1,13 @@
-import { BookOutlined, SearchOutlined } from '@ant-design/icons';
+import {
+  BookOutlined,
+  EditOutlined,
+  EyeOutlined,
+  PlusOutlined,
+  SearchOutlined,
+} from '@ant-design/icons';
 import { Alert, Button, Input, Select, Space, Table, Tag, Tooltip } from 'antd';
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { knowledgeApi } from '@/api/knowledge';
 import type { KnowledgeAsset, KnowledgeScope } from '@/api/knowledge';
@@ -61,6 +68,7 @@ const includesKeyword = (values: readonly string[], keyword: string): boolean =>
   values.some((value) => value.toLowerCase().includes(keyword));
 
 export default function KnowledgeListPage() {
+  const navigate = useNavigate();
   const [assets, setAssets] = useState<KnowledgeAsset[]>([]);
   const [category, setCategory] = useState(DEFAULT_CATEGORY);
   const [error, setError] = useState<string | null>(null);
@@ -222,6 +230,31 @@ export default function KnowledgeListPage() {
       title: '更新时间',
       width: 180,
     },
+    {
+      key: 'actions',
+      render: (_value: unknown, asset) => (
+        <Space>
+          <Button
+            icon={<EyeOutlined />}
+            onClick={() => navigate(`/admin/knowledge/${asset.id}`)}
+            size="small"
+            type="link"
+          >
+            查看
+          </Button>
+          <Button
+            icon={<EditOutlined />}
+            onClick={() => navigate(`/admin/knowledge/${asset.id}/edit`)}
+            size="small"
+            type="link"
+          >
+            编辑
+          </Button>
+        </Space>
+      ),
+      title: '操作',
+      width: 150,
+    },
   ];
 
   return (
@@ -231,6 +264,13 @@ export default function KnowledgeListPage() {
           <h1 className="text-3xl font-bold tracking-tight">知识库</h1>
           <p className="mt-2 text-gray-500">管理文档审查规则等可复用知识资产</p>
         </div>
+        <Button
+          icon={<PlusOutlined />}
+          onClick={() => navigate('/admin/knowledge/new')}
+          type="primary"
+        >
+          新建知识资产
+        </Button>
       </div>
 
       {error && (

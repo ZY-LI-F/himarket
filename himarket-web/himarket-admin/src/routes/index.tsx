@@ -3,6 +3,8 @@ import { createBrowserRouter, Navigate, redirect } from 'react-router-dom';
 import LayoutWrapper from '@/components/LayoutWrapper';
 import ApiProductDetail from '@/pages/ApiProductDetail';
 import GatewayConsoles from '@/pages/GatewayConsoles';
+import KnowledgeDetailPage from '@/pages/Knowledge/KnowledgeDetailPage';
+import KnowledgeEditorPage from '@/pages/Knowledge/KnowledgeEditorPage';
 import KnowledgeListPage from '@/pages/Knowledge/KnowledgeListPage';
 import Login from '@/pages/Login';
 import McpMonitor from '@/pages/McpMonitor';
@@ -171,6 +173,21 @@ export const router = createBrowserRouter([
         element: <KnowledgeListPage />,
         loader: requireAdminLoader,
         path: 'admin/knowledge',
+      },
+      {
+        element: <KnowledgeEditorPage />,
+        loader: requireAdminLoader,
+        path: 'admin/knowledge/new',
+      },
+      {
+        element: <KnowledgeDetailPage />,
+        loader: requireAdminLoader,
+        path: 'admin/knowledge/:knowledgeId',
+      },
+      {
+        element: <KnowledgeEditorPage />,
+        loader: requireAdminLoader,
+        path: 'admin/knowledge/:knowledgeId/edit',
       },
       {
         element: <TemplateListPage />,
