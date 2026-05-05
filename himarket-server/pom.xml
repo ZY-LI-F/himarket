@@ -324,6 +324,11 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>io.minio</groupId>
+            <artifactId>minio</artifactId>
+        </dependency>
+
         <!-- Apache Commons Compress for TAR.GZ parsing -->
         <dependency>
             <groupId>org.apache.commons</groupId>
