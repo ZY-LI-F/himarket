@@ -14,6 +14,7 @@ import ProductCategories from '@/pages/ProductCategories';
 import ProductCategoryDetail from '@/pages/ProductCategoryDetail';
 import ProductTypePage from '@/pages/ProductTypePage';
 import SandboxConsoles from '@/pages/SandboxConsoles';
+import TemplateListPage from '@/pages/Templates/TemplateListPage';
 
 type AdminAuthStatus = 'admin' | 'non-admin' | 'unauthenticated';
 
@@ -172,7 +173,7 @@ export const router = createBrowserRouter([
         path: 'admin/knowledge',
       },
       {
-        element: adminRoutePage('模板'),
+        element: <TemplateListPage />,
         loader: requireAdminLoader,
         path: 'admin/templates',
       },
