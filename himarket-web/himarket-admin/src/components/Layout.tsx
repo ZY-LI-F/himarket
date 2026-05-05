@@ -1,4 +1,5 @@
 import {
+  BookOutlined,
   HomeOutlined,
   ProductOutlined,
   DesktopOutlined,
@@ -13,6 +14,8 @@ import {
   ThunderboltOutlined,
   RobotOutlined,
   ApiOutlined,
+  FileTextOutlined,
+  ProjectOutlined,
 } from '@ant-design/icons';
 import { Button, Tooltip } from 'antd';
 import React, { useState, useEffect } from 'react';
@@ -111,6 +114,18 @@ const Layout: React.FC = () => {
       href: '/product-categories',
       icon: TagsOutlined,
       name: 'Categories',
+    },
+    {
+      children: [
+        { cn: '知识库', href: '/admin/knowledge', icon: BookOutlined, name: '知识库' },
+        { cn: '模板', href: '/admin/templates', icon: FileTextOutlined, name: '模板' },
+        { cn: '术语表', href: '/admin/glossaries', icon: TagsOutlined, name: '术语表' },
+        { cn: '项目', href: '/admin/projects', icon: ProjectOutlined, name: '项目' },
+      ],
+      cn: '知识写作',
+      href: '/admin/knowledge',
+      icon: BookOutlined,
+      name: '知识写作',
     },
     {
       children: [
