@@ -1,0 +1,6 @@
+spec: ICH E9
+section_path: "Glossary"
+title: Statistical terms
+body:
+  outline: |-
+    Provide controlled meanings for statistical and trial-design terms used across the guideline. Use the glossary to reduce ambiguity when templates reference concepts such as bias, analysis sets, confidence intervals, and monitoring roles.

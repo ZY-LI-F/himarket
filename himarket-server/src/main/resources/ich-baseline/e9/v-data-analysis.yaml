@@ -1,0 +1,6 @@
+spec: ICH E9
+section_path: "V"
+title: Analysis planning and execution
+body:
+  outline: |-
+    Cover pre-specification of analyses, analysis sets, missing values, outliers, transformations, estimation, confidence intervals, hypothesis testing, multiplicity, subgroups, covariates, interactions, and validation of data and software integrity.

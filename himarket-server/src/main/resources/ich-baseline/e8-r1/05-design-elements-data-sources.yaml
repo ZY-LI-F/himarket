@@ -1,0 +1,6 @@
+spec: ICH E8(R1)
+section_path: "5"
+title: Study design elements and data sources
+body:
+  outline: |-
+    Summarize core design choices such as study population, treatment description, control group, response variables, bias-reduction methods, statistical analysis, and data sources. Connect each choice to the research question and quality factors.

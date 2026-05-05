@@ -1,0 +1,6 @@
+spec: ICH E6(R3)
+section_path: "III.4"
+title: Data governance for investigator and sponsor
+body:
+  outline: |-
+    Explain shared responsibilities for protecting blinding, managing the data life cycle, preserving metadata and audit trails, correcting and transferring data, finalizing datasets before analysis, retaining access, and controlling computerized systems.

@@ -1,0 +1,6 @@
+spec: ICH E8(R1)
+section_path: "7"
+title: Identifying critical quality factors
+body:
+  outline: |-
+    Provide considerations for finding the study attributes whose failure would threaten participant protection, data integrity, result reliability, or decision usefulness. Treat these factors as priorities for proportionate risk control.

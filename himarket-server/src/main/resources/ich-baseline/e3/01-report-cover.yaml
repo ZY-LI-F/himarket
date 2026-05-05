@@ -1,0 +1,6 @@
+spec: ICH E3
+section_path: "1"
+title: Report cover identifiers
+body:
+  outline: |-
+    Capture the administrative identity of the clinical study report. Include the study title, protocol identifier, investigational product, sponsor, development phase or indication, report date, and accountable sign-off roles so the document can be traced without interpreting results.

@@ -1,0 +1,6 @@
+spec: ICH E3
+section_path: "3"
+title: Report navigation index
+body:
+  outline: |-
+    Lay out the report contents in numbered order with references to major tables, figures, listings, and appendices. Make the structure easy for reviewers to follow and keep cross-references consistent with the final assembled report.

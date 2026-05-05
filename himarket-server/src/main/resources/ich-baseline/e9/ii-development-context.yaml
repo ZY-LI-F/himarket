@@ -1,0 +1,6 @@
+spec: ICH E9
+section_path: "II"
+title: Clinical development context for statistics
+body:
+  outline: |-
+    Frame trials within the development plan, distinguishing exploratory and confirmatory roles. Cover population choices, endpoint hierarchy, composite or global variables, surrogate or categorized variables, and design features that reduce bias.

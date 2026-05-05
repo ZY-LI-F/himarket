@@ -1,0 +1,6 @@
+spec: ICH E9
+section_path: "III"
+title: Statistical design considerations
+body:
+  outline: |-
+    Summarize design configurations, multicenter planning, comparison objectives, group-sequential approaches, sample size rationale, and data capture or processing decisions that should be aligned before trial execution.
