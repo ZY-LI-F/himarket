@@ -54,12 +54,16 @@ class KnowledgeServiceTest {
             Clock.fixed(Instant.parse("2026-05-05T10:15:30Z"), ZoneOffset.UTC);
 
     private KnowledgeAssetRepository repository;
+    private KnowledgeSyncService syncService;
     private KnowledgeService service;
 
     @BeforeEach
     void setUp() {
         repository = org.mockito.Mockito.mock(KnowledgeAssetRepository.class);
-        service = new KnowledgeService(repository, new KnowledgePayloadValidator(), FIXED_CLOCK);
+        syncService = org.mockito.Mockito.mock(KnowledgeSyncService.class);
+        service =
+                new KnowledgeService(
+                        repository, new KnowledgePayloadValidator(), syncService, FIXED_CLOCK);
         when(repository.save(any(KnowledgeAsset.class)))
                 .thenAnswer(invocation -> invocation.getArgument(0));
     }
@@ -113,6 +117,7 @@ class KnowledgeServiceTest {
         assertEquals(3, deleted.getVersion());
         assertNotEquals(updateEtag, deleted.getEtag());
         verify(repository, times(2)).findByIdForUpdate(created.getId());
+        verify(syncService, times(3)).exportAsync(created.getId());
     }
 
     @Test

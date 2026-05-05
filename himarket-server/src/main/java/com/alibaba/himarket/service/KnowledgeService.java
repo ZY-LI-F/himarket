@@ -43,9 +43,12 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 @Service
 @Transactional
@@ -61,19 +64,25 @@ public class KnowledgeService {
     private final KnowledgeAssetRepository repository;
     private final KnowledgePayloadValidator payloadValidator;
     private final Clock clock;
+    private final KnowledgeSyncService syncService;
 
+    @Autowired
     public KnowledgeService(
-            KnowledgeAssetRepository repository, KnowledgePayloadValidator payloadValidator) {
-        this(repository, payloadValidator, Clock.systemDefaultZone());
+            KnowledgeAssetRepository repository,
+            KnowledgePayloadValidator payloadValidator,
+            KnowledgeSyncService syncService) {
+        this(repository, payloadValidator, syncService, Clock.systemDefaultZone());
     }
 
     KnowledgeService(
             KnowledgeAssetRepository repository,
             KnowledgePayloadValidator payloadValidator,
+            KnowledgeSyncService syncService,
             Clock clock) {
         this.repository = Objects.requireNonNull(repository, "repository must not be null");
         this.payloadValidator =
                 Objects.requireNonNull(payloadValidator, "payloadValidator must not be null");
+        this.syncService = Objects.requireNonNull(syncService, "syncService must not be null");
         this.clock = Objects.requireNonNull(clock, "clock must not be null");
     }
 
@@ -104,7 +113,9 @@ public class KnowledgeService {
                         .syncPending(true)
                         .build();
         asset.setEtag(calculateEtag(asset));
-        return repository.save(asset);
+        KnowledgeAsset saved = repository.save(asset);
+        scheduleSyncAfterCommit(saved.getId());
+        return saved;
     }
 
     @Transactional(readOnly = true)
@@ -155,7 +166,9 @@ public class KnowledgeService {
         asset.setSyncPending(true);
         asset.setLastSyncedAt(null);
         asset.setEtag(calculateEtag(asset));
-        return repository.save(asset);
+        KnowledgeAsset saved = repository.save(asset);
+        scheduleSyncAfterCommit(saved.getId());
+        return saved;
     }
 
     public KnowledgeAsset delete(Actor actor, String id, String ifMatchEtag) {
@@ -170,7 +183,23 @@ public class KnowledgeService {
         asset.setSyncPending(true);
         asset.setLastSyncedAt(null);
         asset.setEtag(calculateEtag(asset));
-        return repository.save(asset);
+        KnowledgeAsset saved = repository.save(asset);
+        scheduleSyncAfterCommit(saved.getId());
+        return saved;
+    }
+
+    private void scheduleSyncAfterCommit(String assetId) {
+        if (!TransactionSynchronizationManager.isActualTransactionActive()) {
+            syncService.exportAsync(assetId);
+            return;
+        }
+        TransactionSynchronizationManager.registerSynchronization(
+                new TransactionSynchronization() {
+                    @Override
+                    public void afterCommit() {
+                        syncService.exportAsync(assetId);
+                    }
+                });
     }
 
     private ValidatedCommand validate(SaveCommand command) {
