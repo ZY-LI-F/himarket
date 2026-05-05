@@ -3,6 +3,7 @@ import { createBrowserRouter, Navigate, redirect } from 'react-router-dom';
 import LayoutWrapper from '@/components/LayoutWrapper';
 import ApiProductDetail from '@/pages/ApiProductDetail';
 import GatewayConsoles from '@/pages/GatewayConsoles';
+import KnowledgeListPage from '@/pages/Knowledge/KnowledgeListPage';
 import Login from '@/pages/Login';
 import McpMonitor from '@/pages/McpMonitor';
 import ModelDashboard from '@/pages/ModelDashboard';
@@ -166,7 +167,7 @@ export const router = createBrowserRouter([
         path: 'observability/mcp-monitor',
       },
       {
-        element: adminRoutePage('知识库'),
+        element: <KnowledgeListPage />,
         loader: requireAdminLoader,
         path: 'admin/knowledge',
       },
