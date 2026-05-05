@@ -1,0 +1,605 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "HiMarket Knowledge API",
+    "description": "OpenAPI document for the HiMarket knowledge asset endpoints.",
+    "version": "1.0.0",
+    "x-generated-source": "com.alibaba.himarket.api.v1.admin.knowledge.KnowledgeController"
+  },
+  "servers": [
+    {
+      "url": "/"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Knowledge API",
+      "description": "Knowledge asset schema, validation, and CRUD endpoints."
+    }
+  ],
+  "paths": {
+    "/api/v1/admin/knowledge/schema": {
+      "get": {
+        "tags": [
+          "Knowledge API"
+        ],
+        "operationId": "getKnowledgeSchema",
+        "summary": "Get knowledge payload schema",
+        "parameters": [
+          {
+            "name": "kind",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "DocReviewRule"
+              ]
+            }
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "doc_review"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Supported RJSF schema and UI schema.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RjsfSchemaResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/admin/knowledge/validate": {
+      "post": {
+        "tags": [
+          "Knowledge API"
+        ],
+        "operationId": "validateKnowledgePayload",
+        "summary": "Validate a knowledge payload",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ValidationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Validation result.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/admin/knowledge": {
+      "post": {
+        "tags": [
+          "Knowledge API"
+        ],
+        "operationId": "createKnowledgeAsset",
+        "summary": "Create a knowledge asset",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SaveRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Created knowledge asset.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KnowledgeAsset"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "get": {
+        "tags": [
+          "Knowledge API"
+        ],
+        "operationId": "listKnowledgeAssets",
+        "summary": "List knowledge assets",
+        "parameters": [
+          {
+            "name": "scope",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/KnowledgeScope"
+            }
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "example": "doc_review"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Readable enabled knowledge assets.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/KnowledgeAsset"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/admin/knowledge/{id}": {
+      "get": {
+        "tags": [
+          "Knowledge API"
+        ],
+        "operationId": "getKnowledgeAsset",
+        "summary": "Get a knowledge asset",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/KnowledgeAssetId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Knowledge asset.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KnowledgeAsset"
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Knowledge API"
+        ],
+        "operationId": "updateKnowledgeAsset",
+        "summary": "Update a knowledge asset",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/KnowledgeAssetId"
+          },
+          {
+            "$ref": "#/components/parameters/IfMatch"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SaveRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated knowledge asset.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KnowledgeAsset"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/BadRequest"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          },
+          "412": {
+            "$ref": "#/components/responses/PreconditionFailed"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Knowledge API"
+        ],
+        "operationId": "deleteKnowledgeAsset",
+        "summary": "Delete a knowledge asset",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/KnowledgeAssetId"
+          },
+          {
+            "$ref": "#/components/parameters/IfMatch"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Soft-deleted knowledge asset.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/KnowledgeAsset"
+                }
+              }
+            }
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "412": {
+            "$ref": "#/components/responses/PreconditionFailed"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "parameters": {
+      "KnowledgeAssetId": {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "string"
+        }
+      },
+      "IfMatch": {
+        "name": "If-Match",
+        "in": "header",
+        "required": false,
+        "schema": {
+          "type": "string"
+        },
+        "description": "Current asset etag. Required by the service for update and delete."
+      }
+    },
+    "responses": {
+      "BadRequest": {
+        "description": "Invalid request."
+      },
+      "Forbidden": {
+        "description": "Caller cannot access the requested scope."
+      },
+      "NotFound": {
+        "description": "Knowledge asset not found."
+      },
+      "Conflict": {
+        "description": "Knowledge asset already exists."
+      },
+      "PreconditionFailed": {
+        "description": "Missing or stale If-Match etag."
+      }
+    },
+    "schemas": {
+      "KnowledgeScope": {
+        "type": "string",
+        "enum": [
+          "global",
+          "team",
+          "user"
+        ]
+      },
+      "SaveRequest": {
+        "type": "object",
+        "required": [
+          "kind",
+          "category",
+          "name",
+          "scope",
+          "payload"
+        ],
+        "properties": {
+          "kind": {
+            "type": "string",
+            "example": "DocReviewRule"
+          },
+          "category": {
+            "type": "string",
+            "example": "doc_review"
+          },
+          "name": {
+            "type": "string"
+          },
+          "scope": {
+            "$ref": "#/components/schemas/KnowledgeScope"
+          },
+          "teamId": {
+            "type": "string"
+          },
+          "userId": {
+            "type": "string"
+          },
+          "inheritsFrom": {
+            "type": "string"
+          },
+          "applicableWorkers": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "severity": {
+            "type": "string",
+            "enum": [
+              "info",
+              "minor",
+              "major",
+              "critical"
+            ]
+          },
+          "domain": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "payload": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "enabled": {
+            "type": "boolean",
+            "default": true
+          }
+        }
+      },
+      "ValidationRequest": {
+        "type": "object",
+        "required": [
+          "kind",
+          "category",
+          "payload"
+        ],
+        "properties": {
+          "kind": {
+            "type": "string",
+            "example": "DocReviewRule"
+          },
+          "category": {
+            "type": "string",
+            "example": "doc_review"
+          },
+          "payload": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        }
+      },
+      "ValidationResponse": {
+        "type": "object",
+        "required": [
+          "valid"
+        ],
+        "properties": {
+          "valid": {
+            "type": "boolean"
+          }
+        }
+      },
+      "RjsfSchemaResponse": {
+        "type": "object",
+        "required": [
+          "category",
+          "kind",
+          "schema",
+          "uiSchema"
+        ],
+        "properties": {
+          "category": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string"
+          },
+          "schema": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "uiSchema": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        }
+      },
+      "KnowledgeAsset": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "apiVersion": {
+            "type": "string",
+            "example": "hiclaw.io/v1beta2"
+          },
+          "kind": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "scope": {
+            "$ref": "#/components/schemas/KnowledgeScope"
+          },
+          "teamId": {
+            "type": "string"
+          },
+          "userId": {
+            "type": "string"
+          },
+          "ownerId": {
+            "type": "string"
+          },
+          "inheritsFrom": {
+            "type": "string"
+          },
+          "applicableWorkers": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "severity": {
+            "type": "string"
+          },
+          "domain": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "payload": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "version": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "etag": {
+            "type": "string"
+          },
+          "syncPending": {
+            "type": "boolean"
+          },
+          "lastSyncedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "deletedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    }
+  }
+}
+
