@@ -45,6 +45,9 @@ public enum ErrorCode {
     /** Resource conflict */
     CONFLICT(HttpStatus.CONFLICT, "资源冲突：{}"),
 
+    /** Rate limited */
+    RATE_LIMITED(HttpStatus.TOO_MANY_REQUESTS, "请求过于频繁：{}"),
+
     // Server errors (500-599)
     /** Internal error */
     INTERNAL_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "服务器内部错误：{}"),
