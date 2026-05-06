@@ -22,9 +22,11 @@ package com.alibaba.himarket.api.v1.attachments;
 import com.alibaba.himarket.core.annotation.AdminOrDeveloperAuth;
 import com.alibaba.himarket.service.AttachmentService;
 import com.alibaba.himarket.service.AttachmentService.AttachmentSignedUrlResult;
+import com.alibaba.himarket.service.AttachmentService.AttachmentSummary;
 import com.alibaba.himarket.service.AttachmentService.AttachmentUploadResult;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,6 +45,12 @@ import org.springframework.web.multipart.MultipartFile;
 public class AttachmentController {
 
     private final AttachmentService attachmentService;
+
+    @Operation(summary = "列出附件（v1 共享视图，owner filter 待 v2）")
+    @GetMapping
+    public List<AttachmentSummary> list() {
+        return attachmentService.list();
+    }
 
     @Operation(summary = "上传附件")
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

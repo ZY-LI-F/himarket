@@ -1,4 +1,4 @@
-import { Alert, Button, Checkbox, Divider, Empty, Form, Input, Select, Space, Spin, Steps, Table, Tag, message } from 'antd';
+import { Alert, Button, Divider, Empty, Form, Input, Select, Space, Spin, Steps, Table, Tag, message } from 'antd';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -23,6 +23,8 @@ interface DirectionForm {
   title: string;
   category: string;
   ichSpec?: string;
+  roomId: string;
+  teamTemplateId: string;
   disease?: string;
   drug?: string;
   endpoints?: string;
@@ -30,18 +32,18 @@ interface DirectionForm {
 }
 
 interface IchTemplate {
-  id: string;
+  id: number;
   spec: string;
   sectionPath: string;
-  sectionTitle: string;
-  required: boolean;
+  sectionOrder: number;
+  title?: string;
 }
 
-interface AttachmentItem {
-  id: string;
-  filename: string;
-  category: string;
-  sizeBytes: number;
+interface AttachmentSummary {
+  attachmentId: string;
+  name: string;
+  contentType: string;
+  size: number;
 }
 
 const formatSize = (bytes: number) => {
@@ -57,31 +59,25 @@ const ProjectWizard = () => {
   const [submitting, setSubmitting] = useState(false);
   const [form] = Form.useForm<DirectionForm>();
 
-  // step 2: ICH templates
   const [templates, setTemplates] = useState<IchTemplate[]>([]);
   const [templatesLoading, setTemplatesLoading] = useState(false);
-  const [selectedSections, setSelectedSections] = useState<string[]>([]);
+  const [selectedSections, setSelectedSections] = useState<number[]>([]);
 
-  // step 3: attachments
-  const [attachments, setAttachments] = useState<AttachmentItem[]>([]);
+  const [attachments, setAttachments] = useState<AttachmentSummary[]>([]);
   const [attachmentsLoading, setAttachmentsLoading] = useState(false);
   const [selectedAttachmentIds, setSelectedAttachmentIds] = useState<string[]>([]);
 
-  // step 4: pubmed
   const [pubmedRecords, setPubmedRecords] = useState<PubmedRecord[]>([]);
 
-  // Load ICH templates when entering step 1
   const loadTemplates = useCallback(async () => {
-    if (!direction?.ichSpec || !direction?.category) return;
+    if (!direction?.ichSpec) return;
     setTemplatesLoading(true);
     try {
       const res = await api.get('/templates', {
-        params: { spec: direction.ichSpec, category: direction.category },
+        params: { spec: direction.ichSpec },
       });
       const payload = res?.data?.data ?? res?.data ?? [];
       setTemplates(Array.isArray(payload) ? payload : []);
-      // 默认选中所有 required 章节
-      setSelectedSections(payload.filter((t: IchTemplate) => t.required).map((t: IchTemplate) => t.id));
     } catch (err) {
       message.error(err instanceof Error ? err.message : '加载模板失败');
       setTemplates([]);
@@ -90,11 +86,10 @@ const ProjectWizard = () => {
     }
   }, [direction]);
 
-  // Load user attachments when entering step 2
   const loadAttachments = useCallback(async () => {
     setAttachmentsLoading(true);
     try {
-      const res = await api.get('/attachments', { params: { scope: 'user' } });
+      const res = await api.get('/attachments');
       const payload = res?.data?.data ?? res?.data ?? [];
       setAttachments(Array.isArray(payload) ? payload : []);
     } catch (err) {
@@ -131,30 +126,37 @@ const ProjectWizard = () => {
     if (!direction) return;
     setSubmitting(true);
     try {
-      // 1. 创建项目
-      const createRes = await api.post('/projects', {
-        title: direction.title,
+      const chapters = templates
+        .filter((t) => selectedSections.includes(t.id))
+        .map((t) => ({
+          id: String(t.id),
+          title: t.title ?? t.sectionPath,
+        }));
+
+      const promptCtx = {
         category: direction.category,
-        ichSpec: direction.ichSpec,
         direction: {
           disease: direction.disease,
           drug: direction.drug,
           endpoints: pubmedDirection.endpoints ?? [],
-          design: { studyType: direction.studyType },
+          studyType: direction.studyType,
         },
-        targetSections: selectedSections,
+        attachmentIds: selectedAttachmentIds,
+        pubmedPmids: pubmedRecords.map((r) => r.pmid),
+      };
+
+      const createRes = await api.post('/projects', {
+        title: direction.title,
+        spec: direction.ichSpec ?? 'ICH-E3',
+        version: 'baseline',
+        roomId: direction.roomId,
+        teamTemplateId: direction.teamTemplateId,
+        prompt: JSON.stringify(promptCtx, null, 2),
+        chapters,
       });
       const projectId =
         createRes?.data?.data?.id ?? createRes?.data?.id ?? '';
 
-      // 2. attach 附件
-      if (projectId && selectedAttachmentIds.length > 0) {
-        await api.post(`/projects/${projectId}/attachments/_attach`, {
-          attachmentIds: selectedAttachmentIds,
-        });
-      }
-
-      // 3. attach PubMed records
       if (projectId && pubmedRecords.length > 0) {
         await Promise.all(
           pubmedRecords.map((r) =>
@@ -166,9 +168,8 @@ const ProjectWizard = () => {
         );
       }
 
-      // 4. 派发
       if (projectId) {
-        await api.post(`/projects/${projectId}/dispatch`);
+        await api.post(`/projects/${projectId}/_dispatch`);
       }
 
       message.success('项目创建并已派发');
@@ -209,8 +210,24 @@ const ProjectWizard = () => {
           <Form.Item label="项目类型" name="category" rules={[{ required: true }]}>
             <Select options={CATEGORY_OPTIONS} />
           </Form.Item>
-          <Form.Item label="ICH spec" name="ichSpec">
-            <Select allowClear options={ICH_OPTIONS} placeholder="选填" />
+          <Form.Item label="ICH spec" name="ichSpec" rules={[{ required: true }]}>
+            <Select options={ICH_OPTIONS} />
+          </Form.Item>
+          <Form.Item
+            label="Worker Room"
+            name="roomId"
+            rules={[{ required: true }]}
+            tooltip="HiClaw 派发用，例如 csr-team-room"
+          >
+            <Input placeholder="csr-team-room" />
+          </Form.Item>
+          <Form.Item
+            label="Team Template"
+            name="teamTemplateId"
+            rules={[{ required: true }]}
+            tooltip="例如 csr-authoring-v1"
+          >
+            <Input placeholder="csr-authoring-v1" />
           </Form.Item>
           <Form.Item label="疾病" name="disease">
             <Input placeholder="例如 non-small cell lung cancer" />
@@ -235,44 +252,36 @@ const ProjectWizard = () => {
       {step === 1 && (
         <div>
           <Alert
-            message={
-              direction?.ichSpec
-                ? `加载 ${direction.ichSpec} / ${direction.category} 的章节模板`
-                : '未选择 ICH spec，跳过此步'
-            }
+            message={`加载 ${direction?.ichSpec} 的章节模板`}
             style={{ marginBottom: 16 }}
             type="info"
           />
-          {direction?.ichSpec ? (
-            <Spin spinning={templatesLoading}>
-              {templates.length === 0 && !templatesLoading ? (
-                <Empty description="没有匹配的模板，可继续下一步" />
-              ) : (
-                <Table<IchTemplate>
-                  columns={[
-                    { dataIndex: 'sectionPath', key: 'sectionPath', title: 'Section', width: 110 },
-                    { dataIndex: 'sectionTitle', key: 'sectionTitle', title: '标题' },
-                    {
-                      dataIndex: 'required',
-                      key: 'required',
-                      render: (req: boolean) =>
-                        req ? <Tag color="orange">必选</Tag> : <Tag>可选</Tag>,
-                      title: '类型',
-                      width: 100,
-                    },
-                  ]}
-                  dataSource={templates}
-                  pagination={false}
-                  rowKey="id"
-                  rowSelection={{
-                    onChange: (keys) => setSelectedSections(keys as string[]),
-                    selectedRowKeys: selectedSections,
-                  }}
-                  size="small"
-                />
-              )}
-            </Spin>
-          ) : null}
+          <Spin spinning={templatesLoading}>
+            {templates.length === 0 && !templatesLoading ? (
+              <Empty description="没有匹配的模板，可继续下一步" />
+            ) : (
+              <Table<IchTemplate>
+                columns={[
+                  { dataIndex: 'sectionPath', key: 'sectionPath', title: 'Section', width: 110 },
+                  { dataIndex: 'title', key: 'title', title: '标题' },
+                  {
+                    dataIndex: 'sectionOrder',
+                    key: 'sectionOrder',
+                    title: '顺序',
+                    width: 80,
+                  },
+                ]}
+                dataSource={templates}
+                pagination={false}
+                rowKey="id"
+                rowSelection={{
+                  onChange: (keys) => setSelectedSections(keys as number[]),
+                  selectedRowKeys: selectedSections,
+                }}
+                size="small"
+              />
+            )}
+          </Spin>
           <Divider />
           <Space>
             <Button onClick={() => setStep(0)}>上一步</Button>
@@ -286,7 +295,7 @@ const ProjectWizard = () => {
       {step === 2 && (
         <div>
           <Alert
-            message="从你的附件库挑选要给 worker 当作上下文的文件（protocol / past_csr / dataset 等）。"
+            message="从附件库挑选要给 worker 当作上下文的文件。当前 v1 为共享视图（owner 过滤待 v2）。所选 attachmentId 会随 prompt 一起派发。"
             style={{ marginBottom: 16 }}
             type="info"
           />
@@ -294,19 +303,19 @@ const ProjectWizard = () => {
             {attachments.length === 0 && !attachmentsLoading ? (
               <Empty description="附件库为空，请先到 /me/library 上传" />
             ) : (
-              <Table<AttachmentItem>
+              <Table<AttachmentSummary>
                 columns={[
-                  { dataIndex: 'filename', key: 'filename', title: '文件名' },
+                  { dataIndex: 'name', key: 'name', title: '文件名' },
                   {
-                    dataIndex: 'category',
-                    key: 'category',
+                    dataIndex: 'contentType',
+                    key: 'contentType',
                     render: (c: string) => <Tag>{c}</Tag>,
-                    title: 'Category',
-                    width: 140,
+                    title: 'MIME',
+                    width: 180,
                   },
                   {
-                    dataIndex: 'sizeBytes',
-                    key: 'sizeBytes',
+                    dataIndex: 'size',
+                    key: 'size',
                     render: (s: number) => formatSize(s),
                     title: '大小',
                     width: 100,
@@ -314,7 +323,7 @@ const ProjectWizard = () => {
                 ]}
                 dataSource={attachments}
                 pagination={false}
-                rowKey="id"
+                rowKey="attachmentId"
                 rowSelection={{
                   onChange: (keys) => setSelectedAttachmentIds(keys as string[]),
                   selectedRowKeys: selectedAttachmentIds,
@@ -375,6 +384,7 @@ const ProjectWizard = () => {
             <li>标题：{direction?.title}</li>
             <li>类型：{direction?.category}</li>
             <li>ICH spec：{direction?.ichSpec ?? '-'}</li>
+            <li>Worker room / template：{direction?.roomId} / {direction?.teamTemplateId}</li>
             <li>疾病/药物：{direction?.disease ?? '-'} / {direction?.drug ?? '-'}</li>
             <li>选中章节数：{selectedSections.length}</li>
             <li>选中附件数：{selectedAttachmentIds.length}</li>

@@ -33,7 +33,9 @@ const MyKnowledge = () => {
     setLoading(true);
     setError(undefined);
     try {
-      const res = await api.get('/me/knowledge', { params: { category: activeCategory } });
+      const res = await api.get('/admin/knowledge', {
+        params: { scope: 'user', category: activeCategory },
+      });
       const payload = res?.data?.data ?? res?.data ?? [];
       setData(Array.isArray(payload) ? payload : []);
     } catch (err) {

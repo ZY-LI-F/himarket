@@ -1,30 +1,23 @@
-import { DeleteOutlined, DownloadOutlined, UploadOutlined } from '@ant-design/icons';
-import { Alert, Button, Popconfirm, Select, Space, Spin, Table, Tag, Upload, message } from 'antd';
+import { DownloadOutlined, UploadOutlined } from '@ant-design/icons';
+import { Alert, Button, Space, Spin, Table, Tag, Upload, message } from 'antd';
 import { useCallback, useEffect, useState } from 'react';
 
 import api from '../lib/api';
 
-interface Attachment {
-  id: string;
-  filename: string;
-  category: string;
-  mimeType: string;
-  sizeBytes: number;
-  tags?: string[];
-  description?: string;
-  uploadedAt?: string;
+interface AttachmentSummary {
+  attachmentId: string;
+  name: string;
+  contentType: string;
+  size: number;
+  sha256: string;
+  createdAt?: string;
 }
 
-const CATEGORY_OPTIONS = [
-  { label: '全部', value: undefined },
-  { label: '参考 PDF', value: 'reference_pdf' },
-  { label: '历史 CSR', value: 'past_csr' },
-  { label: '研究方案', value: 'protocol_doc' },
-  { label: '数据集', value: 'dataset' },
-  { label: '指南文件', value: 'guideline' },
-  { label: '模板', value: 'template_doc' },
-  { label: '其他', value: 'other' },
-];
+interface SignedUrlResponse {
+  attachmentId: string;
+  signedUrl: string;
+  signedUrlTtlSeconds: number;
+}
 
 const formatSize = (bytes: number) => {
   if (bytes < 1024) return `${bytes} B`;
@@ -33,8 +26,7 @@ const formatSize = (bytes: number) => {
 };
 
 const Library = () => {
-  const [category, setCategory] = useState<string | undefined>();
-  const [data, setData] = useState<Attachment[]>([]);
+  const [data, setData] = useState<AttachmentSummary[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | undefined>();
   const [uploading, setUploading] = useState(false);
@@ -43,7 +35,7 @@ const Library = () => {
     setLoading(true);
     setError(undefined);
     try {
-      const res = await api.get('/attachments', { params: { scope: 'user', category } });
+      const res = await api.get('/attachments');
       const payload = res?.data?.data ?? res?.data ?? [];
       setData(Array.isArray(payload) ? payload : []);
     } catch (err) {
@@ -51,7 +43,7 @@ const Library = () => {
     } finally {
       setLoading(false);
     }
-  }, [category]);
+  }, []);
 
   useEffect(() => {
     void load();
@@ -62,9 +54,7 @@ const Library = () => {
     try {
       const fd = new FormData();
       fd.append('file', file);
-      fd.append('scope', 'user');
-      fd.append('category', category ?? 'other');
-      await api.post('/attachments/upload', fd, {
+      await api.post('/attachments', fd, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
       message.success('上传成功');
@@ -77,36 +67,29 @@ const Library = () => {
     return false;
   };
 
-  const handleDelete = async (id: string) => {
+  const handleDownload = async (attachmentId: string) => {
     try {
-      await api.delete(`/attachments/${id}`);
-      message.success('已删除');
-      void load();
+      const res = await api.get(`/attachments/${attachmentId}/signed-url`);
+      const payload = (res?.data?.data ?? res?.data) as SignedUrlResponse | undefined;
+      if (payload?.signedUrl) {
+        window.open(payload.signedUrl, '_blank');
+      } else {
+        message.error('未拿到下载链接');
+      }
     } catch (err) {
-      message.error(err instanceof Error ? err.message : '删除失败');
+      message.error(err instanceof Error ? err.message : '下载失败');
     }
-  };
-
-  const handleDownload = (id: string) => {
-    window.open(`/api/v1/attachments/${id}/download`, '_blank');
   };
 
   return (
     <div style={{ maxWidth: 1280, margin: '24px auto', padding: '0 24px' }}>
       <h1 style={{ marginBottom: 16 }}>我的附件库</h1>
       <p style={{ color: '#666', marginBottom: 24 }}>
-        管理参考文件 / 历史 CSR / 研究方案等附件，供 worker 在 CSR / Protocol 写作时引用。
+        上传参考文件 / 历史 CSR / 研究方案等附件，供 worker 在 CSR / Protocol 写作时引用。当前为
+        v1 共享视图（按 owner 过滤待 v2 完善）。
       </p>
 
       <Space style={{ marginBottom: 16 }} wrap>
-        <Select
-          allowClear
-          options={CATEGORY_OPTIONS}
-          placeholder="按 category 过滤"
-          style={{ width: 160 }}
-          value={category}
-          onChange={(v) => setCategory(v)}
-        />
         <Upload beforeUpload={handleUpload} showUploadList={false}>
           <Button icon={<UploadOutlined />} loading={uploading} type="primary">
             上传附件
@@ -117,55 +100,55 @@ const Library = () => {
       {error && <Alert closable message={error} showIcon style={{ marginBottom: 16 }} type="error" />}
 
       <Spin spinning={loading}>
-        <Table<Attachment>
+        <Table<AttachmentSummary>
           columns={[
-            { dataIndex: 'filename', key: 'filename', title: '文件名', width: 240 },
-            { dataIndex: 'category', key: 'category', render: (c: string) => <Tag>{c}</Tag>, title: 'Category', width: 140 },
-            { dataIndex: 'mimeType', key: 'mimeType', title: 'MIME', width: 200 },
-            { dataIndex: 'sizeBytes', key: 'sizeBytes', render: (s: number) => formatSize(s), title: '大小', width: 100 },
+            { dataIndex: 'name', key: 'name', title: '文件名', width: 280 },
             {
-              dataIndex: 'tags',
-              key: 'tags',
-              render: (tags?: string[]) => tags?.map((t) => <Tag key={t}>{t}</Tag>),
-              title: '标签',
+              dataIndex: 'contentType',
+              key: 'contentType',
+              render: (c: string) => <Tag>{c}</Tag>,
+              title: 'MIME',
+              width: 200,
             },
             {
-              dataIndex: 'uploadedAt',
-              key: 'uploadedAt',
+              dataIndex: 'size',
+              key: 'size',
+              render: (s: number) => formatSize(s),
+              title: '大小',
+              width: 100,
+            },
+            {
+              dataIndex: 'sha256',
+              key: 'sha256',
+              render: (v: string) => <code>{v?.slice(0, 12)}…</code>,
+              title: 'sha256',
+              width: 140,
+            },
+            {
+              dataIndex: 'createdAt',
+              key: 'createdAt',
               render: (v?: string) => v?.slice(0, 19).replace('T', ' ') || '-',
               title: '上传时间',
-              width: 160,
+              width: 180,
             },
             {
               key: 'actions',
-              render: (_: unknown, r: Attachment) => (
-                <Space>
-                  <Button
-                    icon={<DownloadOutlined />}
-                    size="small"
-                    type="link"
-                    onClick={() => handleDownload(r.id)}
-                  >
-                    下载
-                  </Button>
-                  <Popconfirm
-                    cancelText="取消"
-                    okText="删除"
-                    title="确认删除?"
-                    onConfirm={() => handleDelete(r.id)}
-                  >
-                    <Button danger icon={<DeleteOutlined />} size="small" type="link">
-                      删除
-                    </Button>
-                  </Popconfirm>
-                </Space>
+              render: (_: unknown, r: AttachmentSummary) => (
+                <Button
+                  icon={<DownloadOutlined />}
+                  size="small"
+                  type="link"
+                  onClick={() => void handleDownload(r.attachmentId)}
+                >
+                  下载
+                </Button>
               ),
               title: '操作',
-              width: 160,
+              width: 100,
             },
           ]}
           dataSource={data}
-          rowKey="id"
+          rowKey="attachmentId"
         />
       </Spin>
     </div>

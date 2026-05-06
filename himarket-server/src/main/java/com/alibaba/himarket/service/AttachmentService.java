@@ -29,6 +29,7 @@ import com.alibaba.himarket.storage.AttachmentObjectStorage.StoredObject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.Duration;
+import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -69,6 +70,10 @@ public class AttachmentService {
                                         contentType,
                                         file.getSize(),
                                         storedObject));
+    }
+
+    public List<AttachmentSummary> list() {
+        return attachmentRepository.findAll().stream().map(AttachmentSummary::from).toList();
     }
 
     public AttachmentSignedUrlResult createSignedDownloadUrl(String attachmentId) {
@@ -208,4 +213,23 @@ public class AttachmentService {
 
     public record AttachmentSignedUrlResult(
             String attachmentId, String signedUrl, long signedUrlTtlSeconds) {}
+
+    public record AttachmentSummary(
+            String attachmentId,
+            String name,
+            String contentType,
+            long size,
+            String sha256,
+            String createdAt) {
+
+        static AttachmentSummary from(Attachment attachment) {
+            return new AttachmentSummary(
+                    attachment.getAttachmentId(),
+                    attachment.getName(),
+                    attachment.getContentType(),
+                    attachment.getSizeBytes(),
+                    attachment.getSha256(),
+                    attachment.getCreateAt() == null ? null : attachment.getCreateAt().toString());
+        }
+    }
 }

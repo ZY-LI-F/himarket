@@ -13,7 +13,7 @@ import {
   Tag,
   message,
 } from 'antd';
-import dayjs, { type Dayjs } from 'dayjs';
+import { type Dayjs } from 'dayjs';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import api from '../lib/api';
