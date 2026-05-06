@@ -16,6 +16,7 @@ import ProductCategories from '@/pages/ProductCategories';
 import ProductCategoryDetail from '@/pages/ProductCategoryDetail';
 import ProductTypePage from '@/pages/ProductTypePage';
 import SandboxConsoles from '@/pages/SandboxConsoles';
+import GlossaryListPage from '@/pages/Glossaries/GlossaryListPage';
 import TemplateListPage from '@/pages/Templates/TemplateListPage';
 
 type AdminAuthStatus = 'admin' | 'non-admin' | 'unauthenticated';
@@ -195,7 +196,7 @@ export const router = createBrowserRouter([
         path: 'admin/templates',
       },
       {
-        element: adminRoutePage('术语表'),
+        element: <GlossaryListPage />,
         loader: requireAdminLoader,
         path: 'admin/glossaries',
       },

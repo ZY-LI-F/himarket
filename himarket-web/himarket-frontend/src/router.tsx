@@ -16,7 +16,12 @@ import McpCreatePage from './pages/McpCreatePage';
 import McpDetail from './pages/McpDetail';
 import McpSquare from './pages/McpSquare';
 import ModelDetail from './pages/ModelDetail';
+import Library from './pages/Library';
+import MyKnowledge from './pages/MyKnowledge';
 import MyMcp from './pages/MyMcp';
+import ProjectWizard from './pages/ProjectWizard';
+import ProjectWorkspace from './pages/ProjectWorkspace';
+import Projects from './pages/Projects';
 import OidcCallback from './pages/OidcCallback';
 import Profile from './pages/Profile';
 import Register from './pages/Register';
@@ -113,6 +118,46 @@ export function Router() {
         <Route element={<McpDetail />} path="/mcp/:mcpProductId" />
         <Route element={<AgentDetail />} path="/agents/:agentProductId" />
         <Route element={<ModelDetail />} path="/models/:modelProductId" />
+        <Route
+          element={
+            <RequireAuth>
+              <MyKnowledge />
+            </RequireAuth>
+          }
+          path="/me/knowledge"
+        />
+        <Route
+          element={
+            <RequireAuth>
+              <Library />
+            </RequireAuth>
+          }
+          path="/me/library"
+        />
+        <Route
+          element={
+            <RequireAuth>
+              <Projects />
+            </RequireAuth>
+          }
+          path="/me/projects"
+        />
+        <Route
+          element={
+            <RequireAuth>
+              <ProjectWizard />
+            </RequireAuth>
+          }
+          path="/me/projects/new"
+        />
+        <Route
+          element={
+            <RequireAuth>
+              <ProjectWorkspace />
+            </RequireAuth>
+          }
+          path="/me/projects/:id"
+        />
         <Route element={<Login />} path="/login" />
         <Route element={<Register />} path="/register" />
         <Route
