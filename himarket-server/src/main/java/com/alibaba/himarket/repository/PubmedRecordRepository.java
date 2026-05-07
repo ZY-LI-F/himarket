@@ -21,10 +21,11 @@ package com.alibaba.himarket.repository;
 
 import com.alibaba.himarket.entity.PubmedRecord;
 import java.util.List;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface PubmedRecordRepository extends BaseRepository<PubmedRecord, String> {
+public interface PubmedRecordRepository extends JpaRepository<PubmedRecord, String> {
 
     List<PubmedRecord> findByPmidIn(List<String> pmids);
 }

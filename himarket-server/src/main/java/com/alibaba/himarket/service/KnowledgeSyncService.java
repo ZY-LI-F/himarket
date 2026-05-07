@@ -41,6 +41,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Pattern;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
@@ -68,6 +69,7 @@ public class KnowledgeSyncService implements ApplicationRunner {
     private final Yaml yaml;
     private final Clock clock;
 
+    @Autowired
     public KnowledgeSyncService(
             KnowledgeAssetRepository repository, KnowledgeObjectStore objectStore) {
         this(repository, objectStore, Clock.systemDefaultZone());

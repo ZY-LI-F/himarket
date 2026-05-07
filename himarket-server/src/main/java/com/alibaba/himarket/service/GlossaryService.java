@@ -69,7 +69,7 @@ public class GlossaryService {
 
         Glossary glossary =
                 Glossary.builder()
-                        .glossaryId(IdGenerator.genIdWithPrefix("glossary-"))
+                        .id(IdGenerator.genIdWithPrefix("glossary-"))
                         .term(request.getTerm().trim())
                         .translation(trimToNull(request.getTranslation()))
                         .aliases(cleanAliases(request.getAliases()))
@@ -167,7 +167,7 @@ public class GlossaryService {
 
     private Glossary findGlossary(String glossaryId) {
         return glossaryRepository
-                .findByGlossaryId(glossaryId)
+                .findById(glossaryId)
                 .orElseThrow(
                         () ->
                                 new BusinessException(

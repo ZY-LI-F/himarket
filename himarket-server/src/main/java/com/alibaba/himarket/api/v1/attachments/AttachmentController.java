@@ -38,7 +38,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 @Tag(name = "附件管理 V1", description = "提供附件流式上传、sha256 去重和临时下载链接")
-@RestController
+@RestController("v1AttachmentController")
 @RequestMapping("/api/v1/attachments")
 @RequiredArgsConstructor
 @AdminOrDeveloperAuth

@@ -50,7 +50,7 @@ public class Glossary extends BaseEntity {
 
     @Id
     @Column(name = "glossary_id", length = 64, nullable = false)
-    private String glossaryId;
+    private String id;
 
     @Column(name = "term", length = 128, nullable = false)
     private String term;

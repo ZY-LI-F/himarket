@@ -72,6 +72,7 @@ public class PubmedService {
     private final Clock clock;
     private final String baseUrl;
 
+    @org.springframework.beans.factory.annotation.Autowired
     public PubmedService(
             PubmedRecordRepository recordRepository,
             PubmedSearchRepository searchRepository,

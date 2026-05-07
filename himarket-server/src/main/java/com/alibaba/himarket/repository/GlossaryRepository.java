@@ -27,8 +27,6 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface GlossaryRepository extends BaseRepository<Glossary, String> {
 
-    Optional<Glossary> findByGlossaryId(String glossaryId);
-
     Optional<Glossary> findByTermIgnoreCase(String term);
 
     List<Glossary> findByEnabledTrue();

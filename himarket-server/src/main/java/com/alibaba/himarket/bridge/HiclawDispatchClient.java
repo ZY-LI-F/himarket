@@ -56,6 +56,7 @@ class HttpHiclawDispatchClient implements HiclawDispatchClient {
     private final String baseUrl;
     private final String bridgeToken;
 
+    @org.springframework.beans.factory.annotation.Autowired
     public HttpHiclawDispatchClient(
             RestTemplateBuilder builder,
             @Value("${hiclaw.bridge.base-url:${HICLAW_BRIDGE_BASE_URL:}}") String baseUrl,
